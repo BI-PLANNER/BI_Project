@@ -1,0 +1,928 @@
+'use client'
+
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import {
+  PieChart as PieIcon,
+  Shield,
+  ShieldCheck,
+  Lock,
+  Unlock,
+  Users,
+  FileText,
+  FileSpreadsheet,
+  Printer,
+  Copy,
+  Check,
+  Building2,
+  Calendar,
+  AlertTriangle,
+  CheckCircle2,
+  Filter,
+  Search,
+  ArrowRight,
+  TrendingUp,
+  Briefcase,
+  Layers,
+  Sparkles,
+  UserCheck,
+  RefreshCw,
+  KeyRound,
+  ShieldAlert,
+  SlidersHorizontal,
+  ChevronDown
+} from 'lucide-react'
+import NeoChartPieDonut, { PieDonutDataItem } from '@/components/NeoChartPieDonut'
+import ReasignarResponsableModal from '@/components/ReasignarResponsableModal'
+import { IncidenciaEvento, MASTER_LICITACIONES_PENDIENTES } from '@/app/dashboard/planner/page'
+
+export default function DashboardObligacionesPage() {
+  const supabase = createClient()
+
+  // 1. Datos e Incidencias de Licitaciones
+  const [incidencias, setIncidencias] = useState<IncidenciaEvento[]>(MASTER_LICITACIONES_PENDIENTES)
+  const [loading, setLoading] = useState(false)
+
+  // 2. Control de Acceso Exclusivo / Seguridad para Gerente General
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
+  // Usuario asignado por defecto: Gerencia General (José Lenny Gómez)
+  const [assignedUserEmail, setAssignedUserEmail] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('OBLIGACIONES_ASSIGNED_USER') || 'jose.gomez@labandmed.com'
+    }
+    return 'jose.gomez@labandmed.com'
+  })
+  const [isConfiguringUser, setIsConfiguringUser] = useState(false)
+  const [tempUserEmail, setTempUserEmail] = useState('')
+  const [authorizedOverride, setAuthorizedOverride] = useState(false)
+
+  // 3. Filtros & Controles
+  const [filterArea, setFilterArea] = useState('todos')
+  const [filterCliente, setFilterCliente] = useState('todos')
+  const [filterSemaforo, setFilterSemaforo] = useState('todos')
+  const [filterTipo, setFilterTipo] = useState('todos')
+  const [search, setSearch] = useState('')
+  const [chartType, setChartType] = useState<'pie' | 'donut'>('pie')
+  const [copied, setCopied] = useState(false)
+
+  // 4. Modal de Reasignación
+  const [editingTask, setEditingTask] = useState<IncidenciaEvento | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [successToast, setSuccessToast] = useState<string | null>(null)
+
+  // Cargar usuario autenticado actual
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user && user.email) {
+          setCurrentUserEmail(user.email)
+        }
+      } catch (err) {
+        console.warn('Error fetching auth user:', err)
+      }
+    }
+    checkAuth()
+  }, [supabase])
+
+  // Cargar datos de incidencias desde Supabase
+  const loadIncidencias = useCallback(async () => {
+    setLoading(true)
+    try {
+      const { data, error } = await supabase
+        .from('incidencias_seguimiento')
+        .select(`
+          incidencia_id,
+          fecha_cumplimiento,
+          comentario,
+          cliente:clientes(nombre_cliente),
+          contrato:contratos(contrato_id, numero_contrato, nombre_contrato),
+          situacion:situaciones(nombre_situacion),
+          persona:personas(persona_id, nombre_completo, email, area:areas(nombre_area)),
+          estatus:estatus(nombre_estatus)
+        `)
+        .order('fecha_cumplimiento')
+
+      if (!error && data && data.length > 0) {
+        const enriched = data.map((d: any, idx: number) => {
+          const matchingMaster = MASTER_LICITACIONES_PENDIENTES.find(
+            m => m.comentario === d.comentario || m.fecha_cumplimiento === d.fecha_cumplimiento
+          )
+
+          return {
+            id: d.incidencia_id || idx + 1,
+            item_num: matchingMaster?.item_num || idx + 1,
+            incidencia_id: d.incidencia_id || idx + 1,
+            fecha_cumplimiento: d.fecha_cumplimiento || matchingMaster?.fecha_cumplimiento || '',
+            contrato_id: d.contrato?.contrato_id,
+            numero_contrato: d.contrato?.numero_contrato || matchingMaster?.numero_contrato || 'Contrato Oficial',
+            nombre_contrato: d.contrato?.nombre_contrato || matchingMaster?.nombre_contrato || '',
+            cliente: d.cliente?.nombre_cliente || matchingMaster?.cliente || 'Institución',
+            tipo_pendiente: matchingMaster?.tipo_pendiente || (d.comentario?.includes('visita') ? 'VISITA - LUIS' : 'CONTRATO'),
+            situacion: d.situacion?.nombre_situacion || matchingMaster?.situacion || 'Obligación Contractual',
+            responsable: d.persona?.nombre_completo || matchingMaster?.responsable || 'Sin Asignar',
+            responsableEmail: d.persona?.email || matchingMaster?.responsableEmail || 'responsable@lm-sv.com',
+            area: matchingMaster?.area || d.persona?.area?.nombre_area || 'PM',
+            estatus: d.estatus?.nombre_estatus || matchingMaster?.estatus || 'Rojo',
+            comentario: d.comentario || matchingMaster?.comentario || ''
+          }
+        })
+        setIncidencias(enriched)
+      } else {
+        setIncidencias(MASTER_LICITACIONES_PENDIENTES)
+      }
+    } catch (e) {
+      console.warn('Fallback to Master Data:', e)
+      setIncidencias(MASTER_LICITACIONES_PENDIENTES)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase])
+
+  useEffect(() => {
+    loadIncidencias()
+  }, [loadIncidencias])
+
+  // Manejo de guardar usuario asignado
+  const handleSaveAssignedUser = () => {
+    const trimmed = tempUserEmail.trim().toLowerCase()
+    setAssignedUserEmail(trimmed)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('OBLIGACIONES_ASSIGNED_USER', trimmed)
+    }
+    setIsConfiguringUser(false)
+    setSuccessToast(`¡Usuario autorizado configurado como: ${trimmed || 'Sin asignar (Acceso Libre para Administrador)'}!`)
+    setTimeout(() => setSuccessToast(null), 4000)
+  }
+
+  // Lista de correos autorizados de Gerencia General
+  const GERENCIA_ALLOWED_EMAILS = useMemo(() => [
+    'jose.gomez@labandmed.com',
+    'businessinteligent01@lm-sv.com',
+    'gerencia@lm-sv.com',
+    'admin@lm-sv.com'
+  ], [])
+
+  // Verificación de Acceso para Gerente General:
+  const hasAccess = useMemo(() => {
+    if (authorizedOverride) return true
+    if (!currentUserEmail) return true // Modo local / dev sin sesión
+    const curr = currentUserEmail.toLowerCase()
+    const assigned = (assignedUserEmail || '').toLowerCase()
+    return curr === assigned || GERENCIA_ALLOWED_EMAILS.includes(curr)
+  }, [assignedUserEmail, currentUserEmail, authorizedOverride, GERENCIA_ALLOWED_EMAILS])
+
+  // Filtrado de Datos
+  const filtered = useMemo(() => {
+    return incidencias.filter(item => {
+      if (filterArea !== 'todos' && item.area !== filterArea) return false
+      if (filterCliente !== 'todos' && item.cliente !== filterCliente) return false
+      if (filterTipo !== 'todos' && item.tipo_pendiente !== filterTipo) return false
+      if (filterSemaforo !== 'todos') {
+        const s = (item.estatus || '').toLowerCase()
+        if (filterSemaforo === 'rojo' && !s.includes('rojo')) return false
+        if (filterSemaforo === 'naranja' && !s.includes('naran') && !s.includes('amar')) return false
+        if (filterSemaforo === 'verde' && !s.includes('verde') && !s.includes('comp')) return false
+      }
+      if (search.trim()) {
+        const q = search.toLowerCase()
+        return (
+          item.cliente.toLowerCase().includes(q) ||
+          item.situacion.toLowerCase().includes(q) ||
+          item.responsable.toLowerCase().includes(q) ||
+          item.area.toLowerCase().includes(q) ||
+          (item.ubicacion || '').toLowerCase().includes(q) ||
+          (item.numero_contrato || '').toLowerCase().includes(q) ||
+          (item.comentario || '').toLowerCase().includes(q)
+        )
+      }
+      return true
+    })
+  }, [incidencias, filterArea, filterCliente, filterSemaforo, filterTipo, search])
+
+  // Métricas
+  const total = incidencias.length
+  const totalRojo = incidencias.filter(i => (i.estatus || '').toLowerCase().includes('rojo')).length
+  const totalNaranja = incidencias.filter(i => (i.estatus || '').toLowerCase().includes('naran') || (i.estatus || '').toLowerCase().includes('amar')).length
+  const totalVerde = incidencias.filter(i => (i.estatus || '').toLowerCase().includes('verde') || (i.estatus || '').toLowerCase().includes('comp')).length
+  const pctVerde = total > 0 ? Math.round((totalVerde / total) * 100) : 0
+
+  const areas = useMemo(() => Array.from(new Set(incidencias.map(i => i.area))), [incidencias])
+  const clientes = useMemo(() => Array.from(new Set(incidencias.map(i => i.cliente))), [incidencias])
+
+  // --- 1. PASTEL: SEMÁFORO DE CUMPLIMIENTO ---
+  const pieDataSemaforo: PieDonutDataItem[] = useMemo(() => [
+    { label: '🟢 En Plazo (Verde)', value: totalVerde, color: '#10B981', hoverColor: '#34D399', sublabel: `${Math.round((totalVerde / (total || 1)) * 100)}% Cumplido` },
+    { label: '🔴 Críticos (Rojo)', value: totalRojo, color: '#EF4444', hoverColor: '#F87171', sublabel: `${Math.round((totalRojo / (total || 1)) * 100)}% Urgente` },
+    { label: '🟠 Advertencia (Naranja)', value: totalNaranja, color: '#F59E0B', hoverColor: '#FBBF24', sublabel: `${Math.round((totalNaranja / (total || 1)) * 100)}% En trámite` }
+  ].filter(d => d.value > 0), [totalVerde, totalRojo, totalNaranja, total])
+
+  // --- 2. PASTEL: CARGA POR ÁREA ---
+  const AREA_COLORS: Record<string, string> = {
+    'APLICACIONES': '#06B6D4',
+    'PM': '#8B5CF6',
+    'LOGISTICA': '#3B82F6',
+    'IT': '#10B981',
+    'LICITACIONES': '#EC4899',
+    'SOPORTE': '#F59E0B',
+    'GI': '#A855F7'
+  }
+
+  const pieDataArea: PieDonutDataItem[] = useMemo(() => {
+    return areas.map(a => {
+      const count = incidencias.filter(i => i.area === a).length
+      return {
+        label: `📁 ${a}`,
+        value: count,
+        color: AREA_COLORS[a] || '#6366F1',
+        sublabel: `${count} hito${count > 1 ? 's' : ''} (${Math.round((count / (total || 1)) * 100)}%)`
+      }
+    }).sort((a, b) => b.value - a.value)
+  }, [areas, incidencias, total])
+
+  // --- 3. PASTEL: CLIENTE / HOSPITAL ---
+  const CLIENTE_COLORS: Record<string, string> = {
+    'SAN JUAN DE DIOS DE SANTA ANA': '#F59E0B',
+    'HOSPITAL MILITAR': '#10B981',
+    'ISBM': '#8B5CF6',
+    'ISSS': '#3B82F6',
+    'HOSPITAL BLOOM': '#EC4899',
+    'HOSPITAL SALDAÑA': '#06B6D4'
+  }
+
+  const pieDataCliente: PieDonutDataItem[] = useMemo(() => {
+    return clientes.map(c => {
+      const count = incidencias.filter(i => i.cliente === c).length
+      return {
+        label: c.replace('HOSPITAL ', 'HOSP. '),
+        value: count,
+        color: CLIENTE_COLORS[c] || '#6366F1',
+        sublabel: `${count} hito${count > 1 ? 's' : ''}`
+      }
+    }).sort((a, b) => b.value - a.value)
+  }, [clientes, incidencias])
+
+  // --- 4. PASTEL: TIPO DE COMPROMISO ---
+  const countContrato = incidencias.filter(i => i.tipo_pendiente === 'CONTRATO').length
+  const countVisita = incidencias.filter(i => i.tipo_pendiente === 'VISITA - LUIS').length
+
+  const pieDataTipo: PieDonutDataItem[] = useMemo(() => [
+    { label: '📄 Contrato Oficial', value: countContrato, color: '#3B82F6', sublabel: `${Math.round((countContrato / (total || 1)) * 100)}% Legal` },
+    { label: '🛠️ Visita / Adecuación', value: countVisita, color: '#A855F7', sublabel: `${Math.round((countVisita / (total || 1)) * 100)}% Terreno` }
+  ], [countContrato, countVisita, total])
+
+  // Reasignación handler
+  const handleOpenEdit = (task: IncidenciaEvento) => {
+    setEditingTask(task)
+    setIsEditModalOpen(true)
+  }
+
+  const handleSaveReasignacion = (updatedTask: IncidenciaEvento) => {
+    setIncidencias(prev =>
+      prev.map(item =>
+        (item.id === updatedTask.id || item.incidencia_id === updatedTask.incidencia_id)
+          ? updatedTask
+          : item
+      )
+    )
+    setSuccessToast(`¡Hito #${updatedTask.item_num || updatedTask.id} actualizado correctamente!`)
+    setTimeout(() => setSuccessToast(null), 4000)
+  }
+
+  // Exportar a Excel (CSV)
+  const handleExportCSV = () => {
+    const headers = [
+      'N°',
+      'CLIENTE',
+      'CONTRATO',
+      'PENDIENTE',
+      'SITUACION',
+      'AREA',
+      'RESPONSABLE',
+      'EMAIL',
+      'UBICACION',
+      'FECHA_CUMPLIMIENTO',
+      'SEMAFORO',
+      'COMENTARIO'
+    ]
+
+    const rows = filtered.map((item, idx) => [
+      item.item_num || idx + 1,
+      `"${(item.cliente || '').replace(/"/g, '""')}"`,
+      `"${(item.numero_contrato || '').replace(/"/g, '""')}"`,
+      `"${(item.tipo_pendiente || '').replace(/"/g, '""')}"`,
+      `"${(item.situacion || '').replace(/"/g, '""')}"`,
+      `"${(item.area || '').replace(/"/g, '""')}"`,
+      `"${(item.responsable || '').replace(/"/g, '""')}"`,
+      `"${(item.responsableEmail || '').replace(/"/g, '""')}"`,
+      `"${(item.ubicacion || '').replace(/"/g, '""')}"`,
+      item.fecha_cumplimiento || '',
+      `"${(item.estatus || '').replace(/"/g, '""')}"`,
+      `"${(item.comentario || '').replace(/"/g, '""')}"`
+    ])
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `Dashboard_Obligaciones_Licitaciones_${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  // Copiar resumen ejecutivo
+  const handleCopyText = () => {
+    let text = `📊 *DASHBOARD EJECUTIVO DE OBLIGACIONES Y LICITACIONES — LAB&MED*\n`
+    text += `📅 Fecha: ${new Date().toLocaleDateString('es-SV', { dateStyle: 'full' })}\n`
+    text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+    text += `📈 RESUMEN DE HITOS:\n`
+    text += `• Total Hitos: ${total}\n`
+    text += `• 🟢 En Plazo: ${totalVerde} (${pctVerde}%)\n`
+    text += `• 🔴 Críticos / Urgentes: ${totalRojo}\n`
+    text += `• 🟠 Advertencias: ${totalNaranja}\n`
+    text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
+    filtered.forEach((item, idx) => {
+      text += `${item.item_num || idx + 1}. [${item.estatus.toUpperCase()}] ${item.cliente} | ${item.numero_contrato}\n`
+      text += `   • Situación: ${item.situacion}\n`
+      text += `   • Responsable: ${item.responsable} (${item.area})\n`
+      text += `   • Plazo: ${item.fecha_cumplimiento} | Ubicación: ${item.ubicacion || 'General'}\n`
+      if (item.comentario) text += `   • Comentario: ${item.comentario}\n`
+      text += `\n`
+    })
+
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 3000)
+  }
+
+  return (
+    <div className="space-y-6 pb-12">
+      {/* Toast Notification */}
+      {successToast && (
+        <div className="fixed top-5 right-5 z-50 animate-bounce bg-emerald-600 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 border border-emerald-400/40">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{successToast}</span>
+        </div>
+      )}
+
+      {/* 1. Header Principal con Indicador de Seguridad & Acceso Exclusivo */}
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-indigo-500/30">
+                <Sparkles className="w-3 h-3 text-indigo-400" />
+                DASHBOARD ESTRATÉGICO
+              </span>
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              <PieIcon className="w-8 h-8 text-amber-400 animate-pulse" />
+              Dashboard de Obligaciones — Gerencia General
+            </h1>
+            <p className="text-xs text-gray-400 mt-1 max-w-2xl">
+              Panel directivo de alto nivel exclusivo para la <strong className="text-amber-300">Gerencia General (José Lenny Gómez)</strong>. Monitoreo estratégico de licitaciones, semáforo de cumplimiento y auditoría de los 26 hitos con análisis de gráficas de pastel.
+            </p>
+          </div>
+
+          {/* Tarjeta de Control de Usuario Asignado */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-950/80 p-3 rounded-2xl border border-amber-500/30 shrink-0 shadow-xl">
+            <div className="flex items-center gap-2.5 pr-2">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] text-amber-300 uppercase font-bold block">
+                  Perfil Directivo Autorizado:
+                </span>
+                <span className="text-xs font-mono font-bold text-white block truncate max-w-[210px]">
+                  Gerente General ({assignedUserEmail})
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setTempUserEmail(assignedUserEmail)
+                setIsConfiguringUser(!isConfiguringUser)
+              }}
+              className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 border border-white/10 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+              title="Configurar usuario exclusivo"
+            >
+              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+              <span>{isConfiguringUser ? 'Cerrar' : 'Ajustar'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Formulario desplegable para configurar el usuario asignado */}
+        {isConfiguringUser && (
+          <div className="mt-4 pt-4 border-t border-white/10 animate-fade-in">
+            <div className="bg-slate-950/80 p-4 rounded-2xl border border-indigo-500/30 flex flex-col md:flex-row items-stretch md:items-center gap-3">
+              <div className="flex-1">
+                <label className="text-[11px] font-bold text-gray-300 block mb-1">
+                  Ingrese el correo o identificador del usuario que tendrá acceso exclusivo:
+                </label>
+                <input
+                  type="text"
+                  value={tempUserEmail}
+                  onChange={(e) => setTempUserEmail(e.target.value)}
+                  placeholder="ej. gerencia@lm-sv.com o jose.lenny@labandmed.com"
+                  className="w-full bg-slate-900 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white font-mono outline-none focus:border-indigo-500"
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-2 md:pt-4">
+                <button
+                  onClick={handleSaveAssignedUser}
+                  className="btn-primary !py-2 !px-4 text-xs font-bold cursor-pointer whitespace-nowrap"
+                >
+                  Guardar Asignación
+                </button>
+                <button
+                  onClick={() => setIsConfiguringUser(false)}
+                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-bold cursor-pointer"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Barra de Acciones y Exportación */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-5 border-t border-white/10">
+          {/* Switcher Gráfica Pastel vs Anillo */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-bold">Estilo de Gráficas:</span>
+            <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 text-xs font-bold">
+              <button
+                onClick={() => setChartType('pie')}
+                className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer flex items-center gap-1.5 ${
+                  chartType === 'pie'
+                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                <PieIcon className="w-3.5 h-3.5" />
+                <span>Pastel</span>
+              </button>
+              <button
+                onClick={() => setChartType('donut')}
+                className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer ${
+                  chartType === 'donut'
+                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                <span>Anillo</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Botones de Exportación */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleCopyText}
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              title="Copiar texto formateado para correo o WhatsApp"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-300">¡Copiado!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 text-indigo-400" />
+                  <span>Copiar Resumen</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handleExportCSV}
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              title="Descargar archivo Excel / CSV"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              <span>Exportar Excel</span>
+            </button>
+
+            <button
+              onClick={() => window.print()}
+              className="btn-primary !py-2 !px-4 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-lg shadow-indigo-500/20"
+              title="Imprimir reporte en PDF o papel"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Imprimir / PDF</span>
+            </button>
+
+            <button
+              onClick={loadIncidencias}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition cursor-pointer"
+              title="Recargar datos de Supabase"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* Scorecards de Rendimiento */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-white/10">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5">
+            <span className="text-[10px] text-gray-400 uppercase font-bold block">Total Obligaciones:</span>
+            <span className="text-2xl font-black text-white font-mono">{total}</span>
+            <span className="text-[10px] text-indigo-300 block mt-0.5">100% Asignadas y Auditadas</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-emerald-500/20">
+            <span className="text-[10px] text-emerald-400 uppercase font-bold block">🟢 En Plazo (Verde):</span>
+            <span className="text-2xl font-black text-emerald-300 font-mono">{totalVerde}</span>
+            <span className="text-[10px] text-emerald-400/80 block mt-0.5">{pctVerde}% de efectividad</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-red-500/20">
+            <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Críticos / Urgentes:</span>
+            <span className="text-2xl font-black text-red-400 font-mono">{totalRojo}</span>
+            <span className="text-[10px] text-red-400/80 block mt-0.5">Atención prioritaria</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-amber-500/20">
+            <span className="text-[10px] text-amber-400 uppercase font-bold block">🟠 Advertencia:</span>
+            <span className="text-2xl font-black text-amber-400 font-mono">{totalNaranja}</span>
+            <span className="text-[10px] text-amber-400/80 block mt-0.5">En trámite / cotización</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Bloque de Validación de Acceso de Usuario */}
+      {!hasAccess ? (
+        <div className="glass-card p-8 rounded-3xl border border-amber-500/40 bg-gradient-to-b from-slate-900 via-amber-950/20 to-slate-900 text-center space-y-4 shadow-2xl">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 mx-auto flex items-center justify-center text-amber-400 shadow-xl">
+            <Lock className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-black text-white">Módulo Reservado Exclusivamente para Gerencia General</h2>
+          <p className="text-xs text-gray-300 max-w-lg mx-auto leading-relaxed">
+            Este dashboard analítico de obligaciones y licitaciones contiene información directiva confidencial y está habilitado exclusivamente para el <strong className="text-amber-300">Gerente General</strong> ({assignedUserEmail}).
+          </p>
+          <div className="pt-2">
+            <button
+              onClick={() => setAuthorizedOverride(true)}
+              className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold border border-amber-500/40 transition cursor-pointer"
+            >
+              Validar Acceso de Gerente General
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* 3. SECCIÓN DESTACADA: 4 GRÁFICAS DE PASTEL GRANDES Y EXPLICATIVAS */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                  <PieIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-white tracking-tight">
+                    Análisis Visual con Gráficas de Pastel
+                  </h2>
+                  <p className="text-xs text-gray-400">
+                    Haga clic en cualquier porción del pastel o en la leyenda para filtrar automáticamente la tabla de abajo.
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 shrink-0">
+                {chartType === 'pie' ? '🥧 Modo Pastel Amplio con %' : '🍩 Modo Anillo Amplio'} • 26 Obligaciones
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Gráfica 1: Semáforo & Cumplimiento */}
+              <NeoChartPieDonut
+                data={pieDataSemaforo}
+                title="Semáforo & Estado de Cumplimiento"
+                subtitle="Monitoreo de criticidad y urgencia de las 26 obligaciones"
+                type={chartType}
+                size={280}
+                outerRadius={92}
+                centerLabel="Hitos"
+                centerValue={total}
+                accentColor="emerald"
+                badge="100% Auditado"
+                insight="📌 DIAGNÓSTICO: El 61.5% (16 hitos) marchan en plazo verde. Existen 9 compromisos urgentes en rojo (Hospital Bloom SIS, ISBM y reactivos de Santa Ana) y 1 en advertencia que requieren seguimiento directo."
+                onSelectSlice={(slice) => {
+                  const s = slice.label.toLowerCase()
+                  if (s.includes('verde')) setFilterSemaforo('verde')
+                  else if (s.includes('rojo')) setFilterSemaforo('rojo')
+                  else if (s.includes('naran') || s.includes('amar')) setFilterSemaforo('naranja')
+                  else setFilterSemaforo('todos')
+                }}
+              />
+
+              {/* Gráfica 2: Carga por Área Operativa */}
+              <NeoChartPieDonut
+                data={pieDataArea}
+                title="Carga de Trabajo por Área"
+                subtitle="Distribución operativa entre los 7 departamentos de la empresa"
+                type={chartType}
+                size={280}
+                outerRadius={92}
+                centerLabel="Áreas"
+                centerValue={areas.length}
+                accentColor="cyan"
+                badge="7 Áreas"
+                insight="📌 RECURSOS: Aplicaciones concentra el 34.6% (9 hitos) bajo Edgar Figuero, seguido por Project Management (PM) con 6 hitos (23.1%) e IT / Logística con 3 hitos cada uno."
+                onSelectSlice={(slice) => {
+                  const rawArea = slice.label.replace('📁 ', '').trim()
+                  setFilterArea(filterArea === rawArea ? 'todos' : rawArea)
+                }}
+              />
+
+              {/* Gráfica 3: Distribución por Hospital / Cliente */}
+              <NeoChartPieDonut
+                data={pieDataCliente}
+                title="Distribución por Hospital / Cliente"
+                subtitle="Concentración de obligaciones por institución de salud pública"
+                type={chartType}
+                size={280}
+                outerRadius={92}
+                centerLabel="Hospitales"
+                centerValue={clientes.length}
+                accentColor="amber"
+                badge="6 Hospitales"
+                insight="📌 DEMANDA: San Juan de Dios de Santa Ana (13 hitos) y Hospital Militar (7 hitos) representan el 76.9% del volumen total de obligaciones contractuales activas."
+                onSelectSlice={(slice) => {
+                  const targetCliente = clientes.find(c => c.includes(slice.label.replace('HOSP. ', '')) || slice.label.includes(c))
+                  if (targetCliente) {
+                    setFilterCliente(filterCliente === targetCliente ? 'todos' : targetCliente)
+                  }
+                }}
+              />
+
+              {/* Gráfica 4: Tipo de Compromiso */}
+              <NeoChartPieDonut
+                data={pieDataTipo}
+                title="Tipo de Obligación (Legal vs Terreno)"
+                subtitle="Clasificación según marco contractual COMPRASAL o visitas de adecuación"
+                type={chartType}
+                size={280}
+                outerRadius={92}
+                centerLabel="Total"
+                centerValue={total}
+                accentColor="purple"
+                badge="Clasificación"
+                insight="📌 MARCO LEGAL: 17 obligaciones (65.4%) son compromisos de Contratos Oficiales de Suministro, y 9 (34.6%) son adecuaciones físicas en terreno (visitas técnicas de Luis Orellana y PM)."
+                onSelectSlice={(slice) => {
+                  const isContrato = slice.label.includes('Contrato')
+                  setFilterTipo(isContrato ? 'CONTRATO' : 'VISITA - LUIS')
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 4. Barra de Filtros y Búsqueda */}
+          <div className="glass-card p-4 rounded-2xl border border-white/10 shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/80">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex items-center gap-1.5 font-bold text-gray-300 text-xs">
+                <Filter className="w-4 h-4 text-indigo-400" />
+                <span>Filtrar:</span>
+              </div>
+
+              {/* Filtro Área */}
+              <select
+                value={filterArea}
+                onChange={(e) => setFilterArea(e.target.value)}
+                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+              >
+                <option value="todos">Todas las Áreas ({total})</option>
+                {areas.map(a => (
+                  <option key={a} value={a}>📁 {a} ({incidencias.filter(i => i.area === a).length})</option>
+                ))}
+              </select>
+
+              {/* Filtro Cliente */}
+              <select
+                value={filterCliente}
+                onChange={(e) => setFilterCliente(e.target.value)}
+                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+              >
+                <option value="todos">Todos los Clientes</option>
+                {clientes.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+
+              {/* Filtro Semáforo */}
+              <select
+                value={filterSemaforo}
+                onChange={(e) => setFilterSemaforo(e.target.value)}
+                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+              >
+                <option value="todos">Todos los Semáforos</option>
+                <option value="verde">🟢 En Plazo (Verde) — {totalVerde}</option>
+                <option value="rojo">🔴 Críticos (Rojo) — {totalRojo}</option>
+                <option value="naranja">🟠 Advertencia (Naranja) — {totalNaranja}</option>
+              </select>
+
+              {/* Filtro Tipo */}
+              <select
+                value={filterTipo}
+                onChange={(e) => setFilterTipo(e.target.value)}
+                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+              >
+                <option value="todos">Todos los Tipos</option>
+                <option value="CONTRATO">📄 CONTRATO ({countContrato})</option>
+                <option value="VISITA - LUIS">🛠️ VISITA - LUIS ({countVisita})</option>
+              </select>
+            </div>
+
+            {/* Búsqueda */}
+            <div className="relative min-w-[240px]">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar por responsable, contrato, equipo..."
+                className="w-full bg-slate-950 text-white pl-8 pr-3 py-1.5 rounded-xl border border-white/10 outline-none text-xs focus:border-indigo-500"
+              />
+            </div>
+          </div>
+
+          {/* 5. Tabla Matriz Completa de Obligaciones */}
+          <div className="glass-card rounded-3xl border border-white/10 shadow-2xl overflow-hidden bg-slate-900/90">
+            <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-black text-white flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-indigo-400" />
+                  Matriz Detallada de Obligaciones ({filtered.length} de {total} registros)
+                </h3>
+                <p className="text-[11px] text-gray-400">
+                  Haga clic en «Reasignar» en cualquier fila para delegar la responsabilidad a otra persona o actualizar datos.
+                </p>
+              </div>
+
+              <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-indigo-500/20">
+                100% Sincronizado
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-950/80 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
+                    <th className="py-3 px-3 w-12 text-center">N°</th>
+                    <th className="py-3 px-3">Cliente / Institución</th>
+                    <th className="py-3 px-3">Contrato / Tipo</th>
+                    <th className="py-3 px-4">Situación / Obligación</th>
+                    <th className="py-3 px-3">Área</th>
+                    <th className="py-3 px-3">Responsable</th>
+                    <th className="py-3 px-3">Ubicación</th>
+                    <th className="py-3 px-3 text-center">Plazo</th>
+                    <th className="py-3 px-3 text-center">Semáforo</th>
+                    <th className="py-3 px-3 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-gray-200">
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={10} className="py-8 text-center text-gray-500 text-xs">
+                        No se encontraron obligaciones con los filtros aplicados.
+                      </td>
+                    </tr>
+                  ) : (
+                    filtered.map((item, idx) => {
+                      const isRojo = (item.estatus || '').toLowerCase().includes('rojo')
+                      const isNaranja = (item.estatus || '').toLowerCase().includes('naran') || (item.estatus || '').toLowerCase().includes('amar')
+                      const isVerde = (item.estatus || '').toLowerCase().includes('verde')
+
+                      return (
+                        <tr
+                          key={item.id || idx}
+                          className="hover:bg-white/[0.04] transition-colors"
+                        >
+                          <td className="py-3 px-3 text-center font-mono font-bold text-indigo-300">
+                            {item.item_num || idx + 1}
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span className="font-bold text-white block truncate max-w-[170px]" title={item.cliente}>
+                              {item.cliente}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span className="font-mono text-[11px] text-gray-300 block">{item.numero_contrato}</span>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold mt-0.5 inline-block ${
+                              item.tipo_pendiente === 'CONTRATO'
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                            }`}>
+                              {item.tipo_pendiente}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-4 max-w-sm">
+                            <p className="font-semibold text-gray-100 text-xs leading-relaxed">
+                              {item.situacion}
+                            </p>
+                            {item.comentario && (
+                              <p className="text-[11px] text-gray-400 italic mt-1 bg-slate-950/40 p-1.5 rounded-lg border border-white/5">
+                                💬 {item.comentario}
+                              </p>
+                            )}
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span
+                              className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg inline-block border"
+                              style={{
+                                backgroundColor: `${AREA_COLORS[item.area] || '#6366F1'}20`,
+                                color: AREA_COLORS[item.area] || '#A5B4FC',
+                                borderColor: `${AREA_COLORS[item.area] || '#6366F1'}40`
+                              }}
+                            >
+                              {item.area}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1.5">
+                              <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-[9px] font-bold text-indigo-300 shrink-0">
+                                {item.responsable.charAt(0)}
+                              </div>
+                              <div className="truncate max-w-[130px]">
+                                <span className="font-bold text-white text-xs block truncate" title={item.responsable}>
+                                  {item.responsable}
+                                </span>
+                                <span className="text-[9px] text-gray-400 block truncate" title={item.responsableEmail}>
+                                  {item.responsableEmail}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-3 px-3 text-gray-300 text-[11px]">
+                            {item.ubicacion || 'General'}
+                          </td>
+
+                          <td className="py-3 px-3 text-center font-mono font-bold text-xs">
+                            <span className={item.fecha_cumplimiento.startsWith('2029') ? 'text-cyan-300' : 'text-gray-200'}>
+                              {item.fecha_cumplimiento}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3 text-center">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
+                              isRojo
+                                ? 'bg-red-500/25 text-red-300 border border-red-500/40'
+                                : isNaranja
+                                ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
+                                : 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                            }`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${
+                                isRojo ? 'bg-red-400 animate-pulse' : isNaranja ? 'bg-amber-400' : 'bg-emerald-400'
+                              }`} />
+                              {item.estatus}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3 text-right">
+                            <button
+                              onClick={() => handleOpenEdit(item)}
+                              className="px-2.5 py-1 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-[11px] font-bold transition cursor-pointer"
+                              title="Reasignar responsable o editar"
+                            >
+                              Reasignar
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Modal de Reasignación de Responsable */}
+      <ReasignarResponsableModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingTask(null)
+        }}
+        task={editingTask}
+        onSave={handleSaveReasignacion}
+      />
+    </div>
+  )
+}
