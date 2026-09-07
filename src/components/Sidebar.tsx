@@ -1,38 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   FileText,
   CalendarClock,
   Boxes,
   LogOut,
   ChevronLeft,
-  Shield,
-  ShieldCheck,
   Database,
   PieChart as PieIcon,
-  Lock
+  ShieldCheck,
+  LayoutDashboard
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 import LabMedLogo from '@/components/LabMedLogo'
-
-const navItems = [
-  { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
-  { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
-  { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
-  { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
-  { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
-  {
-    href: '/dashboard/obligaciones',
-    label: 'Dashboard Obligaciones',
-    icon: PieIcon,
-    badge: 'Gerente General',
-    badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
-  },
-]
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -40,11 +23,94 @@ export default function Sidebar() {
   const router = useRouter()
   const supabase = createClient()
 
+  // User state
+  const [userProfile, setUserProfile] = useState<{
+    email: string
+    nombre: string
+    apellido: string
+    departamento: string
+    isGerenteGeneral: boolean
+  }>({
+    email: '',
+    nombre: 'Usuario',
+    apellido: '',
+    departamento: 'Cargando...',
+    isGerenteGeneral: false
+  })
+
+  useEffect(() => {
+    async function loadUserProfile() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user || !user.email) return
+
+        const userEmail = user.email.toLowerCase()
+        const isGerente = userEmail.includes('aaltunaher') || userEmail.includes('gerencia')
+
+        // Fetch public user row
+        const { data: dbUser } = await supabase
+          .from('users')
+          .select('nombre, apellido, departamento')
+          .ilike('email', userEmail)
+          .single()
+
+        const nombre = dbUser?.nombre || (user.user_metadata?.nombre) || (isGerente ? 'Antonio' : 'José Lenny')
+        const apellido = dbUser?.apellido || (user.user_metadata?.apellido) || (isGerente ? 'Altuna Hernandez' : 'Gómez')
+        const depto = dbUser?.departamento || (isGerente ? 'Gerente General' : 'Planificación Estratégica & Dirección')
+        const isGG = isGerente || depto.toLowerCase().includes('gerente general')
+
+        setUserProfile({
+          email: userEmail,
+          nombre,
+          apellido,
+          departamento: depto,
+          isGerenteGeneral: isGG
+        })
+      } catch (err) {
+        console.warn('Error loading user in sidebar:', err)
+      }
+    }
+    loadUserProfile()
+  }, [supabase])
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/login')
     router.refresh()
   }
+
+  // Define navigation items based on user role
+  const navItems = userProfile.isGerenteGeneral
+    ? [
+        {
+          href: '/dashboard/obligaciones',
+          label: 'Dashboard Obligaciones',
+          icon: PieIcon,
+          badge: 'Principal',
+          badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 font-bold'
+        },
+        {
+          href: '/dashboard/stock',
+          label: 'Stock & Inventario BI',
+          icon: Boxes
+        }
+      ]
+    : [
+        { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
+        { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
+        { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
+        { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
+        { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
+        {
+          href: '/dashboard/obligaciones',
+          label: 'Dashboard Obligaciones',
+          icon: PieIcon,
+          badge: 'Gerente General',
+          badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
+        },
+      ]
+
+  const initials = `${userProfile.nombre.charAt(0)}${userProfile.apellido.charAt(0) || userProfile.nombre.charAt(1) || 'U'}`.toUpperCase()
 
   return (
     <aside
@@ -92,15 +158,21 @@ export default function Sidebar() {
         <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-gray-400">Usuario Activo</span>
-            <span className="badge bg-indigo-500/20 text-indigo-300 text-[9px] px-1.5 font-mono">Control Total</span>
+            <span className={`badge ${userProfile.isGerenteGeneral ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/20 text-indigo-300'} text-[9px] px-1.5 font-mono`}>
+              {userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow">
-              LG
+            <div className={`w-7 h-7 rounded-lg ${userProfile.isGerenteGeneral ? 'bg-gradient-to-tr from-amber-500 to-orange-600' : 'bg-gradient-to-tr from-indigo-500 to-violet-500'} flex items-center justify-center text-xs font-bold text-white shadow`}>
+              {initials}
             </div>
             <div className="truncate">
-              <p className="text-xs font-bold text-gray-100 truncate">José Lenny Gómez</p>
-              <p className="text-[10px] text-amber-300 font-semibold truncate">⚡ Planner Estratégico & Gerente</p>
+              <p className="text-xs font-bold text-gray-100 truncate">
+                {userProfile.nombre} {userProfile.apellido}
+              </p>
+              <p className={`text-[10px] ${userProfile.isGerenteGeneral ? 'text-amber-300' : 'text-indigo-300'} font-semibold truncate`}>
+                {userProfile.departamento}
+              </p>
             </div>
           </div>
         </div>
@@ -131,3 +203,4 @@ export default function Sidebar() {
     </aside>
   )
 }
+

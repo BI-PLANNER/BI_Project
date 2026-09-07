@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import {
   Database,
@@ -30,7 +31,8 @@ import {
   UserCheck,
   Zap,
   HelpCircle,
-  Bookmark
+  Bookmark,
+  PieChart as PieIcon
 } from 'lucide-react'
 import PresionEmailModal from '@/components/PresionEmailModal'
 import { dbInsert, dbUpdate, dbDelete, dbSelect } from '@/lib/api_3fn'
@@ -335,10 +337,28 @@ export default function GestionTablasPage() {
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState<any>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
+  const [isRestrictedGerente, setIsRestrictedGerente] = useState(false)
 
   // Presion Email Modal state
   const [presionModalOpen, setPresionModalOpen] = useState(false)
   const [selectedTaskForPressure, setSelectedTaskForPressure] = useState<any>(null)
+
+  useEffect(() => {
+    async function checkUserRole() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user?.email) {
+          const email = user.email.toLowerCase()
+          if (email.includes('aaltunaher')) {
+            setIsRestrictedGerente(true)
+          }
+        }
+      } catch (err) {
+        console.warn('Error checking user role in tablas:', err)
+      }
+    }
+    checkUserRole()
+  }, [supabase])
 
   const config = TABLE_CONFIGS[selectedTable] || {
     pk: 'id',
@@ -483,6 +503,31 @@ export default function GestionTablasPage() {
     const list = relCatalogs[field.relation] || []
     const match = list.find(item => item[field.relKey] == val)
     return match ? match[field.relLabel] : `#${val}`
+  }
+
+  if (isRestrictedGerente) {
+    return (
+      <div className="p-6 max-w-xl mx-auto mt-16 text-center space-y-6">
+        <div className="glass-card p-10 rounded-3xl border border-white/10 shadow-2xl space-y-5 bg-slate-950/80">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center mx-auto border border-amber-500/30">
+            <ShieldAlert className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Módulo Operativo Restringido</h2>
+          <p className="text-xs text-gray-400 leading-relaxed">
+            Tu perfil de <strong className="text-amber-300">Gerente General</strong> está configurado con acceso exclusivo a los <strong>Dashboards Estratégicos y de Obligaciones</strong>.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/dashboard/obligaciones"
+              className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold shadow-lg shadow-indigo-600/30"
+            >
+              <PieIcon className="w-4 h-4" />
+              <span>Ir al Dashboard de Obligaciones</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
