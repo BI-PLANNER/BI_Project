@@ -30,6 +30,95 @@ import {
   ShieldAlert
 } from 'lucide-react'
 import { dbSelect, dbInsert, dbUpdate, dbDelete } from '@/lib/api_3fn'
+import { MASTER_LICITACIONES_PENDIENTES } from '@/app/dashboard/planner/page'
+
+// 6 Contratos Institucionales Oficiales de la Matriz del Usuario
+export const MASTER_CONTRATOS = [
+  {
+    contrato_id: '430884ea-80db-4e96-9f6b-66e4390e3332',
+    numero_contrato: 'N° 68/2026',
+    nombre_contrato: 'Contrato Hospital Nacional de Niños Benjamín Bloom',
+    cliente_id: 18,
+    cliente_nombre: 'HOSPITAL BLOOM',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  },
+  {
+    contrato_id: 'c5aab7f8-e369-468f-b55b-d6f0e0af0e94',
+    numero_contrato: 'CT No 13-BS-2026',
+    nombre_contrato: 'Contrato Hospital Militar Central',
+    cliente_id: 17,
+    cliente_nombre: 'HOSPITAL MILITAR',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  },
+  {
+    contrato_id: '9301a73d-64cc-4334-b32b-0c64895d7f15',
+    numero_contrato: 'CT No 16/2026',
+    nombre_contrato: 'Contrato San Juan de Dios de Santa Ana',
+    cliente_id: 15,
+    cliente_nombre: 'SAN JUAN DE DIOS DE SANTA ANA',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  },
+  {
+    contrato_id: '40fb3832-7ee1-4e0b-a2b4-3d245d59b912',
+    numero_contrato: 'CT No AD-014/2026-ISBM',
+    nombre_contrato: 'Contrato ISBM Electrolitos & Gases',
+    cliente_id: 14,
+    cliente_nombre: 'ISBM',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  },
+  {
+    contrato_id: 'ec14a9c3-bfcf-4da4-8483-b9734dd2b47c',
+    numero_contrato: 'SM-022/2024',
+    nombre_contrato: 'Contrato ISSS ERITRO & Insumos',
+    cliente_id: 13,
+    cliente_nombre: 'ISSS',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  },
+  {
+    contrato_id: '26a2c588-0b89-4da3-acee-dc4d03f57a22',
+    numero_contrato: 'CT-SALDAÑA-2026',
+    nombre_contrato: 'Contrato Hospital Saldaña',
+    cliente_id: 16,
+    cliente_nombre: 'HOSPITAL SALDAÑA',
+    empresa_id: 1,
+    empresa_nombre: 'LABANDMED S.A. DE C.V.',
+    monto_total: 0,
+    fecha_inicio: '2026-01-01',
+    fecha_fin: '2026-12-31',
+    fianza_cumplimiento_estado: 'Entregada',
+    fianza_buena_inversion_estado: 'Pendiente'
+  }
+]
 
 // Visual themes per client institution
 const CLIENT_THEMES: Record<string, { bg: string, border: string, text: string, badge: string, dot: string }> = {
@@ -55,10 +144,10 @@ const AREA_BADGES: Record<string, string> = {
 }
 
 export default function ContratosPage() {
-  const [contratos, setContratos] = useState<any[]>([])
+  const [contratos, setContratos] = useState<any[]>(MASTER_CONTRATOS)
   const [clientes, setClientes] = useState<any[]>([])
   const [empresas, setEmpresas] = useState<any[]>([])
-  const [incidencias, setIncidencias] = useState<any[]>([])
+  const [incidencias, setIncidencias] = useState<any[]>(MASTER_LICITACIONES_PENDIENTES)
   const [contratoProcesos, setContratoProcesos] = useState<any[]>([])
   const [personas, setPersonas] = useState<any[]>([])
   const [areas, setAreas] = useState<any[]>([])
@@ -66,11 +155,15 @@ export default function ContratosPage() {
   const [estatusList, setEstatusList] = useState<any[]>([])
   const [roles, setRoles] = useState<any[]>([])
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [selectedClienteFilter, setSelectedClienteFilter] = useState('todos')
   const [selectedSemaforoFilter, setSelectedSemaforoFilter] = useState('todos')
-  const [expandedContratos, setExpandedContratos] = useState<Record<string, boolean>>({})
+  const [expandedContratos, setExpandedContratos] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {}
+    MASTER_CONTRATOS.forEach(c => { init[c.contrato_id] = true })
+    return init
+  })
 
   // Modal Contrato
   const [showContractModal, setShowContractModal] = useState(false)
@@ -139,25 +232,18 @@ export default function ContratosPage() {
         dbSelect('roles')
       ])
 
-      setContratos(conData || [])
-      setClientes(cliData || [])
-      setEmpresas(empData || [])
-      setIncidencias(incData || [])
-      setContratoProcesos(cpData || [])
-      setPersonas(perData || [])
-      setAreas(arData || [])
-      setSituaciones(sitData || [])
-      setEstatusList(estData || [])
-      setRoles(roData || [])
-
-      // Auto-expand all contracts on initial load
       if (conData && conData.length > 0) {
-        const initialExpanded: Record<string, boolean> = {}
-        conData.forEach((c: any) => {
-          initialExpanded[c.contrato_id] = true
-        })
-        setExpandedContratos(initialExpanded)
+        setContratos(conData)
       }
+      if (cliData && cliData.length > 0) setClientes(cliData)
+      if (empData && empData.length > 0) setEmpresas(empData)
+      if (incData && incData.length > 0) setIncidencias(incData)
+      if (cpData) setContratoProcesos(cpData)
+      if (perData && perData.length > 0) setPersonas(perData)
+      if (arData && arData.length > 0) setAreas(arData)
+      if (sitData && sitData.length > 0) setSituaciones(sitData)
+      if (estData && estData.length > 0) setEstatusList(estData)
+      if (roData && roData.length > 0) setRoles(roData)
     } catch (err) {
       console.error('Error cargando contratos y obligaciones:', err)
     } finally {
@@ -205,32 +291,52 @@ export default function ContratosPage() {
   // Aggregate contracts with their linked client, company, and obligations
   const contractsWithObligations = useMemo(() => {
     return contratos.map(c => {
-      const cliente = clientes.find(cl => cl.cliente_id === c.cliente_id)
-      const empresa = empresas.find(em => em.empresa_id === c.empresa_id)
+      const cliente = clientes.find(cl => cl.cliente_id === c.cliente_id) || { nombre_cliente: c.cliente_nombre || 'Institución' }
+      const empresa = empresas.find(em => em.empresa_id === c.empresa_id) || { nombre_empresa: c.empresa_nombre || 'LABANDMED S.A. DE C.V.' }
 
-      // Get obligations from incidencias_seguimiento
-      const contractIncidencias = incidencias.filter(
-        i => i.contrato_id === c.contrato_id || (i.cliente_id === c.cliente_id && !i.contrato_id)
-      ).map((inc, idx) => {
+      // Get obligations matching this contract
+      const contractIncidencias = incidencias.filter(i => {
+        if (i.contrato_id && i.contrato_id === c.contrato_id) return true
+        if (i.cliente_id && i.cliente_id === c.cliente_id) return true
+        if (i.cliente && cliente.nombre_cliente && (
+          i.cliente.toLowerCase().includes(cliente.nombre_cliente.toLowerCase()) ||
+          cliente.nombre_cliente.toLowerCase().includes(i.cliente.toLowerCase())
+        )) return true
+        if (i.numero_contrato && c.numero_contrato && (
+          i.numero_contrato.toLowerCase().includes(c.numero_contrato.toLowerCase()) ||
+          c.numero_contrato.toLowerCase().includes(i.numero_contrato.toLowerCase())
+        )) return true
+        return false
+      }).map((inc, idx) => {
         const sit = situaciones.find(s => s.situacion_id === inc.situacion_id)
         const per = personas.find(p => p.persona_id === inc.persona_id)
         const est = estatusList.find(e => e.estatus_id === inc.estatus_id)
         const area = per?.area || areas.find(a => a.area_id === per?.area_id)
 
+        const responsableNombre = inc.responsable || per?.nombre_completo || 'Sin Asignar'
+        const areaNombre = inc.area || area?.nombre_area || (
+          responsableNombre.includes('RICARDO') ? 'IT' :
+          responsableNombre.includes('EDGAR') ? 'APLICACIONES' :
+          responsableNombre.includes('JUAN') ? 'PM' :
+          responsableNombre.includes('DIEGO') ? 'LOGISTICA' :
+          responsableNombre.includes('ROBERTO') ? 'LICITACIONES' :
+          responsableNombre.includes('MOISES') ? 'SOPORTE' : 'OPERACIONES'
+        )
+
         return {
-          id: inc.incidencia_id,
+          id: inc.incidencia_id || inc.id || idx + 1,
           tipo_origen: 'incidencia',
-          numeral: `Hito #${inc.incidencia_id || idx + 1}`,
-          situacion: sit?.nombre_situacion || 'Obligación Contractual',
+          numeral: `Hito #${inc.item_num || inc.incidencia_id || idx + 1}`,
+          situacion: inc.situacion || sit?.nombre_situacion || 'Obligación Contractual',
           situacion_id: inc.situacion_id,
           comentario: inc.comentario || '',
           persona_id: inc.persona_id,
-          responsable_nombre: per?.nombre_completo || 'Sin Asignar',
-          responsable_email: per?.email || '',
-          area_nombre: area?.nombre_area || (per?.nombre_completo === 'RICARDO VILLANUEVA' ? 'IT' : per?.nombre_completo === 'EDGAR FIGUERO' ? 'APLICACIONES' : per?.nombre_completo === 'JUAN JOSE' ? 'PM' : per?.nombre_completo === 'DIEGO POLANCO' ? 'LOGISTICA' : 'OPERACIONES'),
+          responsable_nombre: responsableNombre,
+          responsable_email: inc.responsableEmail || per?.email || '',
+          area_nombre: areaNombre,
           fecha_cumplimiento: inc.fecha_cumplimiento || '',
           estatus_id: inc.estatus_id,
-          estatus_nombre: est?.nombre_estatus || 'PENDIENTE',
+          estatus_nombre: inc.estatus || est?.nombre_estatus || 'PENDIENTE',
           raw_data: inc
         }
       })
@@ -476,8 +582,8 @@ export default function ContratosPage() {
       const payload: any = {
         contrato_id: selectedContratoForNumeral,
         cliente_id: clienteId,
-        situacion_id: sitId || situaciones[0]?.situacion_id,
-        persona_id: numeralForm.persona_id ? Number(numeralForm.persona_id) : personas[0]?.persona_id,
+        situacion_id: sitId || situaciones[0]?.situacion_id || 20,
+        persona_id: numeralForm.persona_id ? Number(numeralForm.persona_id) : (personas[0]?.persona_id || 1),
         fecha_cumplimiento: numeralForm.fecha_cumplimiento || null,
         estatus_id: Number(numeralForm.estatus_id || 10),
         comentario: numeralForm.comentario || null
@@ -690,13 +796,7 @@ export default function ContratosPage() {
 
       {/* Contracts List */}
       <div className="space-y-4">
-        {loading && contractsWithObligations.length === 0 ? (
-          <div className="p-16 text-center text-slate-500 bg-slate-900/40 border border-slate-800 rounded-2xl">
-            <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm font-semibold text-slate-300">Cargando contratos y numerales oficiales...</p>
-            <p className="text-xs text-slate-500 mt-1">Conectando a base de datos PostgreSQL 3FN</p>
-          </div>
-        ) : filteredContratos.length === 0 ? (
+        {filteredContratos.length === 0 ? (
           <div className="p-16 text-center text-slate-500 bg-slate-900/40 border border-slate-800 rounded-2xl">
             <FolderKanban className="w-12 h-12 text-slate-600 mx-auto mb-3" />
             <p className="text-base font-bold text-slate-300">No se encontraron contratos con los filtros aplicados</p>
@@ -705,7 +805,8 @@ export default function ContratosPage() {
         ) : (
           filteredContratos.map(c => {
             const isExpanded = !!expandedContratos[c.contrato_id]
-            const clientTheme = CLIENT_THEMES[c.cliente?.nombre_cliente] || DEFAULT_THEME
+            const clientName = c.cliente?.nombre_cliente || c.cliente_nombre || 'Institución'
+            const clientTheme = CLIENT_THEMES[clientName] || DEFAULT_THEME
 
             return (
               <div
@@ -721,11 +822,11 @@ export default function ContratosPage() {
                       </span>
 
                       <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold border ${clientTheme.badge}`}>
-                        🏢 {c.cliente?.nombre_cliente || 'Institución'}
+                        🏢 {clientName}
                       </span>
 
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-bold border border-slate-700">
-                        {c.empresa?.nombre_empresa || 'LABANDMED S.A. DE C.V.'}
+                        {c.empresa?.nombre_empresa || c.empresa_nombre || 'LABANDMED S.A. DE C.V.'}
                       </span>
 
                       {c.monto_total > 0 && (
