@@ -270,7 +270,7 @@ async function handleNotificationWorkflow(request: Request) {
                 LAB & MED S.A. DE C.V. &bull; Planificación Estratégica & Gerencia General
               </div>
               <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">
-                Remitente Oficial: businessinteligent01@lm-sv.com &bull; CC: jose.gomez@labandmed.com, aaltunaher@labandmed.com
+                Remitente Oficial: businessinteligent01@lm-sv.com
               </div>
             </td>
           </tr>
@@ -289,7 +289,6 @@ async function handleNotificationWorkflow(request: Request) {
           await transporter.sendMail({
             from: `"Planificación Estratégica & BI" <businessinteligent01@lm-sv.com>`,
             to: p.email,
-            cc: ['jose.gomez@labandmed.com', 'aaltunaher@labandmed.com'],
             subject,
             html: htmlBody
           })
