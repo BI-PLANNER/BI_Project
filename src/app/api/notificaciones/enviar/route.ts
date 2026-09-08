@@ -269,6 +269,9 @@ async function handleNotificationWorkflow(request: Request) {
               <div style="font-weight: 600; font-size: 11px; color: #64748b;">
                 LAB & MED S.A. DE C.V. &bull; Planificación Estratégica & Gerencia General
               </div>
+              <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">
+                Remitente Oficial: businessinteligent01@lm-sv.com &bull; CC: jose.gomez@labandmed.com, aaltunaher@labandmed.com
+              </div>
             </td>
           </tr>
         </table>
@@ -284,7 +287,7 @@ async function handleNotificationWorkflow(request: Request) {
       if (transporter && !dryRun) {
         try {
           await transporter.sendMail({
-            from: `"José Gómez — Planificación Estratégica" <${smtpUser}>`,
+            from: `"Planificación Estratégica & BI" <businessinteligent01@lm-sv.com>`,
             to: p.email,
             cc: ['jose.gomez@labandmed.com', 'aaltunaher@labandmed.com'],
             subject,
