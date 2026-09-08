@@ -1,0 +1,96 @@
+{
+  "name": "LAB&MED - Notificaciones Automáticas de Obligaciones Contractuales",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "1",
+      "name": "Cron Diario (8:00 AM Lun-Vie)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://control-planner.vercel.app/api/notificaciones/enviar",
+        "options": {}
+      },
+      "id": "2",
+      "name": "Obtener Obligaciones y Correos (Vercel API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.first().json.resultados || [];\nreturn items.map(item => ({\n  json: {\n    nombre: item.nombre,\n    email: item.email,\n    totalTareas: item.totalTareas,\n    criticas: item.criticas,\n    asunto: item.previewSubject,\n    cuerpoHtml: item.previewHtml\n  }\n}));"
+      },
+      "id": "3",
+      "name": "Agrupar por Encargado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "ccList": "jose.gomez@labandmed.com, aaltunaher@labandmed.com",
+        "subject": "={{ $json.asunto }}",
+        "html": "={{ $json.cuerpoHtml }}",
+        "options": {}
+      },
+      "id": "4",
+      "name": "Enviar Correo a Encargado (SMTP/Gmail)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Cron Diario (8:00 AM Lun-Vie)": {
+      "main": [
+        [
+          {
+            "node": "Obtener Obligaciones y Correos (Vercel API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Obligaciones y Correos (Vercel API)": {
+      "main": [
+        [
+          {
+            "node": "Agrupar por Encargado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar por Encargado": {
+      "main": [
+        [
+          {
+            "node": "Enviar Correo a Encargado (SMTP/Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

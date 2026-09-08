@@ -30,10 +30,12 @@ import {
   KeyRound,
   ShieldAlert,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Zap
 } from 'lucide-react'
 import NeoChartPieDonut, { PieDonutDataItem } from '@/components/NeoChartPieDonut'
 import ReasignarResponsableModal from '@/components/ReasignarResponsableModal'
+import NotificacionesObligacionesModal from '@/components/NotificacionesObligacionesModal'
 import { IncidenciaEvento, MASTER_LICITACIONES_PENDIENTES } from '@/app/dashboard/planner/page'
 
 export default function DashboardObligacionesPage() {
@@ -65,9 +67,10 @@ export default function DashboardObligacionesPage() {
   const [chartType, setChartType] = useState<'pie' | 'donut'>('pie')
   const [copied, setCopied] = useState(false)
 
-  // 4. Modal de Reasignación
+  // 4. Modal de Reasignación & Notificaciones
   const [editingTask, setEditingTask] = useState<IncidenciaEvento | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isNotificacionesModalOpen, setIsNotificacionesModalOpen] = useState(false)
   const [successToast, setSuccessToast] = useState<string | null>(null)
 
   // Cargar usuario autenticado actual
@@ -486,6 +489,15 @@ export default function DashboardObligacionesPage() {
 
           {/* Botones de Exportación */}
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setIsNotificacionesModalOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10"
+              title="Flujo automatizado de correos de cumplimiento a encargados"
+            >
+              <Zap className="w-4 h-4 text-amber-400" />
+              <span>Notificar Encargados</span>
+            </button>
+
             <button
               onClick={handleCopyText}
               className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
@@ -922,6 +934,12 @@ export default function DashboardObligacionesPage() {
         }}
         task={editingTask}
         onSave={handleSaveReasignacion}
+      />
+
+      {/* Modal de Flujo de Notificaciones a Encargados */}
+      <NotificacionesObligacionesModal
+        isOpen={isNotificacionesModalOpen}
+        onClose={() => setIsNotificacionesModalOpen(false)}
       />
     </div>
   )
