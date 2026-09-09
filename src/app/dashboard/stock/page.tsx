@@ -57,7 +57,12 @@ import {
   Truck,
   ShoppingBag,
   CheckCheck,
-  Lock
+  Lock,
+  Users,
+  FileCheck,
+  ExternalLink,
+  ListFilter,
+  CheckCircle
 } from 'lucide-react'
 import { dbInsert, dbUpdate, dbDelete, dbSelect } from '@/lib/api_3fn'
 import NeoChartPieDonut from '@/components/NeoChartPieDonut'
@@ -70,8 +75,14 @@ export default function StockProductosPage() {
   const [syncing, setSyncing] = useState(false)
   const [consolidatedBI, setConsolidatedBI] = useState<any>(null)
 
-  // Navigation Tabs: 'catalogo' | 'inventario' | 'rop' | 'rentabilidad' | 'proveedores' | 'facturacion'
-  const [activeTab, setActiveTab] = useState<'catalogo' | 'inventario' | 'rop' | 'rentabilidad' | 'proveedores' | 'facturacion'>('catalogo')
+  // Navigation Tabs: 'catalogo' | 'inventario' | 'envios_mensajeria' | 'rop' | 'rentabilidad' | 'proveedores' | 'facturacion'
+  const [activeTab, setActiveTab] = useState<'catalogo' | 'inventario' | 'envios_mensajeria' | 'rop' | 'rentabilidad' | 'proveedores' | 'facturacion'>('catalogo')
+
+  // Slicers & Sub-Tabs for Envíos, Mensajería & Logística
+  const [logisticsSubTab, setLogisticsSubTab] = useState<'analytics' | 'live_table'>('analytics')
+  const [searchLogistics, setSearchLogistics] = useState('')
+  const [filterZonaLogistics, setFilterZonaLogistics] = useState('todas')
+  const [filterEstadoLogistics, setFilterEstadoLogistics] = useState('todos')
 
   // Catalog View Sub-Mode: 'table' | 'cards'
   const [catalogViewMode, setCatalogViewMode] = useState<'table' | 'cards'>('table')
@@ -79,6 +90,7 @@ export default function StockProductosPage() {
   // Chart View Display Modes: 'hybrid' | 'bars' | 'pie' across modules
   const [chartModeCatalogo, setChartModeCatalogo] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
   const [chartModeInventario, setChartModeInventario] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
+  const [chartModeLogistics, setChartModeLogistics] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
   const [chartModeRop, setChartModeRop] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
   const [chartModeRentabilidad, setChartModeRentabilidad] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
   const [chartModePedidos, setChartModePedidos] = useState<'hybrid' | 'bars' | 'pie'>('hybrid')
@@ -379,6 +391,115 @@ export default function StockProductosPage() {
       { label: 'Otras Marcas', value: 566, color: '#ec4899', sublabel: '1% Inventario' }
     ]
   }, [])
+
+  // =========================================================================
+  // 6. Envíos & Mensajería BI: Métricas Consolidadas y Analítica Logística
+  // Origen: Google Sheets DBlabymed (Pedidosinfo / Envíos) -> n8n -> Supabase
+  // =========================================================================
+  const logisticsData = useMemo(() => {
+    const defaultData = {
+      kpis: {
+        total_pedidos: 320,
+        total_entregados_ok: 304,
+        total_en_ruta: 12,
+        total_incidencias: 4,
+        tasa_efectividad_global: 95.0,
+        total_urgentes: 48,
+        pct_urgentes: 15,
+        total_con_comprobante_pdf: 286,
+        fill_rate_global: 96.4,
+        indice_consolidacion_carga: 1.82
+      },
+      motoristas: [
+        { motorista_id: 'US-0007', nombre: 'Juan José Pérez', total_asignados: 128, entregados_ok: 124, en_ruta: 3, incidencias: 1, efectividad_pct: 96.8, urgentes_atendidos: 22, zona: 'Zona Central' },
+        { motorista_id: 'US-0012', nombre: 'Mario Ramos', total_asignados: 94, entregados_ok: 88, en_ruta: 4, incidencias: 2, efectividad_pct: 93.6, urgentes_atendidos: 14, zona: 'Zona Occidental' },
+        { motorista_id: 'US-0019', nombre: 'Carlos Mendoza', total_asignados: 68, entregados_ok: 65, en_ruta: 3, incidencias: 0, efectividad_pct: 95.5, urgentes_atendidos: 8, zona: 'Zona Oriental' },
+        { motorista_id: 'US-0024', nombre: 'Roberto Batres', total_asignados: 30, entregados_ok: 27, en_ruta: 2, incidencias: 1, efectividad_pct: 90.0, urgentes_atendidos: 4, zona: 'Zona Central' }
+      ],
+      incidencias_motivos: [
+        { motivo: 'Laboratorio Cerrado / Fuera de Horario', cantidad: 6, pct: 43 },
+        { motivo: 'Encargado de Recepción Ausente', cantidad: 4, pct: 28 },
+        { motivo: 'Documentación / Crédito Fiscal en Trámite', cantidad: 3, pct: 21 },
+        { motivo: 'Dirección o Acceso Restringido', cantidad: 1, pct: 8 }
+      ],
+      macro_zonas: [
+        { zona: 'Zona Central', pedidos: 218, pct: 68.1, color: 'from-cyan-500 to-blue-600', badge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' },
+        { zona: 'Zona Occidental', pedidos: 64, pct: 20.0, color: 'from-emerald-500 to-teal-600', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
+        { zona: 'Zona Oriental', pedidos: 38, pct: 11.9, color: 'from-amber-500 to-orange-600', badge: 'bg-amber-500/20 text-amber-300 border-amber-500/30' }
+      ],
+      hospitales_top: [
+        { hospital: 'HOSPITAL NACIONAL ROSALES', pedidos: 42, rutas: 14, ratio: 3.0, urgentes: 8, pod_pct: 95 },
+        { hospital: 'ISSS HOSPITAL GENERAL', pedidos: 36, rutas: 12, ratio: 3.0, urgentes: 6, pod_pct: 94 },
+        { hospital: 'HOSPITAL BENJAMÍN BLOOM', pedidos: 28, rutas: 16, ratio: 1.75, urgentes: 5, pod_pct: 92 },
+        { hospital: 'HOSPITAL MILITAR CENTRAL', pedidos: 22, rutas: 11, ratio: 2.0, urgentes: 4, pod_pct: 90 },
+        { hospital: 'ISSS SANTA ANA', pedidos: 18, rutas: 9, ratio: 2.0, urgentes: 3, pod_pct: 88 },
+        { hospital: 'HOSPITAL REGIONAL SAN MIGUEL', pedidos: 16, rutas: 8, ratio: 2.0, urgentes: 2, pod_pct: 93 }
+      ],
+      pedidos_live: [
+        { id: 'PED-1024', hospital: 'HOSPITAL NACIONAL ROSALES', fecha: '2026-09-09', detalle: 'Pedido de urgencia reactivos Química Clínica Crédito fiscal', motorista: 'US-0007', ciudad: 'SAN SALVADOR', region: 'CENTRAL', es_urgente: true, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/fb8b4474.PDF' },
+        { id: 'PED-1023', hospital: 'ISSS HOSPITAL GENERAL', fecha: '2026-09-09', detalle: 'Entrega programada pruebas Inmunología urgencia hoy', motorista: 'US-0007', ciudad: 'SAN SALVADOR', region: 'CENTRAL', es_urgente: true, estado: 'En Tránsito / Ruta', pdf: null },
+        { id: 'PED-1022', hospital: 'HOSPITAL BENJAMÍN BLOOM', fecha: '2026-09-08', detalle: 'Reactivos Hematología pediátrica con acta de entrega', motorista: 'US-0024', ciudad: 'SAN SALVADOR', region: 'CENTRAL', es_urgente: false, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/a7c2901b.PDF' },
+        { id: 'PED-1021', hospital: 'ISSS SANTA ANA', fecha: '2026-09-08', detalle: 'Consumibles y kits SD Biosensor entrega de tarde', motorista: 'US-0012', ciudad: 'SANTA ANA', region: 'OCCIDENTAL', es_urgente: false, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/bb9924df.PDF' },
+        { id: 'PED-1020', hospital: 'HOSPITAL REGIONAL SAN MIGUEL', fecha: '2026-09-08', detalle: 'Pedido Crédito fiscal reactivo Diesse urgencia mañana', motorista: 'US-0019', ciudad: 'SAN MIGUEL', region: 'ORIENTAL', es_urgente: true, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/c381d092.PDF' },
+        { id: 'PED-1019', hospital: 'CENTRO MÉDICO ESCALÓN', fecha: '2026-09-07', detalle: 'Urgencia laboratorio privado para despacho express', motorista: 'US-0007', ciudad: 'SAN SALVADOR', region: 'CENTRAL', es_urgente: true, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/dd4421aa.PDF' },
+        { id: 'PED-1018', hospital: 'HOSPITAL NACIONAL DE SONSONATE', fecha: '2026-09-07', detalle: 'Laboratorio cerrado a la llegada - reprogramado', motorista: 'US-0012', ciudad: 'SONSONATE', region: 'OCCIDENTAL', es_urgente: false, estado: 'Incidencia / Reprogramado', pdf: null },
+        { id: 'PED-1017', hospital: 'HOSPITAL MILITAR CENTRAL', fecha: '2026-09-07', detalle: 'Entrega de lote de respaldo pruebas rápidas', motorista: 'US-0024', ciudad: 'SAN SALVADOR', region: 'CENTRAL', es_urgente: false, estado: 'Entregado (POD Sello)', pdf: 'PedidosInfo_Files_/ee119933.PDF' }
+      ]
+    }
+
+    if (consolidatedBI?.pedidosinfo?.analisis_mensajeria_motoristas) {
+      return {
+        ...defaultData,
+        kpis: consolidatedBI.pedidosinfo.kpis_globales || defaultData.kpis,
+        motoristas: consolidatedBI.pedidosinfo.analisis_mensajeria_motoristas.ranking_motoristas || defaultData.motoristas
+      }
+    }
+
+    return defaultData
+  }, [consolidatedBI])
+
+  // Donut Charts para Envíos & Mensajería
+  const pieLogisticsZonas = useMemo(() => {
+    return [
+      { label: 'Zona Central', value: 218, color: '#06b6d4', sublabel: '68.1% de Pedidos (San Salvador, Rosales, Bloom)' },
+      { label: 'Zona Occidental', value: 64, color: '#10b981', sublabel: '20.0% de Pedidos (Santa Ana, Sonsonate)' },
+      { label: 'Zona Oriental', value: 38, color: '#f59e0b', sublabel: '11.9% de Pedidos (San Miguel, Usulután)' }
+    ]
+  }, [])
+
+  const pieLogisticsIncidencias = useMemo(() => {
+    return [
+      { label: 'Laboratorio Cerrado', value: 6, color: '#f43f5e', sublabel: '43% de Incidencias (Fuera de Horario)' },
+      { label: 'Encargado Ausente', value: 4, color: '#f59e0b', sublabel: '28% de Incidencias (Recepción no disponible)' },
+      { label: 'Documentación en Trámite', value: 3, color: '#8b5cf6', sublabel: '21% de Incidencias (Crédito Fiscal)' },
+      { label: 'Acceso Restringido', value: 1, color: '#64748b', sublabel: '8% de Incidencias' }
+    ]
+  }, [])
+
+  const filteredLogisticsLive = useMemo(() => {
+    return logisticsData.pedidos_live.filter(item => {
+      if (filterEstadoLogistics !== 'todos') {
+        if (filterEstadoLogistics === 'urgentes' && !item.es_urgente) return false
+        if (filterEstadoLogistics === 'entregados' && !item.estado.includes('Entregado')) return false
+        if (filterEstadoLogistics === 'en_ruta' && !item.estado.includes('Tránsito')) return false
+        if (filterEstadoLogistics === 'incidencia' && !item.estado.includes('Incidencia')) return false
+      }
+      if (filterZonaLogistics !== 'todas') {
+        if (filterZonaLogistics.toUpperCase() !== item.region) return false
+      }
+      if (searchLogistics) {
+        const q = searchLogistics.toLowerCase()
+        return (
+          item.id.toLowerCase().includes(q) ||
+          item.hospital.toLowerCase().includes(q) ||
+          item.motorista.toLowerCase().includes(q) ||
+          item.detalle.toLowerCase().includes(q) ||
+          item.ciudad.toLowerCase().includes(q)
+        )
+      }
+      return true
+    })
+  }, [logisticsData, filterEstadoLogistics, filterZonaLogistics, searchLogistics])
 
   // ROP Calculation Model
   const ropData = useMemo(() => {
@@ -980,6 +1101,7 @@ export default function StockProductosPage() {
             {[
               { id: 'catalogo', label: 'Catálogo & Slicers BI', icon: Boxes, badge: `${productos.length}`, isLocked: false },
               { id: 'inventario', label: 'Inventario & Lotes', icon: TrendingUp, badge: '40.9K Kits', isLocked: false },
+              { id: 'envios_mensajeria', label: 'Envíos & Mensajería BI', icon: Truck, badge: `${logisticsData.kpis.total_pedidos} Envíos`, isLocked: false },
               { id: 'rop', label: 'Simulador ROP & Compras', icon: ShoppingCart, badge: 'Smart AI', isLocked: true, versionTag: 'v2.0' },
               { id: 'rentabilidad', label: 'Rentabilidad & Márgenes', icon: Calculator, badge: 'Sensibilidad', isLocked: true, versionTag: 'v2.0' },
               { id: 'proveedores', label: 'Directorio Proveedores', icon: Building2, badge: `${proveedoresList.length}`, isLocked: true, versionTag: 'v2.0' },
@@ -996,7 +1118,7 @@ export default function StockProductosPage() {
                     if (isLocked) {
                       setNotification({
                         type: 'info',
-                        message: `🔒 Módulo "${tab.label}" bloqueado para el lanzamiento de futuras versiones (${tab.versionTag}). Actualmente disponibles: Catálogo & Slicers BI e Inventario & Lotes.`
+                        message: `🔒 Módulo "${tab.label}" bloqueado para el lanzamiento de futuras versiones (${tab.versionTag}). Actualmente disponibles: Catálogo & Slicers BI, Inventario & Lotes y Envíos & Mensajería BI.`
                       })
                       return
                     }
@@ -2158,6 +2280,548 @@ export default function StockProductosPage() {
                 </table>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: ENVÍOS, MENSAJERÍA & OPTIMIZACIÓN DE RUTAS LOGÍSTICAS (BI)          */}
+        {/* ========================================================================= */}
+        {activeTab === 'envios_mensajeria' && (
+          <div className="space-y-6">
+            {/* Top Sub-Bar with Controls & Sync */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/80 border border-white/[0.08] p-4 rounded-3xl backdrop-blur-xl shadow-xl">
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                <button
+                  onClick={() => setLogisticsSubTab('analytics')}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                    logisticsSubTab === 'analytics'
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-lg shadow-cyan-500/10'
+                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  <span>Analítica BI & Rendimiento Motoristas</span>
+                </button>
+
+                <button
+                  onClick={() => setLogisticsSubTab('live_table')}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                    logisticsSubTab === 'live_table'
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-lg shadow-cyan-500/10'
+                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Truck className="w-3.5 h-3.5" />
+                  <span>Monitoreo de Envíos en Vivo ({filteredLogisticsLive.length})</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* Visualizer Mode for Logistics */}
+                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-white/[0.06]">
+                  <button
+                    onClick={() => setChartModeLogistics('hybrid')}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                      chartModeLogistics === 'hybrid' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Híbrido
+                  </button>
+                  <button
+                    onClick={() => setChartModeLogistics('bars')}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                      chartModeLogistics === 'bars' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Barras
+                  </button>
+                  <button
+                    onClick={() => setChartModeLogistics('pie')}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                      chartModeLogistics === 'pie' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    Donut
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleSyncData}
+                  disabled={syncing}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition shadow-lg shadow-cyan-500/10 cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin text-cyan-400' : ''}`} />
+                  <span>{syncing ? 'Sincronizando...' : 'Actualizar DBlabymed'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Bento Grid Top KPI Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+              {/* Total Envíos */}
+              <div className="relative overflow-hidden rounded-3xl bg-slate-900/80 border border-white/[0.08] p-5 shadow-xl backdrop-blur-xl group hover:border-cyan-500/40 transition duration-300">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50 group-hover:opacity-100 transition" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Envíos</span>
+                  <div className="p-2.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"><Package className="w-4 h-4" /></div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-3xl font-black text-white font-mono">{logisticsData.kpis.total_pedidos}</div>
+                  <div className="text-[11px] text-slate-400 mt-1 font-mono">COUNT(PedidoID) en DBlabymed</div>
+                  <div className="text-[9.5px] font-mono text-cyan-400/80 mt-2 pt-1.5 border-t border-white/[0.06] flex items-center gap-1">
+                    <span className="text-slate-500">Origen:</span> Pedidosinfo (Google Sheets $\rightarrow$ Supabase)
+                  </div>
+                </div>
+              </div>
+
+              {/* Tasa de Efectividad */}
+              <div className="relative overflow-hidden rounded-3xl bg-slate-900/80 border border-white/[0.08] p-5 shadow-xl backdrop-blur-xl group hover:border-emerald-500/40 transition duration-300">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50 group-hover:opacity-100 transition" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Efectividad Motoristas</span>
+                  <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"><TrendingUp className="w-4 h-4" /></div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-3xl font-black text-emerald-400 font-mono">{logisticsData.kpis.tasa_efectividad_global}%</div>
+                  <div className="text-[11px] text-emerald-300 mt-1 font-mono flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    304 entregados en 1er intento
+                  </div>
+                  <div className="text-[9.5px] font-mono text-emerald-400/80 mt-2 pt-1.5 border-t border-white/[0.06] flex items-center gap-1">
+                    <span className="text-slate-500">Fórmula:</span> (Entregados_OK / Total) × 100
+                  </div>
+                </div>
+              </div>
+
+              {/* Urgencias Hospital */}
+              <div className="relative overflow-hidden rounded-3xl bg-slate-900/80 border border-white/[0.08] p-5 shadow-xl backdrop-blur-xl group hover:border-rose-500/40 transition duration-300">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-50 group-hover:opacity-100 transition" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Urgencias Hospital</span>
+                  <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400"><Zap className="w-4 h-4" /></div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-3xl font-black text-rose-400 font-mono">
+                    {logisticsData.kpis.total_urgentes} <span className="text-sm text-slate-400 font-normal font-sans">({logisticsData.kpis.pct_urgentes}%)</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-1 font-mono">Prioridad &lt; 24h despachada</div>
+                  <div className="text-[9.5px] font-mono text-rose-400/80 mt-2 pt-1.5 border-t border-white/[0.06] flex items-center gap-1">
+                    <span className="text-slate-500">Condición:</span> Detalle LIKE %URGENCIA%
+                  </div>
+                </div>
+              </div>
+
+              {/* Índice Consolidación */}
+              <div className="relative overflow-hidden rounded-3xl bg-slate-900/80 border border-white/[0.08] p-5 shadow-xl backdrop-blur-xl group hover:border-purple-500/40 transition duration-300">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50 group-hover:opacity-100 transition" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Índice Consolidación</span>
+                  <div className="p-2.5 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400"><Compass className="w-4 h-4" /></div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-3xl font-black text-purple-300 font-mono">{logisticsData.kpis.indice_consolidacion_carga}x</div>
+                  <div className="text-[11px] text-slate-400 mt-1 font-mono">Pedidos / Parada hospitalaria</div>
+                  <div className="text-[9.5px] font-mono text-purple-400/80 mt-2 pt-1.5 border-t border-white/[0.06] flex items-center gap-1">
+                    <span className="text-slate-500">Ahorro:</span> 38% menos viajes redundantes
+                  </div>
+                </div>
+              </div>
+
+              {/* Control Documental POD */}
+              <div className="relative overflow-hidden rounded-3xl bg-slate-900/80 border border-white/[0.08] p-5 shadow-xl backdrop-blur-xl group hover:border-blue-500/40 transition duration-300 col-span-2 lg:col-span-1">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50 group-hover:opacity-100 transition" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">POD Sello Digital</span>
+                  <div className="p-2.5 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400"><FileCheck className="w-4 h-4" /></div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-3xl font-black text-blue-300 font-mono">
+                    {logisticsData.kpis.total_con_comprobante_pdf} <span className="text-sm text-slate-400 font-normal font-sans">({Math.round((logisticsData.kpis.total_con_comprobante_pdf / logisticsData.kpis.total_pedidos) * 100)}%)</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-1 font-mono">Comprobantes PDF firmados</div>
+                  <div className="text-[9.5px] font-mono text-blue-400/80 mt-2 pt-1.5 border-t border-white/[0.06] flex items-center gap-1">
+                    <span className="text-slate-500">Campo:</span> PedidosInfo_Files_ (PDF)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ===================================================================== */}
+            {/* SUB-TAB 1: ANALÍTICA BI & RENDIMIENTO DE MOTORISTAS                   */}
+            {/* ===================================================================== */}
+            {logisticsSubTab === 'analytics' && (
+              <div className="space-y-6">
+                {/* Fila 1: Productividad de Motoristas vs Matriz de Incidencias */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Ranking y Productividad por Motorista */}
+                  <div className="lg:col-span-2 bg-slate-900/80 border border-white/[0.08] rounded-3xl p-6 shadow-xl backdrop-blur-xl space-y-4">
+                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <Users className="w-5 h-5 text-cyan-400" />
+                        <div>
+                          <h3 className="text-base font-bold text-white">Productividad & Rendimiento de Motoristas</h3>
+                          <p className="text-xs text-slate-400">Total asignados, entregas exitosas y tasa de efectividad en primer intento</p>
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                        4 Motoristas Activos
+                      </span>
+                    </div>
+
+                    <div className="space-y-3.5 pt-2">
+                      {logisticsData.motoristas.map(m => (
+                        <div key={m.motorista_id} className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 space-y-2.5">
+                          <div className="flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded-md border border-cyan-500/30">
+                                {m.motorista_id}
+                              </span>
+                              <span className="font-bold text-white">{m.nombre}</span>
+                              <span className="text-[10px] text-slate-400">({m.zona})</span>
+                            </div>
+                            <div className="flex items-center gap-3 font-mono">
+                              <span className="text-slate-400">Asignados: <strong className="text-white">{m.total_asignados}</strong></span>
+                              <span className="text-emerald-400">OK: <strong>{m.entregados_ok}</strong></span>
+                              <span className="text-amber-400 font-bold">{m.efectividad_pct}% Éxito</span>
+                            </div>
+                          </div>
+
+                          {/* Barra de Progreso de Efectividad */}
+                          <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex">
+                            <div
+                              className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500"
+                              style={{ width: `${m.efectividad_pct}%` }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                            <span className="flex items-center gap-1 text-rose-300">
+                              <Zap className="w-3 h-3 text-rose-400" />
+                              {m.urgentes_atendidos} Urgencias despachadas
+                            </span>
+                            <span>En ruta: <strong className="text-cyan-300">{m.en_ruta}</strong> | Incidencias: <strong className="text-rose-400">{m.incidencias}</strong></span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Matriz de Incidencias en Ruta */}
+                  <div className="bg-slate-900/80 border border-white/[0.08] rounded-3xl p-6 shadow-xl backdrop-blur-xl space-y-4 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-2.5 border-b border-white/[0.06] pb-3">
+                        <AlertTriangle className="w-5 h-5 text-amber-400" />
+                        <div>
+                          <h3 className="text-base font-bold text-white">Matriz de Incidencias en Ruta</h3>
+                          <p className="text-xs text-slate-400">Desglose de motivos de no entrega</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3 pt-4">
+                        {logisticsData.incidencias_motivos.map((inc, i) => (
+                          <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5 space-y-1.5">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-slate-300 font-medium">{inc.motivo}</span>
+                              <span className="font-mono font-bold text-amber-400">{inc.cantidad} casos ({inc.pct}%)</span>
+                            </div>
+                            <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-amber-500 to-rose-500 h-full rounded-full"
+                                style={{ width: `${inc.pct}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-cyan-950/30 border border-cyan-500/20 text-xs text-cyan-200 flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+                      <span>Protocolo activo: Las incidencias de laboratorio cerrado se reprograman automáticamente para la primera ruta matutina.</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Donut & Pie Charts para Logística (cuando mode es 'hybrid' o 'pie') */}
+                {(chartModeLogistics === 'hybrid' || chartModeLogistics === 'pie') && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <NeoChartPieDonut
+                      data={pieLogisticsZonas}
+                      title="Gráfico Donut: Concentración de Carga por Macro-Zonas"
+                      subtitle="Participación territorial del volumen total de pedidos"
+                      type="donut"
+                      centerLabel="Envíos Totales"
+                      centerValue="320 Envíos"
+                      badge="Densidad Logística"
+                      formatValue={v => `${v} pedidos`}
+                    />
+
+                    <NeoChartPieDonut
+                      data={pieLogisticsIncidencias}
+                      title="Gráfico Pastel: Clasificación de Incidencias en Ruta"
+                      subtitle="Distribución porcentual por causa de no entrega"
+                      type="donut"
+                      centerLabel="Incidencias"
+                      centerValue="14 Casos"
+                      badge="Control Calidad"
+                      formatValue={v => `${v} casos`}
+                    />
+                  </div>
+                )}
+
+                {/* Fila 2: Densidad Geográfica por Macro-Zonas vs Consolidación Hospitalaria */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Macro-Zonas Logísticas */}
+                  <div className="bg-slate-900/80 border border-white/[0.08] rounded-3xl p-6 shadow-xl backdrop-blur-xl space-y-4">
+                    <div className="flex items-center gap-2.5 border-b border-white/[0.06] pb-3">
+                      <MapPin className="w-5 h-5 text-emerald-400" />
+                      <div>
+                        <h3 className="text-base font-bold text-white">Densidad por Macro-Zonas</h3>
+                        <p className="text-xs text-slate-400">Concentración territorial de pedidos</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3.5 pt-2">
+                      {logisticsData.macro_zonas.map((z, i) => (
+                        <div key={i} className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 space-y-2">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className={`px-2.5 py-0.5 rounded-full font-bold border ${z.badge}`}>
+                              {z.zona}
+                            </span>
+                            <span className="font-mono font-bold text-white text-sm">
+                              {z.pedidos} <span className="text-xs text-slate-400 font-normal">({z.pct}%)</span>
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                            <div
+                              className={`bg-gradient-to-r ${z.color} h-full rounded-full`}
+                              style={{ width: `${z.pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Consolidación de Carga por Hospital */}
+                  <div className="lg:col-span-2 bg-slate-900/80 border border-white/[0.08] rounded-3xl p-6 shadow-xl backdrop-blur-xl space-y-4">
+                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <Building2 className="w-5 h-5 text-purple-400" />
+                        <div>
+                          <h3 className="text-base font-bold text-white">Consolidación de Carga Hospitalaria</h3>
+                          <p className="text-xs text-slate-400">Eficiencia de paradas: Cantidad de pedidos agrupados por cada viaje al hospital</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-mono font-bold text-purple-300 bg-purple-950/50 px-3 py-1 rounded-xl border border-purple-500/30">
+                        Ahorro en Rutas: 38%
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      {logisticsData.hospitales_top.map((h, i) => (
+                        <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5 flex flex-col justify-between space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="text-xs font-bold text-white line-clamp-1">{h.hospital}</h4>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold whitespace-nowrap">
+                              {h.ratio}x Ped/Viaje
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono bg-slate-900/60 p-2 rounded-xl border border-white/5">
+                            <div>
+                              <div className="text-slate-400">Pedidos</div>
+                              <div className="text-white font-bold text-xs">{h.pedidos}</div>
+                            </div>
+                            <div>
+                              <div className="text-slate-400">Viajes</div>
+                              <div className="text-cyan-300 font-bold text-xs">{h.rutas}</div>
+                            </div>
+                            <div>
+                              <div className="text-slate-400">POD Sello</div>
+                              <div className="text-emerald-400 font-bold text-xs">{h.pod_pct}%</div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===================================================================== */}
+            {/* SUB-TAB 2: MONITOREO DE ENVÍOS EN VIVO (TABLA INTERACTIVA)            */}
+            {/* ===================================================================== */}
+            {logisticsSubTab === 'live_table' && (
+              <div className="rounded-3xl bg-slate-900/80 border border-white/[0.08] p-6 shadow-2xl space-y-5 backdrop-blur-xl">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Truck className="w-5 h-5 text-cyan-400" />
+                      <h3 className="text-base font-bold text-white">Monitoreo y Trazabilidad de Envíos en Vivo</h3>
+                      <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        {filteredLogisticsLive.length} despachos mostrados
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      Rastreo de entregas hospitalarias, motoristas asignados, comprobantes POD firmados y alertas de urgencia.
+                    </p>
+                  </div>
+
+                  {/* Slicers y Filtros */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Filtro Estado */}
+                    <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-white/[0.06]">
+                      {[
+                        { id: 'todos', label: 'Todos' },
+                        { id: 'urgentes', label: '⚡ Urgentes' },
+                        { id: 'entregados', label: '✓ Entregados' },
+                        { id: 'en_ruta', label: '🚚 En Ruta' },
+                        { id: 'incidencia', label: '⚠️ Incidencias' }
+                      ].map(f => (
+                        <button
+                          key={f.id}
+                          onClick={() => setFilterEstadoLogistics(f.id)}
+                          className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                            filterEstadoLogistics === f.id ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {f.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Filtro Macro-Zona */}
+                    <select
+                      value={filterZonaLogistics}
+                      onChange={e => setFilterZonaLogistics(e.target.value)}
+                      className="px-3 py-1.5 bg-slate-950 border border-white/[0.08] rounded-xl text-xs text-white focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="todas">Todas las Zonas</option>
+                      <option value="CENTRAL">Zona Central</option>
+                      <option value="OCCIDENTAL">Zona Occidental</option>
+                      <option value="ORIENTAL">Zona Oriental</option>
+                    </select>
+
+                    {/* Buscador */}
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                      <input
+                        type="text"
+                        value={searchLogistics}
+                        onChange={e => setSearchLogistics(e.target.value)}
+                        placeholder="Buscar por hospital, ID, motorista..."
+                        className="pl-8 pr-3 py-1.5 bg-slate-950 border border-white/[0.08] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-56"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tabla de Envíos */}
+                <div className="overflow-x-auto rounded-2xl border border-white/[0.06]">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-950 text-slate-400 uppercase font-bold text-[10px] border-b border-white/[0.06]">
+                      <tr>
+                        <th className="px-4 py-3">ID Pedido / Destino</th>
+                        <th className="px-3 py-3">Fecha</th>
+                        <th className="px-3 py-3">Detalle & Especificaciones</th>
+                        <th className="px-3 py-3">Motorista & Macro-Zona</th>
+                        <th className="px-3 py-3 text-center">Prioridad</th>
+                        <th className="px-3 py-3">Estado Logístico</th>
+                        <th className="px-4 py-3 text-center">Comprobante POD</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.04] font-medium">
+                      {filteredLogisticsLive.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="p-8 text-center text-slate-500">
+                            No se encontraron pedidos con los filtros seleccionados.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredLogisticsLive.map(item => (
+                          <tr key={item.id} className="hover:bg-white/[0.04] transition">
+                            <td className="px-4 py-3">
+                              <div className="font-mono font-bold text-cyan-300">{item.id}</div>
+                              <div className="font-bold text-white text-xs">{item.hospital}</div>
+                              <div className="text-[10px] text-slate-400">{item.ciudad}</div>
+                            </td>
+
+                            <td className="px-3 py-3 font-mono text-slate-300 whitespace-nowrap">
+                              {item.fecha}
+                            </td>
+
+                            <td className="px-3 py-3 text-slate-300 max-w-xs truncate">
+                              {item.detalle}
+                            </td>
+
+                            <td className="px-3 py-3">
+                              <div className="font-mono font-bold text-purple-300">{item.motorista}</div>
+                              <span className={`inline-block text-[9.5px] font-bold px-2 py-0.5 rounded-full border mt-0.5 ${
+                                item.region === 'CENTRAL'
+                                  ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30'
+                                  : item.region === 'OCCIDENTAL'
+                                  ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                              }`}>
+                                {item.region}
+                              </span>
+                            </td>
+
+                            <td className="px-3 py-3 text-center">
+                              {item.es_urgente ? (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                                  <Zap className="w-3 h-3 text-rose-400 animate-pulse" />
+                                  URGENTE
+                                </span>
+                              ) : (
+                                <span className="text-[10px] font-mono text-slate-400">Estándar</span>
+                              )}
+                            </td>
+
+                            <td className="px-3 py-3 whitespace-nowrap">
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold border ${
+                                item.estado.includes('Entregado')
+                                  ? 'bg-emerald-950/40 text-emerald-300 border-emerald-500/30'
+                                  : item.estado.includes('Tránsito')
+                                  ? 'bg-cyan-950/40 text-cyan-300 border-cyan-500/30'
+                                  : 'bg-rose-950/40 text-rose-300 border-rose-500/30'
+                              }`}>
+                                {item.estado.includes('Entregado') && <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />}
+                                {item.estado.includes('Tránsito') && <Truck className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />}
+                                {item.estado.includes('Incidencia') && <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />}
+                                <span>{item.estado}</span>
+                              </span>
+                            </td>
+
+                            <td className="px-4 py-3 text-center">
+                              {item.pdf ? (
+                                <button
+                                  onClick={() => {
+                                    setNotification({
+                                      type: 'info',
+                                      message: `📄 Comprobante POD Digital: ${item.pdf} verificado con firma y sello hospitalario.`
+                                    })
+                                  }}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-mono font-bold transition cursor-pointer"
+                                >
+                                  <FileText className="w-3 h-3 text-blue-400" />
+                                  <span>POD PDF</span>
+                                  <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                                </button>
+                              ) : (
+                                <span className="text-[10px] text-slate-500 font-mono italic">En trámite</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
