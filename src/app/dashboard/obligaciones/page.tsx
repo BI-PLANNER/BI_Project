@@ -83,6 +83,7 @@ export default function DashboardObligacionesPage() {
   const [filterTipo, setFilterTipo] = useState('todos')
   const [search, setSearch] = useState('')
   const [chartType, setChartType] = useState<'pie' | 'donut'>('pie')
+  const [mainView, setMainView] = useState<'dashboard' | 'reporte'>('dashboard')
   const [copied, setCopied] = useState(false)
 
   // 4. Modal de Reasignación & Notificaciones
@@ -553,14 +554,17 @@ export default function DashboardObligacionesPage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => {
-                const el = document.getElementById('reporte-tecnico-lenny')
-                if (el) el.scrollIntoView({ behavior: 'smooth' })
+                setMainView(mainView === 'reporte' ? 'dashboard' : 'reporte')
+                setTimeout(() => {
+                  const el = document.getElementById('reporte-tecnico-lenny')
+                  if (el) el.scrollIntoView({ behavior: 'smooth' })
+                }, 100)
               }}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-teal-500/20 to-cyan-500/20 hover:from-teal-500/30 hover:to-cyan-500/30 border border-teal-500/40 text-xs font-bold text-teal-300 flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-teal-500/10 animate-pulse"
-              title="Ir directamente al Reporte Técnico de Actividades al final de la página"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-teal-500/20"
+              title="Ver el Reporte Técnico de Actividades de José Lenny Gómez"
             >
-              <BookOpen className="w-4 h-4 text-teal-400" />
-              <span>Ver Reporte Técnico BI</span>
+              <BookOpen className="w-4 h-4 text-slate-950" />
+              <span>{mainView === 'reporte' ? '📊 Ver Dashboard Obligaciones' : '📋 Ver Reporte de Actividades BI'}</span>
             </button>
 
             <button
