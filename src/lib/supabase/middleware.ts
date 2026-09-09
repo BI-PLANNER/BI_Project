@@ -45,7 +45,7 @@ export async function updateSession(request: NextRequest) {
     '/dashboard/actividades',
     '/dashboard/cumplimiento'
   ]
-  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname.startsWith(path))
+  const isPublicPath = publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path + '/'))
 
   if (!user && !isPublicPath) {
     const url = request.nextUrl.clone()
