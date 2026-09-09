@@ -92,6 +92,16 @@ export default function DashboardObligacionesPage() {
   const [isNotificacionesModalOpen, setIsNotificacionesModalOpen] = useState(false)
   const [successToast, setSuccessToast] = useState<string | null>(null)
 
+  // Detectar parámetro ?tab=reporte o ?view=reporte en la URL para cambiar de vista automáticamente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('tab') === 'reporte' || params.get('view') === 'reporte') {
+        setMainView('reporte')
+      }
+    }
+  }, [])
+
   // Cargar usuario autenticado actual
   useEffect(() => {
     async function checkAuth() {

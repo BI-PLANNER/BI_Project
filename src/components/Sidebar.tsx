@@ -95,7 +95,7 @@ export default function Sidebar() {
       badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
     },
     {
-      href: '/dashboard/reporte',
+      href: '/dashboard/obligaciones?tab=reporte',
       label: 'Reporte de Actividades BI',
       icon: BookOpen,
       badge: 'BI Lenny',
@@ -119,7 +119,18 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          const isReporteLink = item.href.includes('tab=reporte')
+          const isObligacionesLink = item.href === '/dashboard/obligaciones'
+          const currentSearch = typeof window !== 'undefined' ? window.location.search : ''
+
+          let isActive = false
+          if (isReporteLink) {
+            isActive = pathname === '/dashboard/reporte' || (pathname === '/dashboard/obligaciones' && currentSearch.includes('tab=reporte'))
+          } else if (isObligacionesLink) {
+            isActive = pathname === '/dashboard/obligaciones' && !currentSearch.includes('tab=reporte')
+          } else {
+            isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          }
           return (
             <Link
               key={item.href}
