@@ -12,7 +12,8 @@ import {
   PieChart as PieIcon,
   ShieldCheck,
   LayoutDashboard,
-  BookOpen
+  BookOpen,
+  Truck
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -108,8 +109,15 @@ export default function Sidebar() {
     router.refresh()
   }
 
-  // Navigation items: Reporte de Actividades Realizadas is ONLY visible to Luis Orellana and José Lenny Gómez
+  // Navigation items
   const navItems = [
+    {
+      href: '/dashboard/pedidos',
+      label: 'Envíos & Mensajería BI',
+      icon: Truck,
+      badge: 'Live',
+      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30 font-bold'
+    },
     { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
     { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
@@ -130,6 +138,7 @@ export default function Sidebar() {
       badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
     }
   ]
+
 
   const initials = `${userProfile.nombre.charAt(0)}${userProfile.apellido.charAt(0) || userProfile.nombre.charAt(1) || 'U'}`.toUpperCase()
 
