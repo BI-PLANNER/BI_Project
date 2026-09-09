@@ -564,17 +564,18 @@ export default function DashboardObligacionesPage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => {
-                setMainView(mainView === 'reporte' ? 'dashboard' : 'reporte')
-                setTimeout(() => {
-                  const el = document.getElementById('reporte-tecnico-lenny')
-                  if (el) el.scrollIntoView({ behavior: 'smooth' })
-                }, 100)
+                const el = document.getElementById('reporte-actividades-realizadas')
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' })
+                } else {
+                  setMainView('reporte')
+                }
               }}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-teal-500/20"
-              title="Ver el Reporte Técnico de Actividades de José Lenny Gómez"
+              title="Ver la sección de Reporte de Actividades Realizadas"
             >
               <BookOpen className="w-4 h-4 text-slate-950" />
-              <span>{mainView === 'reporte' ? '📊 Ver Dashboard Obligaciones' : '📋 Ver Reporte de Actividades BI'}</span>
+              <span>📋 Ir a Reporte de Actividades Realizadas</span>
             </button>
 
             <button
