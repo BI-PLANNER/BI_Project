@@ -96,7 +96,7 @@ export default function Sidebar() {
     },
     {
       href: '/dashboard/obligaciones?tab=reporte',
-      label: 'Reporte de Actividades BI',
+      label: 'Reporte de Actividades Realizadas',
       icon: BookOpen,
       badge: 'BI Lenny',
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'

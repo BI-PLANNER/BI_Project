@@ -1389,8 +1389,8 @@ export default function DashboardObligacionesPage() {
           </div>
           {/* ━━━━ FIN SECCIÓN REPORTE DE CUMPLIMIENTO ━━━━ */}
 
-          {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES, CONFIGURACIONES & BASES DE DATOS — JOSÉ LENNY GÓMEZ ━━━━ */}
-          <div id="reporte-tecnico-lenny" className="space-y-6 mt-8 pt-6 border-t-2 border-teal-500/30">
+          {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES REALIZADAS — JOSÉ LENNY GÓMEZ ━━━━ */}
+          <div id="reporte-actividades-realizadas" className="space-y-6 mt-12 pt-8 border-t-2 border-teal-500/40">
 
             {/* Header del Reporte Técnico */}
             <div className="glass-card p-6 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 relative overflow-hidden shadow-2xl">
@@ -1400,7 +1400,7 @@ export default function DashboardObligacionesPage() {
               <div className="relative z-10">
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-[10px] border border-teal-500/30 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-teal-400" /> REPORTE TÉCNICO DE LOGROS & CONFIGURACIONES
+                    <Sparkles className="w-3 h-3 text-teal-400" /> SECCIÓN OFICIAL DE ENTREGABLES & CONFIGURACIONES
                   </span>
                   <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-[10px] border border-emerald-500/30">
                     v2.0 · En Producción — Vercel
@@ -1411,8 +1411,8 @@ export default function DashboardObligacionesPage() {
                 </div>
 
                 <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-2 flex items-center gap-3">
-                  <BookOpen className="w-7 h-7 text-teal-400" />
-                  Reporte General de Actividades & Desarrollos del Proyecto
+                  <BookOpen className="w-7 h-7 text-teal-400 animate-pulse" />
+                  Reporte de Actividades Realizadas — BI Planner
                 </h2>
                 <p className="text-xs text-gray-300 max-w-3xl leading-relaxed">
                   Informe integral de todas las configuraciones, tablas de base de datos, conexiones, APIs backend y automatizaciones desarrolladas e integradas en la plataforma
