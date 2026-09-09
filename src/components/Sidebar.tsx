@@ -31,12 +31,18 @@ export default function Sidebar() {
     apellido: string
     departamento: string
     isGerenteGeneral: boolean
+    isLuisOrellana: boolean
+    isJoseLenny: boolean
+    canViewReporte: boolean
   }>({
     email: '',
     nombre: 'Usuario',
     apellido: '',
     departamento: 'Cargando...',
-    isGerenteGeneral: false
+    isGerenteGeneral: false,
+    isLuisOrellana: false,
+    isJoseLenny: false,
+    canViewReporte: false
   })
 
   useEffect(() => {
@@ -46,26 +52,48 @@ export default function Sidebar() {
         if (!user || !user.email) return
 
         const userEmail = user.email.toLowerCase()
-        const isGerente = userEmail.includes('aaltunaher') || userEmail.includes('gerencia')
+        const isGG = userEmail.includes('aaltunaher') || userEmail.includes('antonio')
+        const isLuis = userEmail.includes('lorellana') || userEmail.includes('luis.orellana') || userEmail.includes('orellana')
+        const isLenny = userEmail.includes('jose.gomez') || userEmail.includes('lenny') || (!isGG && !isLuis)
 
         // Fetch public user row
         const { data: dbUser } = await supabase
           .from('users')
           .select('nombre, apellido, departamento')
           .ilike('email', userEmail)
-          .single()
+          .maybeSingle()
 
-        const nombre = dbUser?.nombre || (user.user_metadata?.nombre) || (isGerente ? 'Antonio' : 'José Lenny')
-        const apellido = dbUser?.apellido || (user.user_metadata?.apellido) || (isGerente ? 'Altuna Hernandez' : 'Gómez')
-        const depto = dbUser?.departamento || (isGerente ? 'Gerente General' : 'Planificación Estratégica & Dirección')
-        const isGG = isGerente || depto.toLowerCase().includes('gerente general')
+        let defaultNombre = 'Usuario'
+        let defaultApellido = ''
+        let defaultDepto = 'Colaborador'
+
+        if (isLuis) {
+          defaultNombre = 'Luis'
+          defaultApellido = 'Orellana'
+          defaultDepto = 'Gerencia de Integración'
+        } else if (isGG) {
+          defaultNombre = 'Antonio'
+          defaultApellido = 'Altuna Hernandez'
+          defaultDepto = 'Gerente General'
+        } else if (isLenny) {
+          defaultNombre = 'José Lenny'
+          defaultApellido = 'Gómez'
+          defaultDepto = 'Planificación Estratégica & Dirección'
+        }
+
+        const nombre = dbUser?.nombre || user.user_metadata?.nombre || defaultNombre
+        const apellido = dbUser?.apellido || user.user_metadata?.apellido || defaultApellido
+        const depto = dbUser?.departamento || user.user_metadata?.departamento || defaultDepto
 
         setUserProfile({
           email: userEmail,
           nombre,
           apellido,
           departamento: depto,
-          isGerenteGeneral: isGG
+          isGerenteGeneral: isGG,
+          isLuisOrellana: isLuis,
+          isJoseLenny: isLenny,
+          canViewReporte: isLuis || isLenny
         })
       } catch (err) {
         console.warn('Error loading user in sidebar:', err)
@@ -80,19 +108,19 @@ export default function Sidebar() {
     router.refresh()
   }
 
-  // Navigation items for all users with Reporte de Actividades Realizadas below Garantías
+  // Navigation items: Reporte de Actividades Realizadas is ONLY visible to Luis Orellana and José Lenny Gómez
   const navItems = [
     { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
     { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
-    {
+    ...(userProfile.canViewReporte ? [{
       href: '/dashboard/reporte',
       label: 'Reporte de Actividades Realizadas',
       icon: BookOpen,
-      badge: 'BI Lenny',
+      badge: userProfile.isLuisOrellana ? 'Jefatura' : 'BI Lenny',
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
-    },
+    }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
     {
       href: '/dashboard/obligaciones',
@@ -151,19 +179,37 @@ export default function Sidebar() {
         <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-gray-400">Usuario Activo</span>
-            <span className={`badge ${userProfile.isGerenteGeneral ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/20 text-indigo-300'} text-[9px] px-1.5 font-mono`}>
-              {userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
+            <span className={`badge ${
+              userProfile.isLuisOrellana
+                ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                : userProfile.isGerenteGeneral
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                : 'bg-indigo-500/20 text-indigo-300'
+            } text-[9px] px-1.5 font-mono`}>
+              {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-7 h-7 rounded-lg ${userProfile.isGerenteGeneral ? 'bg-gradient-to-tr from-amber-500 to-orange-600' : 'bg-gradient-to-tr from-indigo-500 to-violet-500'} flex items-center justify-center text-xs font-bold text-white shadow`}>
+            <div className={`w-7 h-7 rounded-lg ${
+              userProfile.isLuisOrellana
+                ? 'bg-gradient-to-tr from-teal-500 to-cyan-600'
+                : userProfile.isGerenteGeneral
+                ? 'bg-gradient-to-tr from-amber-500 to-orange-600'
+                : 'bg-gradient-to-tr from-indigo-500 to-violet-500'
+            } flex items-center justify-center text-xs font-bold text-white shadow`}>
               {initials}
             </div>
             <div className="truncate">
               <p className="text-xs font-bold text-gray-100 truncate">
                 {userProfile.nombre} {userProfile.apellido}
               </p>
-              <p className={`text-[10px] ${userProfile.isGerenteGeneral ? 'text-amber-300' : 'text-indigo-300'} font-semibold truncate`}>
+              <p className={`text-[10px] ${
+                userProfile.isLuisOrellana
+                  ? 'text-teal-300'
+                  : userProfile.isGerenteGeneral
+                  ? 'text-amber-300'
+                  : 'text-indigo-300'
+              } font-semibold truncate`}>
                 {userProfile.departamento}
               </p>
             </div>

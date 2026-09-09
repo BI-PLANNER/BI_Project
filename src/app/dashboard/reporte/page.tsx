@@ -1,13 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 import {
   FileText, Database, Layers, Zap, CheckCircle2, Server,
   Code2, GitBranch, Table2, Eye, Shield, Building2, Users,
   BarChart3, Activity, Boxes, ShieldCheck, ClipboardList,
   CalendarClock, HelpCircle, Truck, Star, Link2, Cpu,
   FolderOpen, BookOpen, Package, ArrowUpRight, Globe,
-  Sparkles, Award, TrendingUp, RefreshCw, Printer, Copy, Check
+  Sparkles, Award, TrendingUp, RefreshCw, Printer, Copy, Check,
+  ShieldAlert, LogIn, ArrowLeft, Lock
 } from 'lucide-react'
 
 const MODULES = [
@@ -91,8 +94,44 @@ const STACK = [
 ]
 
 export default function ReporteTecnicoPage() {
+  const supabase = createClient()
   const [copied, setCopied] = useState(false)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [canAccess, setCanAccess] = useState(false)
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
+  const [currentUserName, setCurrentUserName] = useState<string>('')
+
   const totalLines = MODULES.reduce((a, m) => a + m.lineas, 0)
+
+  useEffect(() => {
+    async function verifyPermission() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user || !user.email) {
+          // No user logged in
+          setCanAccess(false)
+          setAuthLoading(false)
+          return
+        }
+
+        const email = user.email.toLowerCase()
+        setCurrentUserEmail(email)
+
+        const isLuis = email.includes('lorellana') || email.includes('luis.orellana') || email.includes('orellana')
+        const isLenny = email.includes('jose.gomez') || email.includes('lenny')
+
+        const allowed = isLuis || isLenny
+        setCanAccess(allowed)
+        setCurrentUserName(isLuis ? 'Luis Orellana' : isLenny ? 'José Lenny Gómez' : email)
+      } catch (err) {
+        console.warn('Error verifying auth in Reporte page:', err)
+        setCanAccess(false)
+      } finally {
+        setAuthLoading(false)
+      }
+    }
+    verifyPermission()
+  }, [supabase])
 
   const handleCopySummary = () => {
     let text = `📋 *INFORME OFICIAL DE ENTREGABLES & CUMPLIMIENTO — BI PLANNER*\n`
@@ -111,6 +150,74 @@ export default function ReporteTecnicoPage() {
     navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 3000)
+  }
+
+  // 1. Estado de carga de autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-10 h-10 border-4 border-teal-500/30 border-t-teal-400 rounded-full animate-spin" />
+        <p className="text-xs font-mono text-gray-400">Verificando permisos de acceso...</p>
+      </div>
+    )
+  }
+
+  // 2. Estado de Acceso Restringido (Solo Luis Orellana y José Lenny Gómez)
+  if (!canAccess) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <div className="glass-card max-w-lg w-full p-8 rounded-3xl border border-amber-500/30 bg-slate-900/95 text-center space-y-5 shadow-2xl backdrop-blur-xl">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/10">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-xs border border-amber-500/30 px-3 py-1">
+              🔒 ACCESO EXCLUSIVO
+            </span>
+            <h2 className="text-2xl font-black text-white">Reporte de Actividades & Cumplimiento</h2>
+            <p className="text-xs text-gray-300 leading-relaxed pt-1">
+              Este informe técnico oficial de entregables de Business Intelligence está restringido y configurado para visualización exclusiva de:
+            </p>
+
+            <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-teal-500/20 text-xs font-mono space-y-1.5 text-left mt-3">
+              <p className="font-bold text-teal-300 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                🎯 Luis Orellana <span className="text-[10px] text-teal-400/70">(Gerencia de Integración)</span>
+              </p>
+              <p className="text-gray-400 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-gray-500" />
+                👤 José Lenny Gómez <span className="text-[10px] text-gray-500">(Planificación Estratégica BI)</span>
+              </p>
+            </div>
+
+            {currentUserEmail && (
+              <p className="text-[11px] text-gray-500 pt-2">
+                Usuario activo no autorizado: <span className="text-gray-300 font-mono font-bold">{currentUserEmail}</span>
+              </p>
+            )}
+          </div>
+
+          <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/dashboard/stock"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 border border-white/10 transition cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Ir al Dashboard General</span>
+            </Link>
+
+            <Link
+              href="/login"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition hover:opacity-90 shadow-lg shadow-teal-500/20 cursor-pointer"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Iniciar Sesión como Luis Orellana</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

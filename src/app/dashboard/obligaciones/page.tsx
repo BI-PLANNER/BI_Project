@@ -456,21 +456,24 @@ export default function DashboardObligacionesPage() {
                 DASHBOARD ESTRATÉGICO
               </span>
 
-              <button
-                onClick={() => {
-                  const el = document.getElementById('reporte-actividades-realizadas')
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth' })
-                  } else {
-                    setMainView('reporte')
-                  }
-                }}
-                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 hover:from-teal-300 hover:to-cyan-300 text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-xl shadow-teal-500/30 border border-teal-300"
-                title="Ir a la sección de Reporte de Actividades Realizadas"
-              >
-                <BookOpen className="w-4 h-4 text-slate-950" />
-                <span>👉 📋 Ir a Reporte de Actividades Realizadas</span>
-              </button>
+              {/* Botón para ver Reporte solo si es Luis Orellana o José Lenny */}
+              {((currentUserEmail || '').toLowerCase().includes('orellana') || (currentUserEmail || '').toLowerCase().includes('jose.gomez') || (currentUserEmail || '').toLowerCase().includes('lenny')) && (
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('reporte-actividades-realizadas')
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' })
+                    } else {
+                      setMainView('reporte')
+                    }
+                  }}
+                  className="px-4 py-2 rounded-2xl bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 hover:from-teal-300 hover:to-cyan-300 text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-xl shadow-teal-500/30 border border-teal-300"
+                  title="Ir a la sección de Reporte de Actividades Realizadas"
+                >
+                  <BookOpen className="w-4 h-4 text-slate-950" />
+                  <span>👉 📋 Ir a Reporte de Actividades Realizadas</span>
+                </button>
+              )}
             </div>
 
             <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
@@ -1406,269 +1409,38 @@ export default function DashboardObligacionesPage() {
           </div>
           {/* ━━━━ FIN SECCIÓN REPORTE DE CUMPLIMIENTO ━━━━ */}
 
-          {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES REALIZADAS — JOSÉ LENNY GÓMEZ ━━━━ */}
-          <div id="reporte-actividades-realizadas" className="space-y-6 mt-12 pt-8 border-t-2 border-teal-500/40">
-
-            {/* Header del Reporte Técnico */}
-            <div className="glass-card p-6 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 relative overflow-hidden shadow-2xl">
-              <div className="absolute -top-20 -right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-10 left-1/3 w-64 h-64 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
-
-              <div className="relative z-10">
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-[10px] border border-teal-500/30 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-teal-400" /> SECCIÓN OFICIAL DE ENTREGABLES & CONFIGURACIONES
-                  </span>
-                  <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-[10px] border border-emerald-500/30">
-                    v2.0 · En Producción — Vercel
-                  </span>
-                  <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-[10px] border border-indigo-500/30">
-                    Supabase PostgreSQL Cloud
-                  </span>
+          {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES REALIZADAS — EXCLUSIVO LUIS ORELLANA & JOSÉ LENNY ━━━━ */}
+          {((currentUserEmail || '').toLowerCase().includes('orellana') || (currentUserEmail || '').toLowerCase().includes('jose.gomez') || (currentUserEmail || '').toLowerCase().includes('lenny')) && (
+            <div id="reporte-actividades-realizadas" className="glass-card p-6 md:p-8 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 shadow-2xl space-y-4 mt-8">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-teal-500/30 flex items-center gap-1.5 px-3 py-1">
+                      <Sparkles className="w-3.5 h-3.5 text-teal-400" /> SECCIÓN OFICIAL DE ENTREGABLES
+                    </span>
+                    <span className="badge bg-amber-500/20 text-amber-300 font-mono text-xs border border-amber-500/30 px-3 py-1">
+                      🔒 Exclusivo Luis Orellana & BI Lenny
+                    </span>
+                  </div>
+                  <h2 className="text-xl md:text-2xl font-black text-white flex items-center gap-2">
+                    <BookOpen className="w-6 h-6 text-teal-400" />
+                    Reporte de Actividades & Cumplimiento BI
+                  </h2>
+                  <p className="text-xs text-gray-300 max-w-3xl leading-relaxed">
+                    Informe técnico de constancia de desarrollos, 21 tablas de base de datos, 4 APIs, scripts de Python OCR y 9 automatizaciones de <strong className="text-teal-300">Control Planner PRO</strong>.
+                  </p>
                 </div>
 
-                <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-2 flex items-center gap-3">
-                  <BookOpen className="w-7 h-7 text-teal-400 animate-pulse" />
-                  Reporte de Actividades Realizadas — BI Planner
-                </h2>
-                <p className="text-xs text-gray-300 max-w-3xl leading-relaxed">
-                  Informe integral de todas las configuraciones, tablas de base de datos, conexiones, APIs backend y automatizaciones desarrolladas e integradas en la plataforma
-                  <strong className="text-teal-300"> Control Planner PRO — LAB &amp; MED</strong>.
-                  Desarrollado y administrado por <strong className="text-white">José Lenny Gómez</strong> (Área de Business Intelligence &amp; Planificación Estratégica).
-                </p>
-
-                {/* KPI Strip del Trabajo Realizado */}
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-5 border-t border-white/10">
-                  <div className="bg-slate-950/60 rounded-2xl p-3 border border-teal-500/20">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">Módulos Desarrollados</span>
-                    <span className="text-2xl font-black text-teal-300 font-mono">11</span>
-                    <span className="text-[10px] text-gray-500 block">páginas funcionales</span>
-                  </div>
-                  <div className="bg-slate-950/60 rounded-2xl p-3 border border-cyan-500/20">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">Tablas BD 3FN</span>
-                    <span className="text-2xl font-black text-cyan-300 font-mono">21</span>
-                    <span className="text-[10px] text-gray-500 block">+ 5 Vistas SQL</span>
-                  </div>
-                  <div className="bg-slate-950/60 rounded-2xl p-3 border border-indigo-500/20">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">Componentes TSX</span>
-                    <span className="text-2xl font-black text-indigo-300 font-mono">9</span>
-                    <span className="text-[10px] text-gray-500 block">reutilizables en UI</span>
-                  </div>
-                  <div className="bg-slate-950/60 rounded-2xl p-3 border border-violet-500/20">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">APIs & Scripts</span>
-                    <span className="text-2xl font-black text-violet-300 font-mono">4+4</span>
-                    <span className="text-[10px] text-gray-500 block">Python, Node & Next API</span>
-                  </div>
-                  <div className="bg-slate-950/60 rounded-2xl p-3 border border-amber-500/20">
-                    <span className="text-[10px] text-gray-400 uppercase font-bold block">Automatizaciones</span>
-                    <span className="text-2xl font-black text-amber-300 font-mono">9</span>
-                    <span className="text-[10px] text-gray-500 block">activas 24/7</span>
-                  </div>
-                </div>
+                <a
+                  href="/dashboard/reporte"
+                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center gap-2 transition hover:opacity-90 shadow-lg shadow-teal-500/20 shrink-0 self-start md:self-auto cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Abrir Reporte Completo (11 Módulos)</span>
+                </a>
               </div>
             </div>
-
-            {/* 1. MÓDULOS DE LA APLICACIÓN */}
-            <div className="glass-card p-5 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 flex items-center justify-center text-white shadow">
-                  <Layers className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-black text-white">11 Módulos UI Desarrollados en Producción</h3>
-                  <p className="text-[11px] text-gray-400">Páginas completas creadas para la gestión operativa y ejecutiva de LAB &amp; MED</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {[
-                  { label: 'Stock & Inventario BI', ruta: '/dashboard/stock', desc: 'Control de inventario con ROP automático, semáforo live CRITICO/REORDEN/FEFO, demanda mensual con gráficas Recharts y CRUD completo.', lineas: '3,295 líneas TSX' },
-                  { label: 'Contratos & RACI', ruta: '/dashboard/contratos', desc: '6 contratos institucionales con hospitales. Matriz RACI (Responsable/Accountable/Consultado/Informado) por numeral COMPRASAL.', lineas: '1,295 líneas TSX' },
-                  { label: 'Panel Planner BI', ruta: '/dashboard/planner', desc: '26 pendientes oficiales del ciclo operativo. Semáforo automático por fecha. Reasignación en tiempo real. Generador de emails de presión.', lineas: '1,618 líneas TSX' },
-                  { label: 'Garantías & Fianzas', ruta: '/dashboard/garantias', desc: 'Control de fianzas de cumplimiento y buena inversión por contrato. Monitoreo de estado y alertas de fecha de vencimiento.', lineas: '391 líneas TSX' },
-                  { label: 'Gestión por Tablas (21)', ruta: '/dashboard/tablas', desc: 'CRUD maestro de las 21 tablas del sistema. Edición directa de catálogos: áreas, personas, clientes, ubicaciones con conteos live.', lineas: '867 líneas TSX' },
-                  { label: 'Dashboard Obligaciones', ruta: '/dashboard/obligaciones', desc: 'Panel ejecutivo con 4 gráficas de pastel interactivas. Reporte de Cumplimiento por Responsable con ranking y scorecards. Exportación CSV.', lineas: '1,382 líneas TSX' },
-                  { label: 'Kardex / Mesa de Ayuda', ruta: '/dashboard/kardex', desc: 'Registro y seguimiento de incidencias técnicas. Semáforo de vencimiento automático. Asignación de técnico responsable por área.', lineas: '537 líneas TSX' },
-                  { label: 'Pedidos & Entregas', ruta: '/dashboard/pedidos', desc: 'Cronograma de entregas programadas por contrato y hospital. Actualización de estado (Pendiente / En Tránsito / Entregado).', lineas: '380 líneas TSX' },
-                  { label: 'Fases de Contratos', ruta: '/dashboard/fases', desc: 'Checklist por numeral de contrato. Matriz de entregas cruzada por hospital y producto. 2,766 líneas de data migrada desde Excel.', lineas: '1,083 líneas TSX' },
-                  { label: 'Análisis BI', ruta: '/dashboard/analisis', desc: 'Módulo de análisis avanzado de indicadores comerciales y KPIs de efectividad.', lineas: 'Módulo BI' },
-                ].map((mod, i) => (
-                  <div key={mod.ruta} className="p-3.5 rounded-2xl bg-slate-950/60 border border-teal-500/15 space-y-1 hover:border-teal-500/30 transition-all">
-                    <div className="flex items-center justify-between">
-                      <span className="font-black text-white text-xs flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-                        #{i + 1} {mod.label}
-                      </span>
-                      <span className="text-[9px] font-mono text-teal-300 bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">{mod.lineas}</span>
-                    </div>
-                    <p className="text-[11px] text-gray-400 leading-relaxed">{mod.desc}</p>
-                    <span className="text-[10px] font-mono text-gray-500 block">{mod.ruta}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 2. BASE DE DATOS Y TABLAS (21 TABLAS + 5 VISTAS) */}
-            <div className="glass-card p-5 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow">
-                  <Database className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-black text-white">Base de Datos PostgreSQL (21 Tablas 3FN + 5 Vistas SQL)</h3>
-                  <p className="text-[11px] text-gray-400">Modelo relacional en Tercera Forma Normal (3FN) diseñado en Supabase Cloud</p>
-                </div>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-950/80 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
-                      <th className="py-2.5 px-3 w-8 text-center">#</th>
-                      <th className="py-2.5 px-3">Tabla PostgreSQL</th>
-                      <th className="py-2.5 px-3">Grupo</th>
-                      <th className="py-2.5 px-3">Descripción de la Configuración</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5 text-gray-300">
-                    {[
-                      { name: 'empresas', grupo: 'Org.', desc: 'Grupo empresarial LAB & MED' },
-                      { name: 'tipos_institucion', grupo: 'Org.', desc: 'Tipos de instituciones cliente' },
-                      { name: 'clientes', grupo: 'Org.', desc: '6 hospitales clientes activos (Bloom, Saldaña, Santa Ana, ISBM, ISSS, Militar)' },
-                      { name: 'areas', grupo: 'Org.', desc: '7 áreas organizacionales (Aplicaciones, PM, Logística, IT, Licitaciones, Soporte, GI)' },
-                      { name: 'personas', grupo: 'Org.', desc: 'Colaboradores del equipo con email institucional' },
-                      { name: 'roles', grupo: 'Org.', desc: 'Roles RACI operativos (Responsable, Accountable, Consultado, Informado)' },
-                      { name: 'estatus', grupo: 'Org.', desc: 'Catálogo de estados del semáforo (Rojo, Naranja, Verde, Completado)' },
-                      { name: 'users', grupo: 'Org.', desc: 'Usuarios del sistema vinculados con Supabase Auth' },
-                      { name: 'marcas', grupo: 'Producto', desc: 'Marcas comerciales (Siemens, Mindray, etc.)' },
-                      { name: 'productos_equipo', grupo: 'Producto', desc: 'Catálogo de productos/SKU con ROP e inventario mínimo' },
-                      { name: 'procesos', grupo: 'Producto', desc: 'Procesos contractuales y numéricos' },
-                      { name: 'tipos_dependiente', grupo: 'Producto', desc: 'Clasificación de reactivos y consumibles dependientes' },
-                      { name: 'ubicaciones', grupo: 'Producto', desc: 'Laboratorios y ubicaciones de instalación' },
-                      { name: 'situaciones', grupo: 'Producto', desc: 'Tipos de situaciones y obligaciones contractuales' },
-                      { name: 'licitaciones_ofertas', grupo: 'Comercial', desc: 'Licitaciones y ofertas COMPRASAL' },
-                      { name: 'ofertas_items', grupo: 'Comercial', desc: 'Renglones y detalle de ítems de ofertas' },
-                      { name: 'entregas_programadas', grupo: 'Comercial', desc: 'Cronograma de entregas programadas' },
-                      { name: 'contratos', grupo: 'Contrato', desc: '6 contratos adjudicados activos' },
-                      { name: 'contrato_procesos', grupo: 'Contrato', desc: 'Fases, numerales y procesos por contrato' },
-                      { name: 'asignaciones_proceso', grupo: 'Contrato', desc: 'Matriz RACI por asignación individual' },
-                      { name: 'incidencias_seguimiento', grupo: 'Contrato', desc: 'Mesa de ayuda / 26 pendientes del Planner BI' },
-                    ].map((t, i) => (
-                      <tr key={t.name} className="hover:bg-white/[0.03]">
-                        <td className="py-2 px-3 font-mono text-gray-500 text-[10px] text-center">{i + 1}</td>
-                        <td className="py-2 px-3 font-mono text-cyan-300 font-bold">{t.name}</td>
-                        <td className="py-2 px-3">
-                          <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                            {t.grupo}
-                          </span>
-                        </td>
-                        <td className="py-2 px-3 text-gray-300 text-[11px]">{t.desc}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Vistas SQL */}
-              <div className="pt-3 border-t border-white/10">
-                <p className="text-xs font-bold text-white mb-2 flex items-center gap-1.5">
-                  <Database className="w-3.5 h-3.5 text-cyan-400" />
-                  5 Vistas SQL Analíticas Creadas en Supabase:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {[
-                    { v: 'v_licitaciones_resumen', desc: 'Licitaciones consolidadas con empresa, cliente y contrato' },
-                    { v: 'v_kpis_efectividad_comercial', desc: 'KPIs: tasa de adjudicación, montos ofertados vs adjudicados' },
-                    { v: 'v_matriz_raci_contrato', desc: 'Matriz RACI completa cruzada por contrato y proceso' },
-                    { v: 'v_cronograma_entregas_pendientes', desc: 'Cronograma con semáforo logístico de entregas' },
-                    { v: 'v_mesa_ayuda_incidencias', desc: 'Incidencias activas con técnico responsable y área' },
-                  ].map((vw, vi) => (
-                    <div key={vw.v} className="p-2.5 rounded-xl bg-slate-950/60 border border-cyan-500/15 flex items-start gap-2">
-                      <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">V{vi + 1}</span>
-                      <div>
-                        <span className="font-mono text-[11px] font-bold text-white block">{vw.v}</span>
-                        <span className="text-[10px] text-gray-400">{vw.desc}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 3. APIS & AUTOMATIZACIONES */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* APIs Backend */}
-              <div className="glass-card p-5 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 to-purple-600 flex items-center justify-center text-white shadow">
-                    <Code2 className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-white">4 APIs Backend & 4 Scripts</h3>
-                    <p className="text-[11px] text-gray-400">Rutas Next.js API Routes y scripts en Python / Node.js</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  {[
-                    { name: 'POST /api/db', desc: 'Bypass RLS de Supabase con service_role key. Permite operaciones de administración directa.' },
-                    { name: 'POST /api/ocr-lapicero', desc: 'API de OCR inteligente: procesa imágenes de documentos escritos a lapicero con script Python + OpenCV.' },
-                    { name: 'POST /api/notificaciones', desc: 'Envío de correos automáticos de cumplimiento a encargados por nivel de urgencia.' },
-                    { name: 'POST /api/sync-sheets', desc: 'Sincronización bidireccional con hojas de cálculo corporativas.' },
-                    { name: 'ocr_lapicero_extractor.py', desc: 'Script Python con OpenCV para extracción de texto manuscrito.' },
-                    { name: 'seed_licitaciones_pendientes.js', desc: 'Carga masiva de los 26 pendientes oficiales a Supabase.' },
-                  ].map(a => (
-                    <div key={a.name} className="p-2.5 rounded-xl bg-slate-950/60 border border-violet-500/15 text-xs">
-                      <span className="font-mono font-bold text-violet-300 block">{a.name}</span>
-                      <span className="text-[11px] text-gray-400">{a.desc}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Automatizaciones */}
-              <div className="glass-card p-5 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white shadow">
-                    <Zap className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-white">9 Automatizaciones Activas 24/7</h3>
-                    <p className="text-[11px] text-gray-400">Lógica automática que optimiza el tiempo operativo</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  {[
-                    { auto: 'Semáforo de Fechas Automático', desc: 'Evaluación dinámica en tiempo real según fecha de vencimiento.' },
-                    { auto: 'Alertas Live de Stock ROP', desc: 'Cálculo automático de punto de reorden y rotación FEFO.' },
-                    { auto: 'OCR para Texto Escrito a Mano', desc: 'Conversión de fotos de documentos físicos a registros JSON.' },
-                    { auto: 'Reasignación de Responsable Live', desc: 'Actualización instantánea en Supabase sin recargar.' },
-                    { auto: 'Auth & Protección de Rutas', desc: 'Detección automática de rol por email y protección por middleware.' },
-                    { auto: 'Despliegue CI/CD Automático', desc: 'Cada commit en GitHub dispara build y deploy en Vercel automáticamente.' },
-                  ].map(au => (
-                    <div key={au.auto} className="p-2.5 rounded-xl bg-slate-950/60 border border-amber-500/15 text-xs flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-bold text-white block">{au.auto}</span>
-                        <span className="text-[11px] text-gray-400">{au.desc}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer de firma de autor */}
-            <div className="p-4 rounded-2xl bg-teal-950/20 border border-teal-500/30 text-center">
-              <p className="text-xs text-teal-300 font-bold">
-                Control Planner PRO v2.0 — Sistema Web Centralizado LAB &amp; MED
-              </p>
-              <p className="text-[11px] text-gray-400 mt-0.5">
-                Diseñado, programado, configurado y desplegado por <strong className="text-white">José Lenny Gómez</strong> — Business Intelligence &amp; Planificación Estratégica.
-              </p>
-            </div>
-          </div>
+          )}
           {/* ━━━━ FIN SECCIÓN REPORTE DE ACTIVIDADES DE JOSÉ LENNY GÓMEZ ━━━━ */}
 
         </>

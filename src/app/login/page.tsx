@@ -84,6 +84,79 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleAuth} className="space-y-4">
+            {/* Quick Profile Switcher */}
+            {!isRegister && (
+              <div className="space-y-1.5 pb-2 border-b border-white/10">
+                <label className="block text-[10px] font-mono uppercase font-bold text-gray-400">
+                  Acceso Rápido por Perfil:
+                </label>
+                <div className="grid grid-cols-1 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('lorellana@lm-sv.com')
+                      setPassword('Password123!')
+                    }}
+                    className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
+                      email.includes('orellana')
+                        ? 'bg-teal-500/20 border-teal-500/50 text-teal-300 font-bold'
+                        : 'bg-white/[0.03] border-white/10 text-gray-300 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    <div>
+                      <span className="font-bold block">🎯 Luis Orellana</span>
+                      <span className="text-[10px] text-gray-400">Gerencia de Integración · Jefatura</span>
+                    </div>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                      Reporte BI
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('jose.gomez@labandmed.com')
+                      setPassword('Password123!')
+                    }}
+                    className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
+                      email.includes('jose.gomez')
+                        ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-300 font-bold'
+                        : 'bg-white/[0.03] border-white/10 text-gray-300 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    <div>
+                      <span className="font-bold block">👤 José Lenny Gómez</span>
+                      <span className="text-[10px] text-gray-400">Planificación Estratégica & BI</span>
+                    </div>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                      Control Total
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('aaltunaher@labandmed.com')
+                      setPassword('Password123!')
+                    }}
+                    className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
+                      email.includes('aaltunaher')
+                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 font-bold'
+                        : 'bg-white/[0.03] border-white/10 text-gray-300 hover:bg-white/[0.08]'
+                    }`}
+                  >
+                    <div>
+                      <span className="font-bold block">👔 Antonio Altuna</span>
+                      <span className="text-[10px] text-gray-400">Gerente General</span>
+                    </div>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      Gerencia
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             {isRegister && (
               <div>
                 <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
