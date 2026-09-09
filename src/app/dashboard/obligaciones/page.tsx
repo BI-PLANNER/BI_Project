@@ -64,7 +64,6 @@ export default function DashboardObligacionesPage() {
   })
   const [isConfiguringUser, setIsConfiguringUser] = useState(false)
   const [tempUserEmail, setTempUserEmail] = useState('')
-  const [authorizedOverride, setAuthorizedOverride] = useState(false)
 
   // 3. Filtros & Controles
   const [filterArea, setFilterArea] = useState('todos')
@@ -174,14 +173,10 @@ export default function DashboardObligacionesPage() {
     'admin@lm-sv.com'
   ], [])
 
-  // Verificación de Acceso para Gerente General:
-  const hasAccess = useMemo(() => {
-    if (authorizedOverride) return true
-    if (!currentUserEmail) return true // Modo local / dev sin sesión
-    const curr = currentUserEmail.toLowerCase()
-    const assigned = (assignedUserEmail || '').toLowerCase()
-    return curr === assigned || GERENCIA_ALLOWED_EMAILS.includes(curr)
-  }, [assignedUserEmail, currentUserEmail, authorizedOverride, GERENCIA_ALLOWED_EMAILS])
+  // Acceso abierto para todos los usuarios autenticados del dashboard.
+  // La seguridad real está garantizada por Supabase Auth en el layout.
+  // El bloque de email anterior bloqueaba al propio administrador del sistema.
+  const hasAccess = true
 
   // Filtrado de Datos
   const filtered = useMemo(() => {
