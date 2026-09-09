@@ -11,7 +11,8 @@ import {
   Database,
   PieChart as PieIcon,
   ShieldCheck,
-  LayoutDashboard
+  LayoutDashboard,
+  BookOpen
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -93,6 +94,13 @@ export default function Sidebar() {
           href: '/dashboard/stock',
           label: 'Stock & Inventario BI',
           icon: Boxes
+        },
+        {
+          href: '/dashboard/reporte',
+          label: 'Reporte Técnico BI',
+          icon: BookOpen,
+          badge: 'Actividades',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
         }
       ]
     : [
@@ -108,6 +116,13 @@ export default function Sidebar() {
           badge: 'Gerente General',
           badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
         },
+        {
+          href: '/dashboard/reporte',
+          label: 'Reporte Técnico BI',
+          icon: BookOpen,
+          badge: 'Actividades',
+          badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
+        }
       ]
 
   const initials = `${userProfile.nombre.charAt(0)}${userProfile.apellido.charAt(0) || userProfile.nombre.charAt(1) || 'U'}`.toUpperCase()
