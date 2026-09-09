@@ -143,14 +143,39 @@ const AREA_BADGES: Record<string, string> = {
   'GI': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
 }
 
+export const DEFAULT_PERSONAS = [
+  { persona_id: 1, nombre_completo: 'JULIO CESAR', email: 'julio.cesar@lm-sv.com', area: 'PM' },
+  { persona_id: 2, nombre_completo: 'EDGAR FIGUEROA', email: 'edgar.figueroa@lm-sv.com', area: 'APLICACIONES' },
+  { persona_id: 3, nombre_completo: 'LUIS ORELLANA', email: 'luis.orellana@lm-sv.com', area: 'GI' },
+  { persona_id: 4, nombre_completo: 'JOSE LENNY GOMEZ', email: 'jose.gomez@labandmed.com', area: 'PM' },
+  { persona_id: 5, nombre_completo: 'ANTONIO ALTUNA', email: 'antonio.altuna@labandmed.com', area: 'GI' },
+  { persona_id: 6, nombre_completo: 'RICARDO SANCHEZ', email: 'ricardo.sanchez@lm-sv.com', area: 'IT' },
+  { persona_id: 7, nombre_completo: 'DIEGO MEJIA', email: 'diego.mejia@lm-sv.com', area: 'LOGISTICA' },
+  { persona_id: 8, nombre_completo: 'MOISES RIVERA', email: 'moises.rivera@lm-sv.com', area: 'SOPORTE' },
+  { persona_id: 9, nombre_completo: 'ROBERTO BATRES', email: 'roberto.batres@lm-sv.com', area: 'LICITACIONES' },
+  { persona_id: 10, nombre_completo: 'CARLOS MENDOZA', email: 'carlos.mendoza@lm-sv.com', area: 'LOGISTICA' },
+  { persona_id: 11, nombre_completo: 'MARIO RAMOS', email: 'mario.ramos@lm-sv.com', area: 'SOPORTE' },
+  { persona_id: 12, nombre_completo: 'JUAN JOSE PEREZ', email: 'juan.perez@lm-sv.com', area: 'LOGISTICA' }
+]
+
+export const DEFAULT_AREAS = [
+  { area_id: 1, nombre_area: 'PM', label: 'PM (Project Management)' },
+  { area_id: 2, nombre_area: 'APLICACIONES', label: 'APLICACIONES (Especialistas Clínicos)' },
+  { area_id: 3, nombre_area: 'IT', label: 'IT (Sistemas e Informática)' },
+  { area_id: 4, nombre_area: 'LOGISTICA', label: 'LOGISTICA (Bodega & Despacho)' },
+  { area_id: 5, nombre_area: 'SOPORTE', label: 'SOPORTE (Ingeniería Biomédica)' },
+  { area_id: 6, nombre_area: 'LICITACIONES', label: 'LICITACIONES (Ofertas & Contratos)' },
+  { area_id: 7, nombre_area: 'GI', label: 'GI (Gerencia de Integración)' }
+]
+
 export default function ContratosPage() {
   const [contratos, setContratos] = useState<any[]>(MASTER_CONTRATOS)
   const [clientes, setClientes] = useState<any[]>([])
   const [empresas, setEmpresas] = useState<any[]>([])
   const [incidencias, setIncidencias] = useState<any[]>(MASTER_LICITACIONES_PENDIENTES)
   const [contratoProcesos, setContratoProcesos] = useState<any[]>([])
-  const [personas, setPersonas] = useState<any[]>([])
-  const [areas, setAreas] = useState<any[]>([])
+  const [personas, setPersonas] = useState<any[]>(DEFAULT_PERSONAS)
+  const [areas, setAreas] = useState<any[]>(DEFAULT_AREAS)
   const [situaciones, setSituaciones] = useState<any[]>([])
   const [estatusList, setEstatusList] = useState<any[]>([])
   const [roles, setRoles] = useState<any[]>([])
@@ -190,9 +215,11 @@ export default function ContratosPage() {
   const [numeralForm, setNumeralForm] = useState({
     situacion: '',
     situacion_id: '',
-    persona_id: '',
-    area_id: '',
-    fecha_cumplimiento: '',
+    persona_id: '1',
+    responsable_nombre: 'JULIO CESAR',
+    responsable_email: 'julio.cesar@lm-sv.com',
+    area_nombre: 'PM',
+    fecha_cumplimiento: new Date().toISOString().split('T')[0],
     estatus_id: '10', // 10 = Verde
     comentario: ''
   })
@@ -532,13 +559,17 @@ export default function ContratosPage() {
   const handleOpenAddNumeral = (contratoId: string) => {
     setSelectedContratoForNumeral(contratoId)
     setEditingNumeral(null)
+    const pList = personas.length > 0 ? personas : DEFAULT_PERSONAS
+    const firstP = pList[0] || DEFAULT_PERSONAS[0]
     setNumeralForm({
       situacion: '',
-      situacion_id: situaciones[0]?.situacion_id ? String(situaciones[0].situacion_id) : '',
-      persona_id: personas[0]?.persona_id ? String(personas[0].persona_id) : '',
-      area_id: '',
-      fecha_cumplimiento: '',
-      estatus_id: '10', // 10 = Verde
+      situacion_id: '',
+      persona_id: String(firstP.persona_id),
+      responsable_nombre: firstP.nombre_completo,
+      responsable_email: firstP.email,
+      area_nombre: firstP.area || 'PM',
+      fecha_cumplimiento: new Date().toISOString().split('T')[0],
+      estatus_id: '10', // 10 = Verde (En Plazo)
       comentario: ''
     })
     setShowNumeralModal(true)
@@ -547,13 +578,24 @@ export default function ContratosPage() {
   const handleOpenEditNumeral = (ob: any, contratoId: string) => {
     setSelectedContratoForNumeral(contratoId)
     setEditingNumeral(ob)
+    const pList = personas.length > 0 ? personas : DEFAULT_PERSONAS
+    const matched = pList.find(p => String(p.persona_id) === String(ob.persona_id) || p.nombre_completo?.toLowerCase() === ob.responsable_nombre?.toLowerCase()) || pList[0]
+
+    let estId = '10'
+    if (ob.estatus_id) estId = String(ob.estatus_id)
+    else if (ob.estatus_nombre === 'Rojo' || ob.estatus === 'Rojo') estId = '12'
+    else if (ob.estatus_nombre === 'Anaranjado' || ob.estatus === 'Anaranjado') estId = '11'
+    else if (ob.estatus_nombre === 'COMPLETADO' || ob.estatus === 'COMPLETADO') estId = '8'
+
     setNumeralForm({
       situacion: ob.situacion || '',
       situacion_id: ob.situacion_id ? String(ob.situacion_id) : '',
-      persona_id: ob.persona_id ? String(ob.persona_id) : '',
-      area_id: '',
+      persona_id: String(ob.persona_id || matched?.persona_id || '1'),
+      responsable_nombre: ob.responsable_nombre || matched?.nombre_completo || '',
+      responsable_email: ob.responsable_email || matched?.email || '',
+      area_nombre: ob.area_nombre || matched?.area || 'PM',
       fecha_cumplimiento: ob.fecha_cumplimiento || '',
-      estatus_id: ob.estatus_id ? String(ob.estatus_id) : '10',
+      estatus_id: estId,
       comentario: ob.comentario || ''
     })
     setShowNumeralModal(true)
@@ -564,39 +606,64 @@ export default function ContratosPage() {
     if (!selectedContratoForNumeral) return
     setLoading(true)
     try {
-      const contract = contratos.find(c => c.contrato_id === selectedContratoForNumeral)
+      const contract = contractsWithObligations.find(c => c.contrato_id === selectedContratoForNumeral) || contratos.find(c => c.contrato_id === selectedContratoForNumeral)
       const clienteId = contract?.cliente_id || 13
+
+      // Match selected person
+      const pList = personas.length > 0 ? personas : DEFAULT_PERSONAS
+      const selectedPerson = pList.find(p => String(p.persona_id) === String(numeralForm.persona_id)) || {
+        nombre_completo: numeralForm.responsable_nombre || 'JULIO CESAR',
+        email: numeralForm.responsable_email || 'julio.cesar@lm-sv.com'
+      }
+
+      // Estatus mapping
+      const estatusMap: Record<string, string> = {
+        '12': 'Rojo',
+        '11': 'Anaranjado',
+        '10': 'Verde',
+        '8': 'COMPLETADO'
+      }
+      const estatusNombre = estatusMap[numeralForm.estatus_id] || 'Verde'
 
       // Find or create situation if typed
       let sitId = numeralForm.situacion_id ? Number(numeralForm.situacion_id) : null
       if (!sitId && numeralForm.situacion) {
-        const existingSit = situaciones.find(s => s.nombre_situacion.toLowerCase() === numeralForm.situacion.toLowerCase())
+        const existingSit = situaciones.find(s => s.nombre_situacion?.toLowerCase() === numeralForm.situacion.toLowerCase())
         if (existingSit) {
           sitId = existingSit.situacion_id
-        } else {
-          const insertedSit = await dbInsert('situaciones', { nombre_situacion: numeralForm.situacion })
-          sitId = Array.isArray(insertedSit) ? insertedSit[0]?.situacion_id : insertedSit?.situacion_id
         }
       }
 
       const payload: any = {
         contrato_id: selectedContratoForNumeral,
+        numero_contrato: contract?.numero_contrato || null,
+        cliente: contract?.cliente_nombre || contract?.cliente?.nombre_cliente || 'INSTITUCIONAL',
         cliente_id: clienteId,
-        situacion_id: sitId || situaciones[0]?.situacion_id || 20,
-        persona_id: numeralForm.persona_id ? Number(numeralForm.persona_id) : (personas[0]?.persona_id || 1),
+        situacion: numeralForm.situacion,
+        situacion_id: sitId || 20,
+        persona_id: Number(numeralForm.persona_id) || 1,
+        responsable: selectedPerson.nombre_completo,
+        responsableEmail: selectedPerson.email,
+        area: numeralForm.area_nombre || 'PM',
         fecha_cumplimiento: numeralForm.fecha_cumplimiento || null,
         estatus_id: Number(numeralForm.estatus_id || 10),
+        estatus: estatusNombre,
         comentario: numeralForm.comentario || null
       }
 
       if (editingNumeral && editingNumeral.tipo_origen === 'incidencia') {
         await dbUpdate('incidencias_seguimiento', editingNumeral.id, 'incidencia_id', payload)
+        setIncidencias(prev => prev.map(inc => (inc.incidencia_id === editingNumeral.id || inc.id === editingNumeral.id) ? { ...inc, ...payload } : inc))
         showToast('¡Obligación / Numeral actualizado correctamente!')
       } else {
-        await dbInsert('incidencias_seguimiento', payload)
+        const res = await dbInsert('incidencias_seguimiento', payload)
+        const newId = Array.isArray(res) ? res[0]?.incidencia_id : res?.incidencia_id || Date.now()
+        setIncidencias(prev => [{ ...payload, incidencia_id: newId, id: newId }, ...prev])
         showToast('¡Nuevo numeral agregado al contrato exitosamente!')
       }
 
+      // Auto-expand this contract to show the new item immediately
+      setExpandedContratos(prev => ({ ...prev, [selectedContratoForNumeral]: true }))
       setShowNumeralModal(false)
       loadData()
     } catch (err: any) {
@@ -1191,86 +1258,205 @@ export default function ContratosPage() {
 
       {/* Modal: Agregar / Editar Numeral */}
       {showNumeralModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-sm font-bold text-white">
-                  {editingNumeral ? 'Editar Numeral / Obligación' : 'Agregar Numeral Contractual & RACI'}
-                </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh]">
+            {/* Modal Header */}
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <FileSpreadsheet className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">
+                    {editingNumeral ? 'Editar Numeral / Obligación Contractual' : 'Agregar Numeral Contractual & RACI'}
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Control de obligaciones institucionales, responsables RACI y semáforo de vencimiento.
+                  </p>
+                </div>
               </div>
-              <button onClick={() => setShowNumeralModal(false)} className="text-slate-400 hover:text-white text-sm">✕</button>
+              <button
+                onClick={() => setShowNumeralModal(false)}
+                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+              >
+                ✕
+              </button>
             </div>
 
-            <form onSubmit={handleSaveNumeral} className="p-5 overflow-y-auto space-y-3.5 flex-1">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Requerimiento / Situación Técnica *</label>
+            {/* Contract Context Banner */}
+            {selectedContratoForNumeral && (() => {
+              const contract = contractsWithObligations.find(c => c.contrato_id === selectedContratoForNumeral) || contratos.find(c => c.contrato_id === selectedContratoForNumeral)
+              if (!contract) return null
+              return (
+                <div className="px-5 py-2.5 bg-indigo-950/40 border-b border-indigo-500/20 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+                      {contract.numero_contrato}
+                    </span>
+                    <span className="font-bold text-white line-clamp-1">{contract.nombre_contrato}</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-cyan-300 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+                    {contract.cliente_nombre || contract.cliente?.nombre_cliente || 'INSTITUCIONAL'}
+                  </span>
+                </div>
+              )
+            })()}
+
+            {/* Form Fields */}
+            <form onSubmit={handleSaveNumeral} className="p-5 overflow-y-auto space-y-4 flex-1">
+              {/* Requerimiento / Situación Técnica */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-200">
+                  Obligación / Situación Técnica <span className="text-rose-400">*</span>
+                </label>
+                
+                {/* Sugerencias Rápidas */}
+                <div className="flex flex-wrap gap-1.5 pb-1">
+                  {[
+                    'GARANTIA DE FABRICA AUTENTICADO',
+                    'CONTROLES DE 3ERA OPINION',
+                    'CARTA DE AUTORIZACION DEL FABRICANTE',
+                    'SISTEMA INFORMATICO SIS/LIS',
+                    'REACTIVOS DE PRUEBA INICIALES',
+                    'MANTENIMIENTO PREVENTIVO'
+                  ].map(sug => (
+                    <button
+                      key={sug}
+                      type="button"
+                      onClick={() => setNumeralForm({ ...numeralForm, situacion: sug })}
+                      className="text-[10px] px-2 py-0.5 rounded-lg bg-slate-950 hover:bg-indigo-600/30 text-slate-400 hover:text-indigo-300 border border-white/[0.06] hover:border-indigo-500/40 transition"
+                    >
+                      + {sug}
+                    </button>
+                  ))}
+                </div>
+
                 <input
                   type="text"
                   value={numeralForm.situacion}
                   onChange={e => setNumeralForm({ ...numeralForm, situacion: e.target.value })}
-                  placeholder="ej: Sistema informatico SIS, CONTROLES DE 3ERA OPINION..."
+                  placeholder="ej: GARANTIA DE FABRICA AUTENTICADO..."
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* Área Operativa */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-200">
+                  🏷️ Área Operativa Responsable
+                </label>
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
+                  {['PM', 'APLICACIONES', 'IT', 'LOGISTICA', 'SOPORTE', 'LICITACIONES', 'GI'].map(a => (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() => setNumeralForm({ ...numeralForm, area_nombre: a })}
+                      className={`py-1.5 px-1 rounded-xl text-[11px] font-bold border transition text-center ${
+                        numeralForm.area_nombre === a
+                          ? 'bg-indigo-600 text-white border-indigo-400 shadow-lg shadow-indigo-600/30'
+                          : 'bg-slate-950 text-slate-400 border-white/[0.06] hover:text-white hover:bg-slate-850'
+                      }`}
+                    >
+                      {a}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Responsable RACI & Email */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">👤 Responsable RACI (Ejecutor) *</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">
+                    👤 Responsable RACI (Ejecutor) <span className="text-rose-400">*</span>
+                  </label>
                   <select
                     value={numeralForm.persona_id}
-                    onChange={e => setNumeralForm({ ...numeralForm, persona_id: e.target.value })}
+                    onChange={e => {
+                      const pId = e.target.value
+                      const pList = personas.length > 0 ? personas : DEFAULT_PERSONAS
+                      const pObj = pList.find(p => String(p.persona_id) === pId)
+                      setNumeralForm({
+                        ...numeralForm,
+                        persona_id: pId,
+                        responsable_nombre: pObj?.nombre_completo || numeralForm.responsable_nombre,
+                        responsable_email: pObj?.email || numeralForm.responsable_email,
+                        area_nombre: pObj?.area || numeralForm.area_nombre
+                      })
+                    }}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
-                    <option value="">-- Seleccionar Responsable --</option>
-                    {personas.map(p => (
-                      <option key={p.persona_id} value={p.persona_id}>{p.nombre_completo}</option>
+                    {(personas.length > 0 ? personas : DEFAULT_PERSONAS).map(p => (
+                      <option key={p.persona_id} value={p.persona_id}>
+                        {p.nombre_completo} {p.area ? `(${p.area})` : ''}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">📅 Fecha Límite Cumplimiento</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">
+                    ✉️ Correo Electrónico RACI
+                  </label>
                   <input
-                    type="date"
-                    value={numeralForm.fecha_cumplimiento}
-                    onChange={e => setNumeralForm({ ...numeralForm, fecha_cumplimiento: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    type="email"
+                    value={numeralForm.responsable_email}
+                    onChange={e => setNumeralForm({ ...numeralForm, responsable_email: e.target.value })}
+                    placeholder="correo@lm-sv.com"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* Fecha Límite & Semáforo */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Semáforo / Estado</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">
+                    📅 Fecha Límite de Cumplimiento <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={numeralForm.fecha_cumplimiento}
+                    onChange={e => setNumeralForm({ ...numeralForm, fecha_cumplimiento: e.target.value })}
+                    required
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">
+                    🚦 Semáforo / Estado de Alerta
+                  </label>
                   <select
                     value={numeralForm.estatus_id}
                     onChange={e => setNumeralForm({ ...numeralForm, estatus_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-bold"
                   >
                     <option value="12">🔴 Rojo (Crítico / Vencido)</option>
-                    <option value="11">🟠 Anaranjado (Próximo)</option>
+                    <option value="11">🟠 Anaranjado (Próximo a Vencer)</option>
                     <option value="10">🟢 Verde (En Plazo)</option>
-                    <option value="8">✅ Completado</option>
+                    <option value="8">✅ Completado / Entregado</option>
                   </select>
                 </div>
               </div>
 
+              {/* Descripción / Comentario */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Descripción / Observación Técnica</label>
+                <label className="block text-xs font-bold text-slate-200 mb-1">
+                  📝 Descripción / Observación Técnica
+                </label>
                 <textarea
                   value={numeralForm.comentario}
                   onChange={e => setNumeralForm({ ...numeralForm, comentario: e.target.value })}
                   rows={3}
-                  placeholder="Detalles de avance, condiciones de entrega, estado de reactivos..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  placeholder="Ej: Solicitado a fábrica, pendiente de entrega de las garantías autenticadas..."
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
+              {/* Action Buttons */}
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setShowNumeralModal(false)}
@@ -1280,9 +1466,10 @@ export default function ContratosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition active:scale-95"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/40 transition active:scale-95 flex items-center gap-2"
                 >
-                  {editingNumeral ? 'Actualizar Numeral' : 'Guardar Numeral'}
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>{editingNumeral ? 'Actualizar Numeral' : 'Guardar Numeral en Contrato'}</span>
                 </button>
               </div>
             </form>
