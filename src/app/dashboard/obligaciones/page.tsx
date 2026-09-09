@@ -31,7 +31,15 @@ import {
   ShieldAlert,
   SlidersHorizontal,
   ChevronDown,
-  Zap
+  Zap,
+  BarChart3,
+  Trophy,
+  Target,
+  Award,
+  TrendingDown,
+  ClipboardList,
+  Star,
+  Medal
 } from 'lucide-react'
 import NeoChartPieDonut, { PieDonutDataItem } from '@/components/NeoChartPieDonut'
 import ReasignarResponsableModal from '@/components/ReasignarResponsableModal'
@@ -273,6 +281,54 @@ export default function DashboardObligacionesPage() {
     { label: '📄 Contrato Oficial', value: countContrato, color: '#3B82F6', sublabel: `${Math.round((countContrato / (total || 1)) * 100)}% Legal` },
     { label: '🛠️ Visita / Adecuación', value: countVisita, color: '#A855F7', sublabel: `${Math.round((countVisita / (total || 1)) * 100)}% Terreno` }
   ], [countContrato, countVisita, total])
+
+  // --- 5. REPORTE DE CUMPLIMIENTO POR RESPONSABLE (PLANNER BI) ---
+  const reporteCumplimiento = useMemo(() => {
+    const mapaResponsables: Record<string, {
+      nombre: string
+      area: string
+      email: string
+      total: number
+      completados: number
+      criticos: number
+      advertencia: number
+      enPlazo: number
+      tareas: string[]
+    }> = {}
+
+    incidencias.forEach(item => {
+      const key = item.responsable || 'Sin Asignar'
+      if (!mapaResponsables[key]) {
+        mapaResponsables[key] = {
+          nombre: key,
+          area: item.area || 'N/A',
+          email: item.responsableEmail || '',
+          total: 0,
+          completados: 0,
+          criticos: 0,
+          advertencia: 0,
+          enPlazo: 0,
+          tareas: []
+        }
+      }
+      const r = mapaResponsables[key]
+      r.total++
+      r.tareas.push(item.situacion)
+
+      const s = (item.estatus || '').toLowerCase()
+      if (s.includes('comp') || s.includes('verde')) r.completados++
+      else if (s.includes('rojo')) r.criticos++
+      else if (s.includes('naran') || s.includes('amar')) r.advertencia++
+      else r.enPlazo++
+    })
+
+    return Object.values(mapaResponsables)
+      .map(r => ({
+        ...r,
+        pctCumplimiento: r.total > 0 ? Math.round(((r.completados + r.enPlazo) / r.total) * 100) : 0
+      }))
+      .sort((a, b) => b.pctCumplimiento - a.pctCumplimiento)
+  }, [incidencias])
 
   // Reasignación handler
   const handleOpenEdit = (task: IncidenciaEvento) => {
@@ -922,6 +978,385 @@ export default function DashboardObligacionesPage() {
               </table>
             </div>
           </div>
+
+          {/* ━━━━ SECCIÓN: REPORTE DE CUMPLIMIENTO DE RESPONSABILIDADES — PLANNER BI ━━━━ */}
+          <div className="space-y-5 mt-2">
+            {/* Header de la sección */}
+            <div className="glass-card p-5 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-amber-500/8 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+                    <ClipboardList className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] border border-amber-500/30 flex items-center gap-1">
+                        <Shield className="w-3 h-3" />
+                        ACCESO EXCLUSIVO GERENCIA GENERAL
+                      </span>
+                    </div>
+                    <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-indigo-400" />
+                      Reporte de Cumplimiento de Responsabilidades
+                    </h2>
+                    <p className="text-xs text-gray-400 mt-0.5 max-w-2xl">
+                      Análisis individual del desempeño de cada responsable en la ejecución de las obligaciones del Planner BI.
+                      Incluye tasa de cumplimiento, tareas críticas pendientes y ranking de rendimiento.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="text-right">
+                    <span className="text-[10px] text-gray-400 block uppercase font-bold">Responsables auditados</span>
+                    <span className="text-3xl font-black text-white font-mono">{reporteCumplimiento.length}</span>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600/30 to-violet-600/30 border border-indigo-500/30 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-indigo-300" />
+                  </div>
+                </div>
+              </div>
+
+              {/* KPI strip general del reporte */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-white/10 relative z-10">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-emerald-500/20">
+                  <span className="text-[10px] text-emerald-400 uppercase font-bold block">🏆 Mejor Rendimiento</span>
+                  <span className="text-sm font-black text-white block truncate mt-0.5">
+                    {reporteCumplimiento[0]?.nombre?.split(' ')[0] || '—'}
+                  </span>
+                  <span className="text-xs font-mono text-emerald-300">
+                    {reporteCumplimiento[0]?.pctCumplimiento ?? 0}% cumplimiento
+                  </span>
+                </div>
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-red-500/20">
+                  <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Mayor Carga Crítica</span>
+                  <span className="text-sm font-black text-white block truncate mt-0.5">
+                    {(reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.nombre?.split(' ')[0]) || '—'}
+                  </span>
+                  <span className="text-xs font-mono text-red-300">
+                    {reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.criticos ?? 0} tarea(s) crítica(s)
+                  </span>
+                </div>
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-indigo-500/20">
+                  <span className="text-[10px] text-indigo-400 uppercase font-bold block">📊 Promedio General</span>
+                  <span className="text-2xl font-black text-indigo-300 font-mono mt-0.5 block">
+                    {reporteCumplimiento.length > 0
+                      ? Math.round(reporteCumplimiento.reduce((acc, r) => acc + r.pctCumplimiento, 0) / reporteCumplimiento.length)
+                      : 0}%
+                  </span>
+                  <span className="text-[10px] text-gray-400">Tasa de cumplimiento del equipo</span>
+                </div>
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-amber-500/20">
+                  <span className="text-[10px] text-amber-400 uppercase font-bold block">⚠️ Con Pendientes Críticos</span>
+                  <span className="text-2xl font-black text-amber-300 font-mono mt-0.5 block">
+                    {reporteCumplimiento.filter(r => r.criticos > 0).length}
+                  </span>
+                  <span className="text-[10px] text-gray-400">Responsables con tareas en rojo</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Scorecards individuales por responsable */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {reporteCumplimiento.map((resp, idx) => {
+                const esTop = idx === 0
+                const esCritico = resp.criticos > resp.total / 2
+                const pct = resp.pctCumplimiento
+
+                const cardBorder = esCritico
+                  ? 'border-red-500/30 bg-red-950/10'
+                  : esTop
+                  ? 'border-emerald-500/30 bg-emerald-950/10'
+                  : pct >= 70
+                  ? 'border-indigo-500/20'
+                  : 'border-amber-500/20 bg-amber-950/10'
+
+                const barColor = esCritico
+                  ? 'bg-gradient-to-r from-red-600 to-rose-500'
+                  : pct >= 80
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                  : pct >= 50
+                  ? 'bg-gradient-to-r from-indigo-500 to-violet-500'
+                  : 'bg-gradient-to-r from-amber-500 to-orange-500'
+
+                const badgeLabel = esTop
+                  ? '🏆 Top Rendimiento'
+                  : esCritico
+                  ? '🔴 Requiere Atención'
+                  : pct >= 70
+                  ? '✅ En Buen Ritmo'
+                  : '⚠️ Monitorear'
+
+                const badgeStyle = esTop
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : esCritico
+                  ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                  : pct >= 70
+                  ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+
+                const AREA_COL: Record<string, string> = {
+                  'APLICACIONES': '#06B6D4', 'PM': '#8B5CF6', 'LOGISTICA': '#3B82F6',
+                  'IT': '#10B981', 'LICITACIONES': '#EC4899', 'SOPORTE': '#F59E0B', 'GI': '#A855F7'
+                }
+
+                return (
+                  <div
+                    key={resp.nombre}
+                    className={`glass-card p-4 rounded-2xl border ${cardBorder} shadow-xl relative overflow-hidden transition-all hover:scale-[1.01]`}
+                  >
+                    {esTop && (
+                      <div className="absolute top-3 right-3">
+                        <Trophy className="w-5 h-5 text-amber-400 drop-shadow-lg" />
+                      </div>
+                    )}
+
+                    {/* Header persona */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-black text-white shadow-lg shrink-0"
+                        style={{ background: `linear-gradient(135deg, ${AREA_COL[resp.area] || '#6366F1'}99, ${AREA_COL[resp.area] || '#8B5CF6'})` }}
+                      >
+                        #{idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-black text-white text-sm truncate">{resp.nombre}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span
+                            className="text-[9px] font-bold px-1.5 py-0.5 rounded font-mono border"
+                            style={{
+                              backgroundColor: `${AREA_COL[resp.area] || '#6366F1'}20`,
+                              color: AREA_COL[resp.area] || '#A5B4FC',
+                              borderColor: `${AREA_COL[resp.area] || '#6366F1'}40`
+                            }}
+                          >
+                            {resp.area}
+                          </span>
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${badgeStyle}`}>
+                            {badgeLabel}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Barra de progreso de cumplimiento */}
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase">Tasa de Cumplimiento</span>
+                        <span className="text-lg font-black font-mono" style={{ color: AREA_COL[resp.area] || '#A5B4FC' }}>
+                          {pct}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-700 ${barColor}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Mini stats grid */}
+                    <div className="grid grid-cols-4 gap-1.5 mb-3">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-white/5">
+                        <span className="text-lg font-black text-white font-mono block">{resp.total}</span>
+                        <span className="text-[9px] text-gray-400 uppercase font-bold">Total</span>
+                      </div>
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-emerald-500/20">
+                        <span className="text-lg font-black text-emerald-300 font-mono block">{resp.completados + resp.enPlazo}</span>
+                        <span className="text-[9px] text-emerald-400 uppercase font-bold">En Plazo</span>
+                      </div>
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-amber-500/20">
+                        <span className="text-lg font-black text-amber-300 font-mono block">{resp.advertencia}</span>
+                        <span className="text-[9px] text-amber-400 uppercase font-bold">Aviso</span>
+                      </div>
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-red-500/20">
+                        <span className="text-lg font-black text-red-300 font-mono block">{resp.criticos}</span>
+                        <span className="text-[9px] text-red-400 uppercase font-bold">Críticos</span>
+                      </div>
+                    </div>
+
+                    {/* Tareas listadas */}
+                    {resp.tareas.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-white/5">
+                        <span className="text-[9px] text-gray-500 uppercase font-bold block mb-1.5">Responsabilidades asignadas:</span>
+                        <ul className="space-y-0.5">
+                          {resp.tareas.slice(0, 3).map((t, ti) => (
+                            <li key={ti} className="text-[10px] text-gray-300 flex items-start gap-1.5">
+                              <span className="mt-0.5 w-1 h-1 rounded-full bg-indigo-400 shrink-0" />
+                              <span className="truncate" title={t}>{t}</span>
+                            </li>
+                          ))}
+                          {resp.tareas.length > 3 && (
+                            <li className="text-[10px] text-gray-500 pl-2.5">+{resp.tareas.length - 3} más...</li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Tabla ranking ejecutiva */}
+            <div className="glass-card rounded-3xl border border-white/10 shadow-2xl overflow-hidden bg-slate-900/90">
+              <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-white">Ranking de Cumplimiento por Responsable</h3>
+                    <p className="text-[10px] text-gray-400">Ordenado por tasa de cumplimiento — Generado automáticamente desde los 26 pendientes del Planner BI</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/20 shrink-0">
+                  🔐 Solo Gerente General
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-950/80 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
+                      <th className="py-3 px-3 w-12 text-center">Rank</th>
+                      <th className="py-3 px-3">Responsable</th>
+                      <th className="py-3 px-3">Área</th>
+                      <th className="py-3 px-3 text-center">Total</th>
+                      <th className="py-3 px-3 text-center">En Plazo</th>
+                      <th className="py-3 px-3 text-center">Críticos</th>
+                      <th className="py-3 px-3 text-center">Aviso</th>
+                      <th className="py-3 px-4 text-center">Tasa Cumplimiento</th>
+                      <th className="py-3 px-3 text-center">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 text-gray-200">
+                    {reporteCumplimiento.map((resp, idx) => {
+                      const pct = resp.pctCumplimiento
+                      const AREA_COL: Record<string, string> = {
+                        'APLICACIONES': '#06B6D4', 'PM': '#8B5CF6', 'LOGISTICA': '#3B82F6',
+                        'IT': '#10B981', 'LICITACIONES': '#EC4899', 'SOPORTE': '#F59E0B', 'GI': '#A855F7'
+                      }
+                      const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`
+
+                      return (
+                        <tr key={resp.nombre} className={`hover:bg-white/[0.04] transition-colors ${
+                          idx === 0 ? 'bg-emerald-950/10' :
+                          resp.criticos > 1 ? 'bg-red-950/10' : ''
+                        }`}>
+                          <td className="py-3 px-3 text-center font-mono font-black text-base">{rankIcon}</td>
+
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
+                                style={{ background: `${AREA_COL[resp.area] || '#6366F1'}40`, border: `1px solid ${AREA_COL[resp.area] || '#6366F1'}50` }}
+                              >
+                                {resp.nombre.charAt(0)}
+                              </div>
+                              <div>
+                                <span className="font-black text-white text-xs block">{resp.nombre}</span>
+                                <span className="text-[10px] text-gray-400">{resp.email || 'Sin email'}</span>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-3 px-3">
+                            <span
+                              className="text-[10px] font-bold px-2 py-0.5 rounded-lg border font-mono"
+                              style={{
+                                backgroundColor: `${AREA_COL[resp.area] || '#6366F1'}20`,
+                                color: AREA_COL[resp.area] || '#A5B4FC',
+                                borderColor: `${AREA_COL[resp.area] || '#6366F1'}40`
+                              }}
+                            >
+                              {resp.area}
+                            </span>
+                          </td>
+
+                          <td className="py-3 px-3 text-center font-mono font-black text-white">{resp.total}</td>
+
+                          <td className="py-3 px-3 text-center">
+                            <span className="font-bold text-emerald-300 font-mono">{resp.completados + resp.enPlazo}</span>
+                          </td>
+
+                          <td className="py-3 px-3 text-center">
+                            {resp.criticos > 0 ? (
+                              <span className="px-2 py-0.5 rounded-full bg-red-500/25 text-red-300 border border-red-500/40 font-bold font-mono">
+                                {resp.criticos}
+                              </span>
+                            ) : (
+                              <span className="text-gray-500 font-mono">—</span>
+                            )}
+                          </td>
+
+                          <td className="py-3 px-3 text-center">
+                            {resp.advertencia > 0 ? (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold font-mono">
+                                {resp.advertencia}
+                              </span>
+                            ) : (
+                              <span className="text-gray-500 font-mono">—</span>
+                            )}
+                          </td>
+
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${
+                                    pct >= 80 ? 'bg-emerald-500' :
+                                    pct >= 50 ? 'bg-indigo-500' :
+                                    'bg-amber-500'
+                                  }`}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className={`font-black font-mono text-xs ${
+                                pct >= 80 ? 'text-emerald-300' :
+                                pct >= 50 ? 'text-indigo-300' :
+                                'text-amber-300'
+                              }`}>{pct}%</span>
+                            </div>
+                          </td>
+
+                          <td className="py-3 px-3 text-center">
+                            {resp.criticos === 0 && pct >= 80 ? (
+                              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">✅ Óptimo</span>
+                            ) : resp.criticos > 1 ? (
+                              <span className="px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] font-bold">🚨 Atención</span>
+                            ) : (
+                              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">⚠️ Monitorear</span>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pie de sección ejecutiva */}
+              <div className="p-4 border-t border-white/5 bg-slate-950/40">
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <Star className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-[10px] text-gray-400 font-bold">NOTA EJECUTIVA: </span>
+                    <span className="text-[10px] text-gray-300">
+                      Este reporte se genera automáticamente desde los {total} hitos activos del Planner BI.
+                      La tasa de cumplimiento considera tareas En Plazo y Completadas vs. el total asignado.
+                    </span>
+                  </div>
+                  <span className="ml-auto text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-indigo-500/20 shrink-0">
+                    Actualizado: {new Date().toLocaleDateString('es-SV', { dateStyle: 'short' })} — Control Planner LABANDMED
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* ━━━━ FIN SECCIÓN REPORTE DE CUMPLIMIENTO ━━━━ */}
+
         </>
       )}
 

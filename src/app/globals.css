@@ -7,29 +7,29 @@
    ============================================================ */
 
 :root {
-  /* Brand Colors */
-  --brand-primary: #6366f1;
-  --brand-secondary: #8b5cf6;
-  --brand-accent: #06b6d4;
+  /* Brand Colors — Teal / Aqua Marina */
+  --brand-primary: #0d9488;    /* teal-600  */
+  --brand-secondary: #0891b2;  /* cyan-600  */
+  --brand-accent: #06b6d4;     /* cyan-500  */
 
-  /* Dark theme base */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-card: #16161f;
-  --bg-card-hover: #1c1c28;
-  --bg-elevated: #1e1e2a;
+  /* Dark theme base — deep ocean tones */
+  --bg-primary: #020c0e;
+  --bg-secondary: #071218;
+  --bg-card: #0c1e22;
+  --bg-card-hover: #122830;
+  --bg-elevated: #143035;
 
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-active: rgba(99, 102, 241, 0.4);
+  --border-subtle: rgba(6, 182, 212, 0.07);
+  --border-default: rgba(6, 182, 212, 0.14);
+  --border-active: rgba(13, 148, 136, 0.45);
 
-  --text-primary: #f1f1f4;
-  --text-secondary: #a1a1b5;
-  --text-muted: #6b6b80;
+  --text-primary: #e8f8f8;
+  --text-secondary: #94b8bc;
+  --text-muted: #4d7a80;
 
   /* Glass */
-  --glass-bg: rgba(22, 22, 31, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(12, 30, 34, 0.75);
+  --glass-border: rgba(6, 182, 212, 0.1);
 
   /* Semáforo */
   --semaforo-verde: #10b981;
@@ -37,10 +37,10 @@
   --semaforo-rojo: #ef4444;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 24px rgba(99, 102, 241, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 28px rgba(13, 148, 136, 0.18);
 }
 
 /* ============================================================
@@ -166,12 +166,12 @@ code, kbd, samp, pre, .font-mono {
 
 .sidebar-link:hover {
   color: var(--text-primary);
-  background: rgba(99, 102, 241, 0.08);
+  background: rgba(13, 148, 136, 0.10);
 }
 
 .sidebar-link.active {
-  color: var(--brand-primary);
-  background: rgba(99, 102, 241, 0.12);
+  color: var(--brand-accent);
+  background: rgba(13, 148, 136, 0.15);
 }
 
 .sidebar-link.active::before {
@@ -182,7 +182,7 @@ code, kbd, samp, pre, .font-mono {
   transform: translateY(-50%);
   width: 3px;
   height: 60%;
-  background: var(--brand-primary);
+  background: linear-gradient(180deg, var(--brand-primary), var(--brand-accent));
   border-radius: 0 3px 3px 0;
 }
 
@@ -306,11 +306,11 @@ code, kbd, samp, pre, .font-mono {
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 0.875rem;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 20px rgba(13, 148, 136, 0.55);
   transform: translateY(-1px);
 }
 
@@ -354,7 +354,7 @@ code, kbd, samp, pre, .font-mono {
 
 .input-field:focus {
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18);
 }
 
 /* ============================================================
