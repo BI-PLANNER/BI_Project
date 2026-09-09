@@ -552,6 +552,18 @@ export default function DashboardObligacionesPage() {
           {/* Botones de Exportación */}
           <div className="flex flex-wrap items-center gap-2">
             <button
+              onClick={() => {
+                const el = document.getElementById('reporte-tecnico-lenny')
+                if (el) el.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-teal-500/20 to-cyan-500/20 hover:from-teal-500/30 hover:to-cyan-500/30 border border-teal-500/40 text-xs font-bold text-teal-300 flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-teal-500/10 animate-pulse"
+              title="Ir directamente al Reporte Técnico de Actividades al final de la página"
+            >
+              <BookOpen className="w-4 h-4 text-teal-400" />
+              <span>Ver Reporte Técnico BI</span>
+            </button>
+
+            <button
               onClick={() => setIsNotificacionesModalOpen(true)}
               className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10"
               title="Flujo automatizado de correos de cumplimiento a encargados"
@@ -1364,7 +1376,7 @@ export default function DashboardObligacionesPage() {
           {/* ━━━━ FIN SECCIÓN REPORTE DE CUMPLIMIENTO ━━━━ */}
 
           {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES, CONFIGURACIONES & BASES DE DATOS — JOSÉ LENNY GÓMEZ ━━━━ */}
-          <div className="space-y-6 mt-8 pt-6 border-t-2 border-teal-500/30">
+          <div id="reporte-tecnico-lenny" className="space-y-6 mt-8 pt-6 border-t-2 border-teal-500/30">
 
             {/* Header del Reporte Técnico */}
             <div className="glass-card p-6 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 relative overflow-hidden shadow-2xl">
