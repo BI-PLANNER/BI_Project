@@ -450,11 +450,27 @@ export default function DashboardObligacionesPage() {
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div>
-            <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
               <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-indigo-500/30">
                 <Sparkles className="w-3 h-3 text-indigo-400" />
                 DASHBOARD ESTRATÉGICO
               </span>
+
+              <button
+                onClick={() => {
+                  const el = document.getElementById('reporte-actividades-realizadas')
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' })
+                  } else {
+                    setMainView('reporte')
+                  }
+                }}
+                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 hover:from-teal-300 hover:to-cyan-300 text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-xl shadow-teal-500/30 border border-teal-300"
+                title="Ir a la sección de Reporte de Actividades Realizadas"
+              >
+                <BookOpen className="w-4 h-4 text-slate-950" />
+                <span>👉 📋 Ir a Reporte de Actividades Realizadas</span>
+              </button>
             </div>
 
             <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
