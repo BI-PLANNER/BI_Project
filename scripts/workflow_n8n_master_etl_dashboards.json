@@ -1,0 +1,125 @@
+{
+  "name": "LAB&MED - ETL DBlabymed (Google Sheets Real) & BI Dashboards",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "trigger-cron",
+      "name": "1. Cron Programado (Cada 2 Horas)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [160, 240]
+    },
+    {
+      "parameters": {
+        "path": "sync-sheets-supabase",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "trigger-webhook",
+      "name": "1b. Webhook On-Demand (/sync-sheets-supabase)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [160, 420]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "get",
+        "fileId": "DBlabymed",
+        "options": {
+          "rawValues": false
+        }
+      },
+      "id": "read-dblabymed-master",
+      "name": "2. Conector Google Sheets: DBlabymed",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [420, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================================================\n// GESTIÓN DE MEMORIA ESTÁTICA PERSISTENTE & LIMPIEZA DE DATOS REALES DBlabymed\n// ==========================================================================\nconst staticData = $getWorkflowStaticData('global');\nstaticData.processedIds = staticData.processedIds || {};\n\n// Prevenir sobrecarga de memoria limitando el historial de hash a los últimos 5,000 registros\nconst MAX_MEMORY_KEYS = 5000;\nconst storedKeys = Object.keys(staticData.processedIds);\nif (storedKeys.length > MAX_MEMORY_KEYS) {\n  const toDelete = storedKeys.slice(0, storedKeys.length - 2000);\n  toDelete.forEach(k => delete staticData.processedIds[k]);\n}\n\nconst items = $input.all();\nconst hoy = new Date();\nconst pedidosProcesados = [];\n\nfor (const item of items) {\n  const row = item.json;\n  \n  // Mapeo exacto según columnas del Google Sheets real DBlabymed:\n  // Col A: PedidoID\n  // Col G: Fecha\n  // Col H: Detalle / Comentario / Urgencia / Cliente\n  // Col I: Archivo PDF (PedidosInfo_Files_/xxx.PDF)\n  // Col K: UsuarioID (US-0007)\n  // Col L: Ciudad (SAN SALVADOR)\n  // Col M: Región (CENTRAL)\n  \n  const pedidoId = (row['PedidoID'] || row['A'] || row['ID'] || '').toString().trim();\n  const fechaStr = (row['Fecha'] || row['FECHA'] || row['G'] || '').toString().trim();\n  const detalle = (row['Detalle'] || row['Comentario'] || row['H'] || '').toString().trim();\n  const archivoPdf = (row['Archivo'] || row['PDF'] || row['I'] || '').toString().trim();\n  const usuarioId = (row['UsuarioID'] || row['Usuario'] || row['K'] || 'US-GENERAL').toString().trim();\n  const ciudad = (row['Ciudad'] || row['Municipio'] || row['L'] || 'SAN SALVADOR').toString().trim().toUpperCase();\n  const region = (row['Region'] || row['Región'] || row['M'] || 'CENTRAL').toString().trim().toUpperCase();\n\n  if (!pedidoId && !detalle && !fechaStr) continue;\n\n  // Detección Inteligente de Urgencias y Tipo de Pedido\n  const textoCompleto = `${detalle} ${archivoPdf}`.toLowerCase();\n  const esUrgente = textoCompleto.includes('urgencia') || \n                    textoCompleto.includes('urgente') || \n                    textoCompleto.includes('hoy') || \n                    textoCompleto.includes('mañana');\n  \n  const esCreditoFiscal = textoCompleto.includes('crédito') || textoCompleto.includes('credito fiscal');\n  const tienePdfAdjunto = archivoPdf.toLowerCase().includes('.pdf') || archivoPdf.includes('PedidosInfo_Files_');\n\n  // Normalización de Fecha\n  let fechaNormalizada = fechaStr;\n  if (fechaStr.includes('/')) {\n    const parts = fechaStr.split('/');\n    if (parts.length === 3) {\n      // Si viene en formato DD/MM/YYYY\n      const d = parts[0].padStart(2, '0');\n      const m = parts[1].padStart(2, '0');\n      const y = parts[2].length === 2 ? '20' + parts[2] : parts[2];\n      fechaNormalizada = `${y}-${m}-${d}`;\n    }\n  }\n\n  // Identificador único para deduplicación\n  const idKey = pedidoId || `${fechaNormalizada}_${usuarioId}_${ciudad}`;\n  const esNuevo = !staticData.processedIds[idKey];\n  staticData.processedIds[idKey] = new Date().toISOString();\n\n  pedidosProcesados.push({\n    json: {\n      pedido_id: pedidoId || `PED-${Math.random().toString(36).substring(7).toUpperCase()}`,\n      fecha: fechaNormalizada || new Date().toISOString().split('T')[0],\n      detalle,\n      archivo_pdf: archivoPdf,\n      tiene_pdf_adjunto: tienePdfAdjunto,\n      usuario_id: usuarioId,\n      ciudad,\n      region,\n      es_urgente: esUrgente,\n      es_credito_fiscal: esCreditoFiscal,\n      estado: esUrgente ? 'Prioritario / Urgente' : 'En Proceso',\n      es_nuevo_registro: esNuevo\n    }\n  });\n}\n\nreturn pedidosProcesados;"
+      },
+      "id": "transform-dblabymed-real",
+      "name": "3. Transformar Columnas Reales & Control Memoria",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================================================\n// MOTOR DE AGREGACIÓN & ANALYTICS BI PARA DASHBOARDS (SUPABASE / NEXT.JS)\n// ==========================================================================\nconst pedidos = $input.all().map(i => i.json);\n\nconst totalPedidos = pedidos.length;\nconst totalUrgentes = pedidos.filter(p => p.es_urgente).length;\nconst totalConPdf = pedidos.filter(p => p.tiene_pdf_adjunto).length;\nconst totalCreditoFiscal = pedidos.filter(p => p.es_credito_fiscal).length;\n\n// 1. Distribución Geográfica por Región (CENTRAL, OCCIDENTE, ORIENTE)\nconst porRegion = {};\npedidos.forEach(p => {\n  const r = p.region || 'CENTRAL';\n  porRegion[r] = (porRegion[r] || 0) + 1;\n});\n\n// 2. Distribución por Ciudad / Municipio\nconst porCiudad = {};\npedidos.forEach(p => {\n  const c = p.ciudad || 'SAN SALVADOR';\n  porCiudad[c] = (porCiudad[c] || 0) + 1;\n});\n\n// 3. Actividad por Usuario / Vendedor (e.g. US-0007)\nconst porUsuario = {};\npedidos.forEach(p => {\n  const u = p.usuario_id || 'US-GENERAL';\n  if (!porUsuario[u]) porUsuario[u] = { total: 0, urgentes: 0, con_pdf: 0 };\n  porUsuario[u].total += 1;\n  if (p.es_urgente) porUsuario[u].urgentes += 1;\n  if (p.tiene_pdf_adjunto) porUsuario[u].con_pdf += 1;\n});\n\nreturn [{\n  json: {\n    fuente_origen: 'Google Sheets: DBlabymed',\n    timestamp_sync: new Date().toISOString(),\n    kpis_generales: {\n      total_pedidos: totalPedidos,\n      total_urgentes: totalUrgentes,\n      pct_urgentes: totalPedidos > 0 ? Math.round((totalUrgentes / totalPedidos) * 100) : 0,\n      total_con_pdf: totalConPdf,\n      pct_con_pdf: totalPedidos > 0 ? Math.round((totalConPdf / totalPedidos) * 100) : 0,\n      total_credito_fiscal: totalCreditoFiscal\n    },\n    distribucion_geografica: {\n      por_region: porRegion,\n      por_ciudad: porCiudad\n    },\n    productividad_usuarios: porUsuario,\n    pedidos_recientes: pedidos.slice(-50).reverse()\n  }\n}];"
+      },
+      "id": "aggregate-bi-analytics",
+      "name": "4. Generar Métricas BI & Agregaciones Dashboard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://control-planner.vercel.app/api/db",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"accion\": \"SYNC_DBLABYMED_REAL\",\n  \"origen\": \"Google Sheets DBlabymed\",\n  \"metricas\": $json.kpis_generales,\n  \"distribucion\": $json.distribucion_geografica,\n  \"usuarios\": $json.productividad_usuarios,\n  \"pedidos\": $json.pedidos_recientes\n}",
+        "options": {}
+      },
+      "id": "sync-supabase-real",
+      "name": "5. Sincronizar Supabase & Actualizar Dashboard Live",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 320]
+    }
+  ],
+  "connections": {
+    "1. Cron Programado (Cada 2 Horas)": {
+      "main": [
+        [
+          { "node": "2. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "1b. Webhook On-Demand (/sync-sheets-supabase)": {
+      "main": [
+        [
+          { "node": "2. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "2. Conector Google Sheets: DBlabymed": {
+      "main": [
+        [
+          { "node": "3. Transformar Columnas Reales & Control Memoria", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "3. Transformar Columnas Reales & Control Memoria": {
+      "main": [
+        [
+          { "node": "4. Generar Métricas BI & Agregaciones Dashboard", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "4. Generar Métricas BI & Agregaciones Dashboard": {
+      "main": [
+        [
+          { "node": "5. Sincronizar Supabase & Actualizar Dashboard Live", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
