@@ -80,50 +80,28 @@ export default function Sidebar() {
     router.refresh()
   }
 
-  // Define navigation items based on user role
-  const navItems = userProfile.isGerenteGeneral
-    ? [
-        {
-          href: '/dashboard/obligaciones',
-          label: 'Dashboard Obligaciones',
-          icon: PieIcon,
-          badge: 'Principal',
-          badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30 font-bold'
-        },
-        {
-          href: '/dashboard/stock',
-          label: 'Stock & Inventario BI',
-          icon: Boxes
-        },
-        {
-          href: '/dashboard/reporte',
-          label: 'Reporte de Actividades BI',
-          icon: BookOpen,
-          badge: 'Lenny BI',
-          badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
-        }
-      ]
-    : [
-        { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
-        { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
-        { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
-        { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
-        { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
-        {
-          href: '/dashboard/obligaciones',
-          label: 'Dashboard Obligaciones',
-          icon: PieIcon,
-          badge: 'Gerente General',
-          badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
-        },
-        {
-          href: '/dashboard/reporte',
-          label: 'Reporte de Actividades BI',
-          icon: BookOpen,
-          badge: 'Lenny BI',
-          badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
-        }
-      ]
+  // Navigation items for all users with Reporte de Actividades BI below Dashboard Obligaciones
+  const navItems = [
+    { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
+    { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
+    { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
+    { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
+    { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
+    {
+      href: '/dashboard/obligaciones',
+      label: 'Dashboard Obligaciones',
+      icon: PieIcon,
+      badge: 'Gerente General',
+      badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
+    },
+    {
+      href: '/dashboard/reporte',
+      label: 'Reporte de Actividades BI',
+      icon: BookOpen,
+      badge: 'BI Lenny',
+      badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
+    }
+  ]
 
   const initials = `${userProfile.nombre.charAt(0)}${userProfile.apellido.charAt(0) || userProfile.nombre.charAt(1) || 'U'}`.toUpperCase()
 
