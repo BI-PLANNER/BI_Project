@@ -347,6 +347,127 @@ export default function ReporteTecnicoPage() {
         </div>
       </div>
 
+      {/* ══════════ 2.1 ARQUITECTURA SAAS (SOFTWARE AS A SERVICE) & VALOR ESTRATÉGICO ══════════ */}
+      <div className="glass-card p-6 md:p-8 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-900 via-cyan-950/20 to-slate-900 shadow-2xl space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+              <Globe className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="badge bg-cyan-500/20 text-cyan-300 font-mono font-bold text-[10px] border border-cyan-500/30 px-2.5 py-0.5">
+                  MODALIDAD SAAS CLOUD
+                </span>
+                <span className="badge bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px] border border-emerald-500/30 px-2.5 py-0.5">
+                  PROPIEDAD 100% LAB & MED
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-black text-white mt-1">
+                Modelo de Arquitectura SaaS (Software as a Service) &amp; Valor para la Jefatura
+              </h2>
+            </div>
+          </div>
+          <p className="text-xs font-mono text-cyan-300 bg-cyan-950/60 px-3 py-1.5 rounded-xl border border-cyan-500/30 self-start md:self-auto">
+            ⚡ Infraestructura Serverless · Alta Disponibilidad 99.9%
+          </p>
+        </div>
+
+        <p className="text-xs md:text-sm text-gray-300 leading-relaxed">
+          <strong>Control Planner PRO</strong> fue diseñado y construido como una solución <strong className="text-cyan-300">SaaS Empresarial (Software como Servicio)</strong>.
+          A diferencia del software de escritorio o los archivos locales tradicionales, esta arquitectura permite a la empresa operar con estándares de tecnología de primer nivel, reduciendo costos de mantenimiento a cero y garantizando acceso inmediato desde cualquier lugar.
+        </p>
+
+        {/* 4 PILARES DEL MODELO SAAS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-cyan-500/20 space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm">
+              ☁️
+            </div>
+            <h3 className="text-xs font-black text-white uppercase tracking-wider">1. Cero Instalación Local</h3>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              No requiere instalar ejecutables ni configurar servidores físicos en la oficina. Se accede mediante navegador web con conexión cifrada SSL/TLS.
+            </p>
+          </div>
+
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-teal-500/20 space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm">
+              🔄
+            </div>
+            <h3 className="text-xs font-black text-white uppercase tracking-wider">2. Despliegues Continuos (CI/CD)</h3>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              Las actualizaciones de lógica, nuevos reportes o ajustes de semáforos se publican en caliente en la nube en segundos sin interrumpir la operación.
+            </p>
+          </div>
+
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-indigo-500/20 space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
+              🔐
+            </div>
+            <h3 className="text-xs font-black text-white uppercase tracking-wider">3. Seguridad &amp; RLS Multi-Rol</h3>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              Políticas de Row Level Security (RLS) en PostgreSQL que aíslan datos confidenciales y aseguran que cada perfil vea solo lo que le corresponde.
+            </p>
+          </div>
+
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-amber-500/20 space-y-2">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
+              💰
+            </div>
+            <h3 className="text-xs font-black text-white uppercase tracking-wider">4. Ahorro Masivo de Licencias</h3>
+            <p className="text-[11px] text-gray-400 leading-relaxed">
+              Ahorro de $15,000–$25,000 anuales al evitar licencias por usuario de SaaS comerciales externos (como Salesforce, Monday o QuickBase Enterprise).
+            </p>
+          </div>
+        </div>
+
+        {/* TABLA COMPARATIVA DE VALOR */}
+        <div className="overflow-x-auto pt-2">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-slate-950/90 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
+                <th className="py-3 px-3">Criterio de Evaluación</th>
+                <th className="py-3 px-3 text-red-400">❌ Archivos Excel / Manual</th>
+                <th className="py-3 px-3 text-amber-400">⚠️ SaaS Terceros (Monday / Salesforce)</th>
+                <th className="py-3 px-3 text-teal-300">✅ Control Planner PRO (SaaS Propio)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5 text-gray-300">
+              <tr className="hover:bg-white/[0.02]">
+                <td className="py-2.5 px-3 font-bold text-white">Sincronización en Tiempo Real</td>
+                <td className="py-2.5 px-3 text-gray-400">Nula (archivos duplicados y desfasados)</td>
+                <td className="py-2.5 px-3 text-gray-300">Sí, pero limitada por plan contratado</td>
+                <td className="py-2.5 px-3 text-teal-300 font-bold">Inmediata en PostgreSQL Cloud</td>
+              </tr>
+              <tr className="hover:bg-white/[0.02]">
+                <td className="py-2.5 px-3 font-bold text-white">Adaptación a Hospitales y Licitaciones</td>
+                <td className="py-2.5 px-3 text-gray-400">Riesgosa / Fórmulas propensas a error</td>
+                <td className="py-2.5 px-3 text-gray-300">Rígida, no entiende COMPRASAL ni RACI local</td>
+                <td className="py-2.5 px-3 text-teal-300 font-bold">100% Diseñada para los 6 contratos de LAB &amp; MED</td>
+              </tr>
+              <tr className="hover:bg-white/[0.02]">
+                <td className="py-2.5 px-3 font-bold text-white">Digitalización con OCR de Lapicero</td>
+                <td className="py-2.5 px-3 text-gray-400">Imposible (digitación manual lenta)</td>
+                <td className="py-2.5 px-3 text-gray-400">Requiere add-ons costosos de terceros</td>
+                <td className="py-2.5 px-3 text-teal-300 font-bold">Algoritmo Python OpenCV integrado</td>
+              </tr>
+              <tr className="hover:bg-white/[0.02]">
+                <td className="py-2.5 px-3 font-bold text-white">Costo por Usuario / Mensualidad</td>
+                <td className="py-2.5 px-3 text-gray-400">Oculto en horas hombre perdidas</td>
+                <td className="py-2.5 px-3 text-amber-300 font-bold">$40 - $120 / usuario / mes</td>
+                <td className="py-2.5 px-3 text-emerald-300 font-bold">$0 en licencias (Propiedad de LAB &amp; MED)</td>
+              </tr>
+              <tr className="hover:bg-white/[0.02]">
+                <td className="py-2.5 px-3 font-bold text-white">Propiedad Intelectual &amp; Código Fuente</td>
+                <td className="py-2.5 px-3 text-gray-400">Ninguna ventaja competitiva</td>
+                <td className="py-2.5 px-3 text-gray-400">Datos cautivos en servidor ajeno</td>
+                <td className="py-2.5 px-3 text-teal-300 font-bold">Activo digital exclusivo de la empresa</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* ══════════ 3. LOS 11 MÓDULOS DE LA APLICACIÓN WEB ══════════ */}
       <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-5">
         <div className="flex items-center justify-between">
