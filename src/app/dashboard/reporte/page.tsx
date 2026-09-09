@@ -137,21 +137,34 @@ export default function ReporteTecnicoPage() {
             Desarrollado por <strong className="text-white">José Lenny Gómez</strong> — Área de Business Intelligence &amp; Planificación Estratégica.
           </p>
 
-          {/* KPI STRIP */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6 pt-5 border-t border-white/10">
-            {[
-              { label: 'Módulos', value: '11', sub: 'páginas funcionales', color: 'text-teal-300' },
-              { label: 'Tablas BD', value: '21', sub: '+ 5 vistas SQL', color: 'text-cyan-300' },
-              { label: 'Componentes', value: '9', sub: 'TSX reutilizables', color: 'text-indigo-300' },
-              { label: 'APIs Backend', value: '4', sub: '+ 4 scripts Python/JS', color: 'text-violet-300' },
-              { label: 'Líneas Código', value: '~' + Math.round(totalLines / 1000) + 'K+', sub: 'TypeScript / TSX', color: 'text-amber-300' },
-            ].map(k => (
-              <div key={k.label} className="bg-slate-950/60 rounded-2xl p-3 border border-white/10">
-                <span className="text-[10px] text-gray-400 uppercase font-bold block">{k.label}</span>
-                <span className={`text-2xl font-black font-mono ${k.color}`}>{k.value}</span>
-                <span className="text-[10px] text-gray-500 block">{k.sub}</span>
-              </div>
-            ))}
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-5 border-t border-white/10">
+            {/* KPI STRIP */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 flex-1">
+              {[
+                { label: 'Módulos', value: '11', sub: 'páginas funcionales', color: 'text-teal-300' },
+                { label: 'Tablas BD', value: '21', sub: '+ 5 vistas SQL', color: 'text-cyan-300' },
+                { label: 'Componentes', value: '9', sub: 'TSX reutilizables', color: 'text-indigo-300' },
+                { label: 'APIs Backend', value: '4', sub: '+ 4 scripts Python/JS', color: 'text-violet-300' },
+                { label: 'Líneas Código', value: '~' + Math.round(totalLines / 1000) + 'K+', sub: 'TypeScript / TSX', color: 'text-amber-300' },
+              ].map(k => (
+                <div key={k.label} className="bg-slate-950/60 rounded-2xl p-3 border border-white/10">
+                  <span className="text-[10px] text-gray-400 uppercase font-bold block">{k.label}</span>
+                  <span className={`text-2xl font-black font-mono ${k.color}`}>{k.value}</span>
+                  <span className="text-[10px] text-gray-500 block">{k.sub}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* BOTONES DE ACCIÓN PARA PRESENTAR A JEFATURA */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => window.print()}
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center gap-2 hover:opacity-90 transition cursor-pointer shadow-lg shadow-teal-500/20"
+                title="Imprimir o guardar reporte en PDF para entregar a Jefatura"
+              >
+                <span>🖨️ Imprimir / Guardar PDF</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

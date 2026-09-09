@@ -97,9 +97,9 @@ export default function Sidebar() {
         },
         {
           href: '/dashboard/reporte',
-          label: 'Reporte Técnico BI',
+          label: 'Reporte de Actividades BI',
           icon: BookOpen,
-          badge: 'Actividades',
+          badge: 'Lenny BI',
           badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
         }
       ]
@@ -118,9 +118,9 @@ export default function Sidebar() {
         },
         {
           href: '/dashboard/reporte',
-          label: 'Reporte Técnico BI',
+          label: 'Reporte de Actividades BI',
           icon: BookOpen,
-          badge: 'Actividades',
+          badge: 'Lenny BI',
           badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
         }
       ]
