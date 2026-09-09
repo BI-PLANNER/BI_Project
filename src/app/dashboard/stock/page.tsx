@@ -179,6 +179,13 @@ export default function StockProductosPage() {
 
   useEffect(() => {
     loadData()
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const tabParam = params.get('tab')
+      if (tabParam && ['catalogo', 'inventario', 'envios_mensajeria', 'rop', 'rentabilidad', 'proveedores', 'facturacion'].includes(tabParam)) {
+        setActiveTab(tabParam as any)
+      }
+    }
   }, [loadData])
 
   // Trigger Master Live Sync
