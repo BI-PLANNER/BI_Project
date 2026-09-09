@@ -33,8 +33,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Rutas públicas que no requieren autenticación o son endpoints API
-  const publicPaths = ['/login', '/registro', '/auth/callback', '/api']
+  // Rutas públicas que no requieren autenticación o son endpoints API y reportes públicos
+  const publicPaths = [
+    '/login',
+    '/registro',
+    '/auth/callback',
+    '/api',
+    '/reporte',
+    '/actividades',
+    '/dashboard/reporte',
+    '/dashboard/actividades',
+    '/dashboard/cumplimiento'
+  ]
   const isPublicPath = publicPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
   if (!user && !isPublicPath) {
