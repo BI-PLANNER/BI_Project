@@ -1168,9 +1168,9 @@ export default function ContratosPage() {
       {showContractModal && (
         <div
           onClick={(e) => { if (e.target === e.currentTarget) setShowContractModal(false) }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
+          className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-6 sm:pt-10 md:pt-14 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
         >
-          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] my-auto relative z-10">
+          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
@@ -1373,9 +1373,9 @@ export default function ContratosPage() {
       {showNumeralModal && (
         <div
           onClick={(e) => { if (e.target === e.currentTarget) setShowNumeralModal(false) }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
+          className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-6 sm:pt-10 md:pt-14 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
         >
-          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] my-auto relative z-10">
+          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
             {/* Modal Header */}
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
               <div className="flex items-center gap-2.5">
