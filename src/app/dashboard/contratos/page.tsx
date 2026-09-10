@@ -759,7 +759,7 @@ export default function ContratosPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 animate-fade-in">
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Toast Notification */}
       {successToast && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 bg-emerald-950/95 border border-emerald-500/50 rounded-2xl text-emerald-200 text-xs font-semibold shadow-2xl backdrop-blur-md animate-slide-up">
