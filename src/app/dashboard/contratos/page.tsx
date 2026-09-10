@@ -213,6 +213,7 @@ export default function ContratosPage() {
     numero_contrato: '',
     nombre_contrato: '',
     cliente_id: '13',
+    nuevo_cliente_nombre: '',
     empresa_id: '1',
     monto_total: '',
     fecha_adjudicacion: '',
@@ -366,53 +367,56 @@ export default function ContratosPage() {
           responsableNombre.includes('MOISES') ? 'SOPORTE' : 'OPERACIONES'
         )
 
+        const estatusNombre = inc.estatus || est?.nombre_estatus || 'Verde'
+        const semaforo = getSemaforoInfo(inc.fecha_cumplimiento, estatusNombre)
+
         return {
-          id: inc.incidencia_id || inc.id || idx + 1,
+          id: inc.incidencia_id || inc.id || `inc-${idx}`,
           tipo_origen: 'incidencia',
-          numeral: `Hito #${inc.item_num || inc.incidencia_id || idx + 1}`,
-          situacion: inc.situacion || sit?.nombre_situacion || 'Obligación Contractual',
+          situacion: inc.situacion || sit?.nombre_situacion || 'Obligación Técnica General',
           situacion_id: inc.situacion_id,
-          comentario: inc.comentario || '',
-          persona_id: inc.persona_id,
           responsable_nombre: responsableNombre,
-          responsable_email: inc.responsableEmail || per?.email || '',
+          responsable_email: inc.responsableEmail || per?.email || 'operaciones@lm-sv.com',
+          persona_id: inc.persona_id,
           area_nombre: areaNombre,
-          fecha_cumplimiento: inc.fecha_cumplimiento || '',
+          fecha_cumplimiento: inc.fecha_cumplimiento,
           estatus_id: inc.estatus_id,
-          estatus_nombre: inc.estatus || est?.nombre_estatus || 'PENDIENTE',
-          raw_data: inc
+          estatus_nombre: estatusNombre,
+          comentario: inc.comentario || '',
+          semaforo
         }
       })
 
-      // Get obligations from contrato_procesos if any
-      const contractProcesosList = contratoProcesos.filter(
-        cp => cp.contrato_id === c.contrato_id
-      ).map((cp, idx) => {
+      // Get contrato_procesos (numerales relacionales 3FN)
+      const cpItems = contratoProcesos.filter(cp => cp.contrato_id === c.contrato_id).map((cp, idx) => {
+        const proc = cp.proceso || {}
         const est = estatusList.find(e => e.estatus_id === cp.estatus_id)
+        const semaforo = getSemaforoInfo(cp.fecha_programada, est?.nombre_estatus)
+
         return {
-          id: cp.contrato_proceso_id,
-          tipo_origen: 'proceso',
-          numeral: cp.numeral || `Numeral ${idx + 1}`,
-          situacion: cp.descripcion_solicitado || 'Proceso Técnico',
-          comentario: cp.descripcion_solicitado || '',
-          responsable_nombre: 'Asignado en RACI',
-          area_nombre: 'CONTRATO',
-          fecha_cumplimiento: cp.fecha_cumplimiento || '',
+          id: cp.contrato_proceso_id || `cp-${idx}`,
+          tipo_origen: 'contrato_proceso',
+          situacion: proc.nombre_proceso || cp.descripcion_personalizada || 'Numeral Contractual',
+          responsable_nombre: 'Asignado RACI',
+          responsable_email: 'operaciones@lm-sv.com',
+          persona_id: null,
+          area_nombre: 'PM',
+          fecha_cumplimiento: cp.fecha_programada,
           estatus_id: cp.estatus_id,
-          estatus_nombre: est?.nombre_estatus || 'PENDIENTE',
-          raw_data: cp
+          estatus_nombre: est?.nombre_estatus || 'Verde',
+          comentario: cp.observaciones || '',
+          semaforo
         }
       })
 
-      const allObligations = [...contractIncidencias, ...contractProcesosList]
+      const allObligations = [...contractIncidencias, ...cpItems]
 
-      // Calculate stats
+      // Calculate contract-level stats
       const stats = {
         total: allObligations.length,
-        rojo: allObligations.filter(o => getSemaforoInfo(o.fecha_cumplimiento, o.estatus_nombre).color === 'rojo').length,
-        naranja: allObligations.filter(o => getSemaforoInfo(o.fecha_cumplimiento, o.estatus_nombre).color === 'naranja').length,
-        verde: allObligations.filter(o => getSemaforoInfo(o.fecha_cumplimiento, o.estatus_nombre).color === 'verde').length,
-        completado: allObligations.filter(o => getSemaforoInfo(o.fecha_cumplimiento, o.estatus_nombre).color === 'completado').length
+        rojo: allObligations.filter(o => o.semaforo.color === 'rojo').length,
+        naranja: allObligations.filter(o => o.semaforo.color === 'naranja').length,
+        verde: allObligations.filter(o => o.semaforo.color === 'verde' || o.semaforo.color === 'completado').length
       }
 
       return {
@@ -423,60 +427,64 @@ export default function ContratosPage() {
         stats
       }
     })
-  }, [contratos, clientes, empresas, incidencias, contratoProcesos, personas, situaciones, estatusList, areas])
+  }, [contratos, clientes, empresas, incidencias, contratoProcesos, personas, areas, situaciones, estatusList])
 
-  // Filtered Contracts
+  // Filtered contracts list based on search and slicers
   const filteredContratos = useMemo(() => {
     return contractsWithObligations.filter(c => {
-      // Filter by Cliente
-      if (selectedClienteFilter !== 'todos' && c.cliente?.nombre_cliente !== selectedClienteFilter && String(c.cliente_id) !== selectedClienteFilter) {
-        return false
+      // Cliente filter
+      if (selectedClienteFilter !== 'todos') {
+        const cName = c.cliente?.nombre_cliente || c.cliente_nombre || ''
+        if (cName !== selectedClienteFilter) return false
       }
 
-      // Filter by Semáforo
-      if (selectedSemaforoFilter === 'rojo' && c.stats.rojo === 0) return false
-      if (selectedSemaforoFilter === 'naranja' && c.stats.naranja === 0) return false
-      if (selectedSemaforoFilter === 'verde' && c.stats.verde === 0) return false
+      // Semáforo filter
+      if (selectedSemaforoFilter !== 'todos') {
+        if (selectedSemaforoFilter === 'rojo' && c.stats.rojo === 0) return false
+        if (selectedSemaforoFilter === 'naranja' && c.stats.naranja === 0) return false
+        if (selectedSemaforoFilter === 'verde' && c.stats.verde === 0) return false
+      }
 
-      // Search Query
-      if (search) {
+      // Search term
+      if (search.trim()) {
         const q = search.toLowerCase()
         const matchContract =
-          (c.numero_contrato || '').toLowerCase().includes(q) ||
-          (c.nombre_contrato || '').toLowerCase().includes(q) ||
-          (c.cliente?.nombre_cliente || '').toLowerCase().includes(q)
+          c.numero_contrato?.toLowerCase().includes(q) ||
+          c.nombre_contrato?.toLowerCase().includes(q) ||
+          c.cliente?.nombre_cliente?.toLowerCase().includes(q) ||
+          c.cliente_nombre?.toLowerCase().includes(q) ||
+          c.empresa?.nombre_empresa?.toLowerCase().includes(q)
 
-        const matchObligation = c.obligaciones.some((o: any) =>
-          o.situacion.toLowerCase().includes(q) ||
-          o.comentario.toLowerCase().includes(q) ||
-          o.responsable_nombre.toLowerCase().includes(q) ||
-          o.area_nombre.toLowerCase().includes(q)
+        const matchObligation = c.obligaciones.some((ob: any) =>
+          ob.situacion?.toLowerCase().includes(q) ||
+          ob.responsable_nombre?.toLowerCase().includes(q) ||
+          ob.area_nombre?.toLowerCase().includes(q) ||
+          ob.comentario?.toLowerCase().includes(q)
         )
 
-        if (!matchContract && !matchObligation) return false
+        return matchContract || matchObligation
       }
 
       return true
     })
   }, [contractsWithObligations, selectedClienteFilter, selectedSemaforoFilter, search])
 
-  // Global KPI totals
+  // Total KPIs across all loaded contracts
   const totalContratosCount = contractsWithObligations.length
   const totalObligacionesCount = contractsWithObligations.reduce((acc, c) => acc + c.stats.total, 0)
   const totalRojosCount = contractsWithObligations.reduce((acc, c) => acc + c.stats.rojo, 0)
   const totalNaranjasCount = contractsWithObligations.reduce((acc, c) => acc + c.stats.naranja, 0)
   const totalVerdesCount = contractsWithObligations.reduce((acc, c) => acc + c.stats.verde, 0)
 
-  // Toggle single contract
-  const toggleExpand = (contratoId: string) => {
-    setExpandedContratos(prev => ({ ...prev, [contratoId]: !prev[contratoId] }))
+  // Handlers for UI state
+  const toggleExpand = (id: string) => {
+    setExpandedContratos(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
-  // Toggle all contracts
-  const toggleExpandAll = (expand: boolean) => {
+  const toggleExpandAll = (expanded: boolean) => {
     const updated: Record<string, boolean> = {}
-    contractsWithObligations.forEach(c => {
-      updated[c.contrato_id] = expand
+    contratos.forEach(c => {
+      updated[c.contrato_id] = expanded
     })
     setExpandedContratos(updated)
   }
@@ -492,6 +500,7 @@ export default function ContratosPage() {
       numero_contrato: '',
       nombre_contrato: '',
       cliente_id: String(clList[0]?.cliente_id || '13'),
+      nuevo_cliente_nombre: '',
       empresa_id: String(emList[0]?.empresa_id || '1'),
       monto_total: '',
       fecha_adjudicacion: '',
@@ -511,6 +520,7 @@ export default function ContratosPage() {
       numero_contrato: c.numero_contrato || '',
       nombre_contrato: c.nombre_contrato || '',
       cliente_id: c.cliente_id ? String(c.cliente_id) : '',
+      nuevo_cliente_nombre: '',
       empresa_id: c.empresa_id ? String(c.empresa_id) : '1',
       monto_total: c.monto_total ? String(c.monto_total) : '',
       fecha_adjudicacion: c.fecha_adjudicacion || '',
@@ -526,29 +536,65 @@ export default function ContratosPage() {
 
   const handleSaveContract = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!contractForm.numero_contrato.trim()) {
+      alert('Por favor ingresa el número de contrato.')
+      return
+    }
     setLoading(true)
     try {
+      let finalClienteId = Number(contractForm.cliente_id)
+      let clienteNombreFinal = ''
+
+      // Si seleccionó agregar nueva institución
+      if (contractForm.cliente_id === 'nuevo' && contractForm.nuevo_cliente_nombre.trim()) {
+        const nom = contractForm.nuevo_cliente_nombre.trim().toUpperCase()
+        const existing = clientes.find(c => c.nombre_cliente?.toUpperCase() === nom)
+        if (existing) {
+          finalClienteId = existing.cliente_id
+          clienteNombreFinal = existing.nombre_cliente
+        } else {
+          const resCli = await dbInsert('clientes', { nombre_cliente: nom, activo: true })
+          finalClienteId = Array.isArray(resCli) ? resCli[0]?.cliente_id : resCli?.cliente_id
+          clienteNombreFinal = nom
+          setClientes(prev => [...prev, { cliente_id: finalClienteId, nombre_cliente: nom }])
+        }
+      } else {
+        const found = clientes.find(c => String(c.cliente_id) === String(contractForm.cliente_id))
+        clienteNombreFinal = found?.nombre_cliente || 'INSTITUCIONAL'
+      }
+
       const payload: any = {
-        numero_contrato: contractForm.numero_contrato,
-        nombre_contrato: contractForm.nombre_contrato || null,
-        cliente_id: Number(contractForm.cliente_id),
+        numero_contrato: contractForm.numero_contrato.trim(),
+        nombre_contrato: contractForm.nombre_contrato?.trim() || null,
+        cliente_id: finalClienteId,
         empresa_id: Number(contractForm.empresa_id || 1),
         monto_total: contractForm.monto_total ? Number(contractForm.monto_total) : 0,
         fecha_adjudicacion: contractForm.fecha_adjudicacion || null,
         fecha_inicio: contractForm.fecha_inicio || null,
         fecha_fin: contractForm.fecha_fin || null,
         fianza_cumplimiento_estado: contractForm.fianza_cumplimiento_estado || 'NO_APLICA',
-        fianza_cumplimiento_poliza: contractForm.fianza_cumplimiento_poliza || null,
+        fianza_cumplimiento_poliza: contractForm.fianza_cumplimiento_poliza?.trim() || null,
         fianza_buena_inversion_estado: contractForm.fianza_buena_inversion_estado || 'NO_APLICA',
-        fianza_buena_inversion_poliza: contractForm.fianza_buena_inversion_poliza || null
+        fianza_buena_inversion_poliza: contractForm.fianza_buena_inversion_poliza?.trim() || null
       }
 
       if (editingContract) {
         await dbUpdate('contratos', editingContract.contrato_id, 'contrato_id', payload)
+        setContratos(prev => prev.map(c => c.contrato_id === editingContract.contrato_id ? { ...c, ...payload } : c))
         showToast(`¡Contrato ${contractForm.numero_contrato} actualizado correctamente!`)
       } else {
-        await dbInsert('contratos', payload)
-        showToast(`¡Contrato ${contractForm.numero_contrato} creado con éxito!`)
+        const res = await dbInsert('contratos', payload)
+        const newRecord = Array.isArray(res) ? res[0] : res
+        const newId = newRecord?.contrato_id || `temp-${Date.now()}`
+        const fullNewContract = {
+          ...payload,
+          contrato_id: newId,
+          cliente_nombre: clienteNombreFinal,
+          empresa_nombre: empresas.find(e => e.empresa_id === payload.empresa_id)?.nombre_empresa || 'LABANDMED S.A. DE C.V.'
+        }
+        setContratos(prev => [fullNewContract, ...prev])
+        setExpandedContratos(prev => ({ ...prev, [newId]: true }))
+        showToast(`¡Contrato ${contractForm.numero_contrato} registrado exitosamente!`)
       }
 
       setShowContractModal(false)
@@ -1197,6 +1243,7 @@ export default function ContratosPage() {
                     {(clientes.length > 0 ? clientes : DEFAULT_CLIENTES).map(cl => (
                       <option key={cl.cliente_id} value={cl.cliente_id}>{cl.nombre_cliente}</option>
                     ))}
+                    <option value="nuevo">+ 🏢 Otra Institución (Nueva)...</option>
                   </select>
                 </div>
                 <div>
@@ -1213,6 +1260,23 @@ export default function ContratosPage() {
                   </select>
                 </div>
               </div>
+
+              {/* Si seleccionó nueva institución */}
+              {contractForm.cliente_id === 'nuevo' && (
+                <div className="p-3 bg-indigo-950/30 border border-indigo-500/30 rounded-xl space-y-1.5 animate-fade-in">
+                  <label className="block text-xs font-bold text-indigo-300">
+                    🏢 Nombre de la Nueva Institución / Hospital
+                  </label>
+                  <input
+                    type="text"
+                    value={contractForm.nuevo_cliente_nombre}
+                    onChange={e => setContractForm({ ...contractForm, nuevo_cliente_nombre: e.target.value })}
+                    placeholder="ej: HOSPITAL NACIONAL SAN RAFAEL, MINSAL..."
+                    required
+                    className="w-full px-3 py-2 bg-slate-950 border border-indigo-500/50 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-bold uppercase"
+                  />
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -1242,8 +1306,8 @@ export default function ContratosPage() {
                 </span>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Fianza de Cumplimiento</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-semibold text-slate-300">Fianza de Cumplimiento</label>
                     <select
                       value={contractForm.fianza_cumplimiento_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_cumplimiento_estado: e.target.value })}
@@ -1254,9 +1318,16 @@ export default function ContratosPage() {
                       <option value="Pendiente">Pendiente</option>
                       <option value="NO_APLICA">No Aplica</option>
                     </select>
+                    <input
+                      type="text"
+                      value={contractForm.fianza_cumplimiento_poliza}
+                      onChange={e => setContractForm({ ...contractForm, fianza_cumplimiento_poliza: e.target.value })}
+                      placeholder="No. Póliza (opcional)"
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded-md text-[11px] text-slate-300 placeholder-slate-600 font-mono"
+                    />
                   </div>
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Fianza Buena Inversión</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-[11px] font-semibold text-slate-300">Fianza Buena Inversión</label>
                     <select
                       value={contractForm.fianza_buena_inversion_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_buena_inversion_estado: e.target.value })}
@@ -1267,6 +1338,13 @@ export default function ContratosPage() {
                       <option value="En Trámite">En Trámite</option>
                       <option value="NO_APLICA">No Aplica</option>
                     </select>
+                    <input
+                      type="text"
+                      value={contractForm.fianza_buena_inversion_poliza}
+                      onChange={e => setContractForm({ ...contractForm, fianza_buena_inversion_poliza: e.target.value })}
+                      placeholder="No. Póliza (opcional)"
+                      className="w-full px-2 py-1 bg-slate-950 border border-slate-800 rounded-md text-[11px] text-slate-300 placeholder-slate-600 font-mono"
+                    />
                   </div>
                 </div>
               </div>
