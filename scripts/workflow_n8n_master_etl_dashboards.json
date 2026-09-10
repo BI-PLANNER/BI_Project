@@ -1,5 +1,5 @@
 {
-  "name": "LAB&MED - ETL DBlabymed (Google Sheets Real) & BI Dashboards",
+  "name": "LAB&MED - ETL Maestro (Google Sheets & Microsoft Excel 365) BI Dashboards",
   "nodes": [
     {
       "parameters": {
@@ -28,7 +28,7 @@
       "name": "1b. Webhook On-Demand (/sync-sheets-supabase)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [160, 420]
+      "position": [160, 440]
     },
     {
       "parameters": {
@@ -40,30 +40,63 @@
         }
       },
       "id": "read-dblabymed-master",
-      "name": "2. Conector Google Sheets: DBlabymed",
+      "name": "2a. Conector Google Sheets: DBlabymed",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [420, 320]
+      "position": [420, 240]
     },
     {
       "parameters": {
-        "jsCode": "// ==========================================================================\n// GESTIÓN DE MEMORIA ESTÁTICA PERSISTENTE & LIMPIEZA DE DATOS REALES DBlabymed\n// ==========================================================================\nconst staticData = $getWorkflowStaticData('global');\nstaticData.processedIds = staticData.processedIds || {};\n\n// Prevenir sobrecarga de memoria limitando el historial de hash a los últimos 5,000 registros\nconst MAX_MEMORY_KEYS = 5000;\nconst storedKeys = Object.keys(staticData.processedIds);\nif (storedKeys.length > MAX_MEMORY_KEYS) {\n  const toDelete = storedKeys.slice(0, storedKeys.length - 2000);\n  toDelete.forEach(k => delete staticData.processedIds[k]);\n}\n\nconst items = $input.all();\nconst hoy = new Date();\nconst pedidosProcesados = [];\n\nfor (const item of items) {\n  const row = item.json;\n  \n  // Mapeo exacto según columnas del Google Sheets real DBlabymed:\n  // Col A: PedidoID\n  // Col G: Fecha\n  // Col H: Detalle / Comentario / Urgencia / Cliente\n  // Col I: Archivo PDF (PedidosInfo_Files_/xxx.PDF)\n  // Col K: UsuarioID (US-0007)\n  // Col L: Ciudad (SAN SALVADOR)\n  // Col M: Región (CENTRAL)\n  \n  const pedidoId = (row['PedidoID'] || row['A'] || row['ID'] || '').toString().trim();\n  const fechaStr = (row['Fecha'] || row['FECHA'] || row['G'] || '').toString().trim();\n  const detalle = (row['Detalle'] || row['Comentario'] || row['H'] || '').toString().trim();\n  const archivoPdf = (row['Archivo'] || row['PDF'] || row['I'] || '').toString().trim();\n  const usuarioId = (row['UsuarioID'] || row['Usuario'] || row['K'] || 'US-GENERAL').toString().trim();\n  const ciudad = (row['Ciudad'] || row['Municipio'] || row['L'] || 'SAN SALVADOR').toString().trim().toUpperCase();\n  const region = (row['Region'] || row['Región'] || row['M'] || 'CENTRAL').toString().trim().toUpperCase();\n\n  if (!pedidoId && !detalle && !fechaStr) continue;\n\n  // Detección Inteligente de Urgencias y Tipo de Pedido\n  const textoCompleto = `${detalle} ${archivoPdf}`.toLowerCase();\n  const esUrgente = textoCompleto.includes('urgencia') || \n                    textoCompleto.includes('urgente') || \n                    textoCompleto.includes('hoy') || \n                    textoCompleto.includes('mañana');\n  \n  const esCreditoFiscal = textoCompleto.includes('crédito') || textoCompleto.includes('credito fiscal');\n  const tienePdfAdjunto = archivoPdf.toLowerCase().includes('.pdf') || archivoPdf.includes('PedidosInfo_Files_');\n\n  // Normalización de Fecha\n  let fechaNormalizada = fechaStr;\n  if (fechaStr.includes('/')) {\n    const parts = fechaStr.split('/');\n    if (parts.length === 3) {\n      // Si viene en formato DD/MM/YYYY\n      const d = parts[0].padStart(2, '0');\n      const m = parts[1].padStart(2, '0');\n      const y = parts[2].length === 2 ? '20' + parts[2] : parts[2];\n      fechaNormalizada = `${y}-${m}-${d}`;\n    }\n  }\n\n  // Identificador único para deduplicación\n  const idKey = pedidoId || `${fechaNormalizada}_${usuarioId}_${ciudad}`;\n  const esNuevo = !staticData.processedIds[idKey];\n  staticData.processedIds[idKey] = new Date().toISOString();\n\n  pedidosProcesados.push({\n    json: {\n      pedido_id: pedidoId || `PED-${Math.random().toString(36).substring(7).toUpperCase()}`,\n      fecha: fechaNormalizada || new Date().toISOString().split('T')[0],\n      detalle,\n      archivo_pdf: archivoPdf,\n      tiene_pdf_adjunto: tienePdfAdjunto,\n      usuario_id: usuarioId,\n      ciudad,\n      region,\n      es_urgente: esUrgente,\n      es_credito_fiscal: esCreditoFiscal,\n      estado: esUrgente ? 'Prioritario / Urgente' : 'En Proceso',\n      es_nuevo_registro: esNuevo\n    }\n  });\n}\n\nreturn pedidosProcesados;"
+        "resource": "worksheet",
+        "operation": "getRows",
+        "workbook": "REPORTE DE LICITACIONES.xlsx",
+        "worksheet": "Hoja1",
+        "options": {
+          "headerRow": 1,
+          "dataProperty": "data"
+        }
+      },
+      "id": "read-excel-licitaciones",
+      "name": "2b. Conector Microsoft Excel 365: REPORTE DE LICITACIONES",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2,
+      "position": [420, 440],
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "ms-excel-labandmed-auth",
+          "name": "Microsoft Excel 365 (businessinteligent01@lm-sv.com)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================================================\n// LIMPIEZA & MAPEO DE DATOS DE EXCEL 365 (REPORTE DE LICITACIONES)\n// ==========================================================================\nconst items = $input.all();\nconst licitacionesProcesadas = [];\n\nfor (const item of items) {\n  const row = item.json;\n  \n  // Columnas exactas de Microsoft Excel Online (REPORTE DE LICITACIONES):\n  // A: AÑO\n  // B: Mes\n  // C: EMPR (LAB&MED)\n  // D: INS (ISSS, MINSAL, etc.)\n  // E: Cliente (Hospitales e Institutos)\n  // F: TIPO DE PROCESO (LICITACION COMPETITIVA, SUBASTA, BAJA CUANTIA)\n  // G: No. Oferta (LC26DM0076, etc.)\n  // H: Nombre Oferta\n  // I: Presentación / Monto / Estado\n  \n  const anio = (row['AÑO'] || row['Año'] || row['ANIO'] || '2026').toString().trim();\n  const mes = (row['Mes'] || row['MES'] || '').toString().trim().toUpperCase();\n  const empresa = (row['EMPR'] || row['Empresa'] || 'LAB&MED').toString().trim().toUpperCase();\n  const institucion = (row['INS'] || row['Institución'] || row['Institucion'] || 'MINSAL').toString().trim().toUpperCase();\n  const cliente = (row['Cliente'] || row['CLIENTE'] || '').toString().trim();\n  const tipoProceso = (row['TIPO DE PROCESO'] || row['Tipo Proceso'] || 'LICITACIÓN').toString().trim().toUpperCase();\n  const numOferta = (row['No. Oferta'] || row['No Oferta'] || row['Oferta'] || '').toString().trim();\n  const nombreOferta = (row['Nombre Oferta'] || row['Nombre de Oferta'] || row['Descripción'] || '').toString().trim();\n  const presentacion = (row['Presentación'] || row['Presentacion'] || '').toString().trim();\n\n  if (!numOferta && !nombreOferta && !cliente) continue;\n\n  licitacionesProcesadas.push({\n    json: {\n      anio,\n      mes,\n      empresa,\n      institucion,\n      cliente,\n      tipo_proceso: tipoProceso,\n      numero_oferta: numOferta,\n      nombre_oferta: nombreOferta,\n      presentacion,\n      fuente: 'Excel 365 SharePoint: REPORTE DE LICITACIONES',\n      fecha_registro: new Date().toISOString()\n    }\n  });\n}\n\nreturn licitacionesProcesadas;"
+      },
+      "id": "transform-excel-licitaciones",
+      "name": "3b. Transformar Licitaciones Excel 365",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 440]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================================================\n// GESTIÓN DE MEMORIA ESTÁTICA & TRANSFORMACIÓN DBlabymed (Google Sheets)\n// ==========================================================================\nconst staticData = $getWorkflowStaticData('global');\nstaticData.processedIds = staticData.processedIds || {};\n\nconst MAX_MEMORY_KEYS = 5000;\nconst storedKeys = Object.keys(staticData.processedIds);\nif (storedKeys.length > MAX_MEMORY_KEYS) {\n  const toDelete = storedKeys.slice(0, storedKeys.length - 2000);\n  toDelete.forEach(k => delete staticData.processedIds[k]);\n}\n\nconst items = $input.all();\nconst pedidosProcesados = [];\n\nfor (const item of items) {\n  const row = item.json;\n  const pedidoId = (row['PedidoID'] || row['A'] || row['ID'] || '').toString().trim();\n  const fechaStr = (row['Fecha'] || row['FECHA'] || row['G'] || '').toString().trim();\n  const detalle = (row['Detalle'] || row['Comentario'] || row['H'] || '').toString().trim();\n  const archivoPdf = (row['Archivo'] || row['PDF'] || row['I'] || '').toString().trim();\n  const usuarioId = (row['UsuarioID'] || row['Usuario'] || row['K'] || 'US-GENERAL').toString().trim();\n  const ciudad = (row['Ciudad'] || row['Municipio'] || row['L'] || 'SAN SALVADOR').toString().trim().toUpperCase();\n  const region = (row['Region'] || row['Región'] || row['M'] || 'CENTRAL').toString().trim().toUpperCase();\n\n  if (!pedidoId && !detalle && !fechaStr) continue;\n\n  const textoCompleto = `${detalle} ${archivoPdf}`.toLowerCase();\n  const esUrgente = textoCompleto.includes('urgencia') || textoCompleto.includes('urgente') || textoCompleto.includes('hoy') || textoCompleto.includes('mañana');\n  const esCreditoFiscal = textoCompleto.includes('crédito') || textoCompleto.includes('credito fiscal');\n  const tienePdfAdjunto = archivoPdf.toLowerCase().includes('.pdf') || archivoPdf.includes('PedidosInfo_Files_');\n\n  let fechaNormalizada = fechaStr;\n  if (fechaStr.includes('/')) {\n    const parts = fechaStr.split('/');\n    if (parts.length === 3) {\n      const d = parts[0].padStart(2, '0');\n      const m = parts[1].padStart(2, '0');\n      const y = parts[2].length === 2 ? '20' + parts[2] : parts[2];\n      fechaNormalizada = `${y}-${m}-${d}`;\n    }\n  }\n\n  const idKey = pedidoId || `${fechaNormalizada}_${usuarioId}_${ciudad}`;\n  const esNuevo = !staticData.processedIds[idKey];\n  staticData.processedIds[idKey] = new Date().toISOString();\n\n  pedidosProcesados.push({\n    json: {\n      pedido_id: pedidoId || `PED-${Math.random().toString(36).substring(7).toUpperCase()}`,\n      fecha: fechaNormalizada || new Date().toISOString().split('T')[0],\n      detalle,\n      archivo_pdf: archivoPdf,\n      tiene_pdf_adjunto: tienePdfAdjunto,\n      usuario_id: usuarioId,\n      ciudad,\n      region,\n      es_urgente: esUrgente,\n      es_credito_fiscal: esCreditoFiscal,\n      estado: esUrgente ? 'Prioritario / Urgente' : 'En Proceso',\n      es_nuevo_registro: esNuevo\n    }\n  });\n}\n\nreturn pedidosProcesados;"
       },
       "id": "transform-dblabymed-real",
-      "name": "3. Transformar Columnas Reales & Control Memoria",
+      "name": "3a. Transformar Columnas Reales & Control Memoria",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [680, 320]
+      "position": [700, 240]
     },
     {
       "parameters": {
-        "jsCode": "// ==========================================================================\n// MOTOR DE AGREGACIÓN & ANALYTICS BI PARA DASHBOARDS (SUPABASE / NEXT.JS)\n// ==========================================================================\nconst pedidos = $input.all().map(i => i.json);\n\nconst totalPedidos = pedidos.length;\nconst totalUrgentes = pedidos.filter(p => p.es_urgente).length;\nconst totalConPdf = pedidos.filter(p => p.tiene_pdf_adjunto).length;\nconst totalCreditoFiscal = pedidos.filter(p => p.es_credito_fiscal).length;\n\n// 1. Distribución Geográfica por Región (CENTRAL, OCCIDENTE, ORIENTE)\nconst porRegion = {};\npedidos.forEach(p => {\n  const r = p.region || 'CENTRAL';\n  porRegion[r] = (porRegion[r] || 0) + 1;\n});\n\n// 2. Distribución por Ciudad / Municipio\nconst porCiudad = {};\npedidos.forEach(p => {\n  const c = p.ciudad || 'SAN SALVADOR';\n  porCiudad[c] = (porCiudad[c] || 0) + 1;\n});\n\n// 3. Actividad por Usuario / Vendedor (e.g. US-0007)\nconst porUsuario = {};\npedidos.forEach(p => {\n  const u = p.usuario_id || 'US-GENERAL';\n  if (!porUsuario[u]) porUsuario[u] = { total: 0, urgentes: 0, con_pdf: 0 };\n  porUsuario[u].total += 1;\n  if (p.es_urgente) porUsuario[u].urgentes += 1;\n  if (p.tiene_pdf_adjunto) porUsuario[u].con_pdf += 1;\n});\n\nreturn [{\n  json: {\n    fuente_origen: 'Google Sheets: DBlabymed',\n    timestamp_sync: new Date().toISOString(),\n    kpis_generales: {\n      total_pedidos: totalPedidos,\n      total_urgentes: totalUrgentes,\n      pct_urgentes: totalPedidos > 0 ? Math.round((totalUrgentes / totalPedidos) * 100) : 0,\n      total_con_pdf: totalConPdf,\n      pct_con_pdf: totalPedidos > 0 ? Math.round((totalConPdf / totalPedidos) * 100) : 0,\n      total_credito_fiscal: totalCreditoFiscal\n    },\n    distribucion_geografica: {\n      por_region: porRegion,\n      por_ciudad: porCiudad\n    },\n    productividad_usuarios: porUsuario,\n    pedidos_recientes: pedidos.slice(-50).reverse()\n  }\n}];"
+        "jsCode": "// ==========================================================================\n// UNIFICADOR & MOTOR DE ANALYTICS CONSOLIDADO (PEDIDOS + LICITACIONES EXCEL)\n// ==========================================================================\nconst pedidos = $('3a. Transformar Columnas Reales & Control Memoria').all().map(i => i.json);\nlet licitaciones = [];\ntry {\n  licitaciones = $('3b. Transformar Licitaciones Excel 365').all().map(i => i.json);\n} catch (e) {}\n\n// 1. Métricas de Pedidos / Logística\nconst totalPedidos = pedidos.length;\nconst totalUrgentes = pedidos.filter(p => p.es_urgente).length;\nconst totalConPdf = pedidos.filter(p => p.tiene_pdf_adjunto).length;\nconst totalCreditoFiscal = pedidos.filter(p => p.es_credito_fiscal).length;\n\n// 2. Métricas de Licitaciones Excel 365\nconst totalLicitaciones = licitaciones.length;\nconst porInstitucion = {};\nconst porTipoProceso = {};\n\nlicitaciones.forEach(lic => {\n  const ins = lic.institucion || 'OTRAS';\n  porInstitucion[ins] = (porInstitucion[ins] || 0) + 1;\n  \n  const tipo = lic.tipo_proceso || 'LICITACION';\n  porTipoProceso[tipo] = (porTipoProceso[tipo] || 0) + 1;\n});\n\nreturn [{\n  json: {\n    timestamp_sync: new Date().toISOString(),\n    kpis_pedidos: {\n      total_pedidos: totalPedidos,\n      total_urgentes: totalUrgentes,\n      total_con_pdf: totalConPdf,\n      total_credito_fiscal: totalCreditoFiscal\n    },\n    kpis_licitaciones_excel: {\n      total_licitaciones: totalLicitaciones,\n      por_institucion: porInstitucion,\n      por_tipo_proceso: porTipoProceso\n    },\n    muestras_licitaciones: licitaciones.slice(0, 30),\n    pedidos_recientes: pedidos.slice(-30).reverse()\n  }\n}];"
       },
       "id": "aggregate-bi-analytics",
-      "name": "4. Generar Métricas BI & Agregaciones Dashboard",
+      "name": "4. Consolidar BI (Pedidos + Licitaciones Excel)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [940, 320]
+      "position": [960, 340]
     },
     {
       "parameters": {
@@ -71,46 +104,62 @@
         "url": "https://control-planner.vercel.app/api/db",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"accion\": \"SYNC_DBLABYMED_REAL\",\n  \"origen\": \"Google Sheets DBlabymed\",\n  \"metricas\": $json.kpis_generales,\n  \"distribucion\": $json.distribucion_geografica,\n  \"usuarios\": $json.productividad_usuarios,\n  \"pedidos\": $json.pedidos_recientes\n}",
+        "jsonBody": "={\n  \"accion\": \"SYNC_EXCEL_LICITACIONES_Y_PEDIDOS\",\n  \"datos\": $json\n}",
         "options": {}
       },
       "id": "sync-supabase-real",
       "name": "5. Sincronizar Supabase & Actualizar Dashboard Live",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1200, 320]
+      "position": [1240, 340]
     }
   ],
   "connections": {
     "1. Cron Programado (Cada 2 Horas)": {
       "main": [
         [
-          { "node": "2. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 }
+          { "node": "2a. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 },
+          { "node": "2b. Conector Microsoft Excel 365: REPORTE DE LICITACIONES", "type": "main", "index": 0 }
         ]
       ]
     },
     "1b. Webhook On-Demand (/sync-sheets-supabase)": {
       "main": [
         [
-          { "node": "2. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 }
+          { "node": "2a. Conector Google Sheets: DBlabymed", "type": "main", "index": 0 },
+          { "node": "2b. Conector Microsoft Excel 365: REPORTE DE LICITACIONES", "type": "main", "index": 0 }
         ]
       ]
     },
-    "2. Conector Google Sheets: DBlabymed": {
+    "2a. Conector Google Sheets: DBlabymed": {
       "main": [
         [
-          { "node": "3. Transformar Columnas Reales & Control Memoria", "type": "main", "index": 0 }
+          { "node": "3a. Transformar Columnas Reales & Control Memoria", "type": "main", "index": 0 }
         ]
       ]
     },
-    "3. Transformar Columnas Reales & Control Memoria": {
+    "2b. Conector Microsoft Excel 365: REPORTE DE LICITACIONES": {
       "main": [
         [
-          { "node": "4. Generar Métricas BI & Agregaciones Dashboard", "type": "main", "index": 0 }
+          { "node": "3b. Transformar Licitaciones Excel 365", "type": "main", "index": 0 }
         ]
       ]
     },
-    "4. Generar Métricas BI & Agregaciones Dashboard": {
+    "3a. Transformar Columnas Reales & Control Memoria": {
+      "main": [
+        [
+          { "node": "4. Consolidar BI (Pedidos + Licitaciones Excel)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "3b. Transformar Licitaciones Excel 365": {
+      "main": [
+        [
+          { "node": "4. Consolidar BI (Pedidos + Licitaciones Excel)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "4. Consolidar BI (Pedidos + Licitaciones Excel)": {
       "main": [
         [
           { "node": "5. Sincronizar Supabase & Actualizar Dashboard Live", "type": "main", "index": 0 }
