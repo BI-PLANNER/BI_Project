@@ -20,8 +20,9 @@ export async function POST(req: NextRequest) {
 
     const admin: any = supabaseAdmin
 
+    const act = String(action || accion || '').toLowerCase().trim()
     // Handler Especial para Sincronización Diaria desde Microsoft Excel 365 (SharePoint)
-    if (action === 'sync_excel_licitaciones' || accion === 'SYNC_EXCEL_LICITACIONES' || table === 'sync_excel_licitaciones') {
+    if (act === 'sync_excel_licitaciones' || table === 'sync_excel_licitaciones' || table === 'licitaciones_ofertas_sync') {
       const itemsToSync = licitaciones || payload || []
       if (!Array.isArray(itemsToSync) || itemsToSync.length === 0) {
         return NextResponse.json({ success: true, message: 'No hay licitaciones para sincronizar', synced: 0 })
