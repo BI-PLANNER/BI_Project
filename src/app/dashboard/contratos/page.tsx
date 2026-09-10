@@ -168,10 +168,26 @@ export const DEFAULT_AREAS = [
   { area_id: 7, nombre_area: 'GI', label: 'GI (Gerencia de Integración)' }
 ]
 
+export const DEFAULT_CLIENTES = [
+  { cliente_id: 13, nombre_cliente: 'ISSS' },
+  { cliente_id: 14, nombre_cliente: 'ISBM' },
+  { cliente_id: 15, nombre_cliente: 'SAN JUAN DE DIOS DE SANTA ANA' },
+  { cliente_id: 16, nombre_cliente: 'HOSPITAL SALDAÑA' },
+  { cliente_id: 17, nombre_cliente: 'HOSPITAL MILITAR' },
+  { cliente_id: 18, nombre_cliente: 'HOSPITAL BLOOM' },
+  { cliente_id: 19, nombre_cliente: 'HOSPITAL NACIONAL ROSALES' },
+  { cliente_id: 20, nombre_cliente: 'MINSAL' }
+]
+
+export const DEFAULT_EMPRESAS = [
+  { empresa_id: 1, nombre_empresa: 'LABANDMED S.A. DE C.V.' },
+  { empresa_id: 2, nombre_empresa: 'MEDITECH EL SALVADOR' }
+]
+
 export default function ContratosPage() {
   const [contratos, setContratos] = useState<any[]>(MASTER_CONTRATOS)
-  const [clientes, setClientes] = useState<any[]>([])
-  const [empresas, setEmpresas] = useState<any[]>([])
+  const [clientes, setClientes] = useState<any[]>(DEFAULT_CLIENTES)
+  const [empresas, setEmpresas] = useState<any[]>(DEFAULT_EMPRESAS)
   const [incidencias, setIncidencias] = useState<any[]>(MASTER_LICITACIONES_PENDIENTES)
   const [contratoProcesos, setContratoProcesos] = useState<any[]>([])
   const [personas, setPersonas] = useState<any[]>(DEFAULT_PERSONAS)
@@ -196,8 +212,8 @@ export default function ContratosPage() {
   const [contractForm, setContractForm] = useState({
     numero_contrato: '',
     nombre_contrato: '',
-    cliente_id: '',
-    empresa_id: '',
+    cliente_id: '13',
+    empresa_id: '1',
     monto_total: '',
     fecha_adjudicacion: '',
     fecha_inicio: '',
@@ -465,18 +481,22 @@ export default function ContratosPage() {
     setExpandedContratos(updated)
   }
 
-  // Handlers for Contract CRUD
   const handleOpenCreateContract = () => {
     setEditingContract(null)
+    const clList = clientes.length > 0 ? clientes : DEFAULT_CLIENTES
+    const emList = empresas.length > 0 ? empresas : DEFAULT_EMPRESAS
+    const now = new Date()
+    const nextYear = new Date()
+    nextYear.setFullYear(now.getFullYear() + 1)
     setContractForm({
       numero_contrato: '',
       nombre_contrato: '',
-      cliente_id: clientes[0]?.cliente_id ? String(clientes[0].cliente_id) : '',
-      empresa_id: empresas[0]?.empresa_id ? String(empresas[0].empresa_id) : '1',
+      cliente_id: String(clList[0]?.cliente_id || '13'),
+      empresa_id: String(emList[0]?.empresa_id || '1'),
       monto_total: '',
       fecha_adjudicacion: '',
-      fecha_inicio: '',
-      fecha_fin: '',
+      fecha_inicio: now.toISOString().split('T')[0],
+      fecha_fin: nextYear.toISOString().split('T')[0],
       fianza_cumplimiento_estado: 'Entregada',
       fianza_cumplimiento_poliza: '',
       fianza_buena_inversion_estado: 'Pendiente',
@@ -1100,16 +1120,32 @@ export default function ContratosPage() {
 
       {/* Modal: Crear / Editar Contrato */}
       {showContractModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
-              <div className="flex items-center gap-2">
-                <FolderKanban className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-sm font-bold text-white">
-                  {editingContract ? 'Editar Contrato Institucional' : 'Nuevo Contrato Institucional'}
-                </h3>
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) setShowContractModal(false) }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
+        >
+          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] my-auto relative z-10">
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <FolderKanban className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">
+                    {editingContract ? 'Editar Contrato Institucional' : 'Nuevo Contrato Institucional'}
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Definición de contrato, entidad adjudicadora, vigencias y fianzas de garantía.
+                  </p>
+                </div>
               </div>
-              <button onClick={() => setShowContractModal(false)} className="text-slate-400 hover:text-white text-sm">✕</button>
+              <button
+                type="button"
+                onClick={() => setShowContractModal(false)}
+                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+              >
+                ✕
+              </button>
             </div>
 
             <form onSubmit={handleSaveContract} className="p-5 overflow-y-auto space-y-4 flex-1">
@@ -1122,7 +1158,7 @@ export default function ContratosPage() {
                     onChange={e => setContractForm({ ...contractForm, numero_contrato: e.target.value })}
                     required
                     placeholder="ej: SM-022/2024, CT No 16/2026"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
                 <div>
@@ -1133,7 +1169,7 @@ export default function ContratosPage() {
                     value={contractForm.monto_total}
                     onChange={e => setContractForm({ ...contractForm, monto_total: e.target.value })}
                     placeholder="0.00"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
               </div>
@@ -1145,7 +1181,7 @@ export default function ContratosPage() {
                   value={contractForm.nombre_contrato}
                   onChange={e => setContractForm({ ...contractForm, nombre_contrato: e.target.value })}
                   placeholder="ej: Suministro de reactivos, comodato de equipo y soporte técnico"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
@@ -1156,10 +1192,9 @@ export default function ContratosPage() {
                     value={contractForm.cliente_id}
                     onChange={e => setContractForm({ ...contractForm, cliente_id: e.target.value })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
-                    <option value="">-- Seleccionar Institución --</option>
-                    {clientes.map(cl => (
+                    {(clientes.length > 0 ? clientes : DEFAULT_CLIENTES).map(cl => (
                       <option key={cl.cliente_id} value={cl.cliente_id}>{cl.nombre_cliente}</option>
                     ))}
                   </select>
@@ -1170,9 +1205,9 @@ export default function ContratosPage() {
                     value={contractForm.empresa_id}
                     onChange={e => setContractForm({ ...contractForm, empresa_id: e.target.value })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
-                    {empresas.map(em => (
+                    {(empresas.length > 0 ? empresas : DEFAULT_EMPRESAS).map(em => (
                       <option key={em.empresa_id} value={em.empresa_id}>{em.nombre_empresa}</option>
                     ))}
                   </select>
@@ -1186,7 +1221,7 @@ export default function ContratosPage() {
                     type="date"
                     value={contractForm.fecha_inicio}
                     onChange={e => setContractForm({ ...contractForm, fecha_inicio: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
                 <div>
@@ -1195,13 +1230,13 @@ export default function ContratosPage() {
                     type="date"
                     value={contractForm.fecha_fin}
                     onChange={e => setContractForm({ ...contractForm, fecha_fin: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
               </div>
 
               {/* Fianzas Bancarias */}
-              <div className="p-3.5 bg-slate-950/80 rounded-xl border border-slate-800 space-y-3">
+              <div className="p-3.5 bg-slate-950/80 rounded-xl border border-slate-800 space-y-3 shadow-inner">
                 <span className="text-[11px] font-bold text-indigo-300 uppercase tracking-wider block">
                   Control de Garantías & Fianzas Bancarias
                 </span>
@@ -1212,7 +1247,7 @@ export default function ContratosPage() {
                     <select
                       value={contractForm.fianza_cumplimiento_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_cumplimiento_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white"
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white"
                     >
                       <option value="Entregada">Entregada</option>
                       <option value="En Trámite">En Trámite</option>
@@ -1225,7 +1260,7 @@ export default function ContratosPage() {
                     <select
                       value={contractForm.fianza_buena_inversion_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_buena_inversion_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-xs text-white"
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white"
                     >
                       <option value="Pendiente">Pendiente</option>
                       <option value="Entregada">Entregada</option>
@@ -1258,8 +1293,11 @@ export default function ContratosPage() {
 
       {/* Modal: Agregar / Editar Numeral */}
       {showNumeralModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh]">
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) setShowNumeralModal(false) }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
+        >
+          <div className="bg-slate-900 border border-slate-700/90 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[92vh] my-auto relative z-10">
             {/* Modal Header */}
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
               <div className="flex items-center gap-2.5">
@@ -1276,6 +1314,7 @@ export default function ContratosPage() {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setShowNumeralModal(false)}
                 className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
               >
