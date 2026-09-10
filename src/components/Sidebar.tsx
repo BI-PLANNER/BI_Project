@@ -18,6 +18,7 @@ import {
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import LabMedLogo from '@/components/LabMedLogo'
+import AlertsNotificationCenter from '@/components/AlertsNotificationCenter'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -118,7 +119,6 @@ export default function Sidebar() {
       badge: 'Live',
       badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30 font-bold'
     },
-    { href: '/dashboard/stock', label: 'Stock & Inventario BI', icon: Boxes },
     { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
@@ -136,6 +136,13 @@ export default function Sidebar() {
       icon: PieIcon,
       badge: 'Gerente General',
       badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
+    },
+    {
+      href: '/dashboard/stock',
+      label: 'Stock & Inventario BI',
+      icon: Boxes,
+      badge: 'Alertas 114 Críticas',
+      badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold'
     }
   ]
 
@@ -168,16 +175,19 @@ export default function Sidebar() {
                 <item.icon className="w-5 h-5 flex-shrink-0 text-indigo-400" />
                 {!collapsed && <span className="font-semibold text-xs">{item.label}</span>}
               </div>
-              {!collapsed && item.href === '/dashboard/stock' && (
-                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                  Alertas Live
+              {!collapsed && item.href === '/dashboard/stock' ? (
+                <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-950/30">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
+                  </span>
+                  Alertas 114 Críticas
                 </span>
-              )}
-              {!collapsed && (item as any).badge && (
+              ) : !collapsed && (item as any).badge ? (
                 <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'}`}>
                   {(item as any).badge}
                 </span>
-              )}
+              ) : null}
             </Link>
           )
         })}

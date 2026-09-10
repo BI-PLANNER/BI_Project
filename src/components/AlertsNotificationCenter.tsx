@@ -65,13 +65,17 @@ interface Props {
   initialAlertas?: AlertaItem[]
   initialResumen?: AlertasResumen
   onSyncComplete?: (data: any) => void
+  isSidebar?: boolean
+  collapsed?: boolean
 }
 
 export default function AlertsNotificationCenter({
   className = '',
   initialAlertas,
   initialResumen,
-  onSyncComplete
+  onSyncComplete,
+  isSidebar = false,
+  collapsed = false
 }: Props) {
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -244,40 +248,66 @@ export default function AlertsNotificationCenter({
   const criticalCount = resumen.quiebres_inminentes_criticos || 0
 
   return (
-    <div className={`relative inline-block ${className}`}>
-      {/* Botón Campana en Header */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`relative p-2.5 rounded-2xl border transition-all duration-300 flex items-center gap-2 group cursor-pointer ${
-          isOpen
-            ? 'bg-rose-500/20 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
-            : criticalCount > 0
-            ? 'bg-slate-900/90 border-rose-500/30 text-rose-400 hover:border-rose-500/60 hover:bg-rose-950/30'
-            : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-300'
-        }`}
-        title="Centro de Alertas de Oferta vs Demanda"
-      >
-        <div className="relative">
-          <Bell className={`w-4 h-4 ${criticalCount > 0 ? 'animate-bounce' : ''}`} />
-          {criticalCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500" />
-            </span>
-          )}
-        </div>
-
-        <div className="flex flex-col text-left leading-none pr-1">
-          <span className="text-[10px] font-bold text-slate-400">Alertas</span>
-          <span className="text-xs font-black font-mono text-white flex items-center gap-1">
-            {criticalCount > 0 ? (
-              <span className="text-rose-400">{criticalCount} Críticas</span>
-            ) : (
-              <span className="text-emerald-400">0 Quiebres</span>
+    <div className={`relative ${isSidebar ? 'w-full' : 'inline-block'} ${className}`}>
+      {/* Botón Campana / Alertas */}
+      {collapsed ? (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`relative w-10 h-10 mx-auto rounded-xl border transition-all duration-300 flex items-center justify-center group cursor-pointer ${
+            isOpen
+              ? 'bg-rose-500/20 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
+              : criticalCount > 0
+              ? 'bg-slate-900/90 border-rose-500/30 text-rose-400 hover:border-rose-500/60 hover:bg-rose-950/30'
+              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-300'
+          }`}
+          title={`Centro de Alertas (${criticalCount > 0 ? `${criticalCount} Críticas` : '0 Quiebres'})`}
+        >
+          <div className="relative">
+            <Bell className={`w-4 h-4 ${criticalCount > 0 ? 'animate-bounce' : ''}`} />
+            {criticalCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500" />
+              </span>
             )}
-          </span>
-        </div>
-      </button>
+          </div>
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`relative ${
+            isSidebar ? 'w-full justify-start px-3 py-2 rounded-2xl' : 'p-2.5 rounded-2xl'
+          } border transition-all duration-300 flex items-center gap-2.5 group cursor-pointer ${
+            isOpen
+              ? 'bg-rose-500/20 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
+              : criticalCount > 0
+              ? 'bg-slate-900/90 border-rose-500/30 text-rose-400 hover:border-rose-500/60 hover:bg-rose-950/30 shadow-md shadow-rose-950/20'
+              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-300'
+          }`}
+          title="Centro de Alertas de Oferta vs Demanda"
+        >
+          <div className="relative flex-shrink-0">
+            <Bell className={`w-4 h-4 ${criticalCount > 0 ? 'animate-bounce' : ''}`} />
+            {criticalCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500" />
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col text-left leading-none pr-1">
+            <span className="text-[10px] font-bold text-slate-400">Alertas</span>
+            <span className="text-xs font-black font-mono text-white flex items-center gap-1 mt-0.5">
+              {criticalCount > 0 ? (
+                <span className="text-rose-400">{criticalCount} Críticas</span>
+              ) : (
+                <span className="text-emerald-400">0 Quiebres</span>
+              )}
+            </span>
+          </div>
+        </button>
+      )}
 
       {/* MODAL / FLYOUT RENDERIZADO CON PORTAL DIRECTO AL BODY (SIN CORTES) */}
       {isOpen && mounted && createPortal(
