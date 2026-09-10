@@ -326,10 +326,22 @@ export default function StockProductosPage() {
       const m = p.marca?.nombre_marca || 'Genérica'
       counts[m] = (counts[m] || 0) + 1
     })
-    return Object.entries(counts)
+    const sorted = Object.entries(counts)
       .map(([marca, count]) => ({ marca, count }))
       .sort((a, b) => b.count - a.count)
-      .slice(0, 8)
+
+    const top8 = sorted.slice(0, 8)
+    const rest = sorted.slice(8)
+    const restCount = rest.reduce((acc, curr) => acc + curr.count, 0)
+
+    if (restCount > 0) {
+      top8.push({
+        marca: `Otros (${rest.length} Fabricantes menores)`,
+        count: restCount
+      })
+    }
+
+    return top8
   }, [productos])
 
   // =========================================================================
@@ -1355,7 +1367,8 @@ export default function StockProductosPage() {
                           'from-amber-500 to-orange-600',
                           'from-blue-500 to-cyan-600',
                           'from-rose-500 to-red-600',
-                          'from-teal-500 to-emerald-600'
+                          'from-teal-500 to-emerald-600',
+                          'from-slate-400 to-slate-600'
                         ]
                         const barColor = colors[idx % colors.length]
 
