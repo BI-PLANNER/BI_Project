@@ -1,61 +1,54 @@
 const { chromium } = require('playwright-core');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
 (async () => {
-  console.log('--- TEST PLAYWRIGHT: SIDEBAR ALERTAS BOTON ---');
-  
-  const browser = await chromium.launch({
-    channel: 'chrome',
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  console.log('--- TEST PLAYWRIGHT: SIDEBAR DEDICATED ALERTAS WIDGET ---');
+  let browser;
+  try {
+    browser = await chromium.launch({ channel: 'chrome', headless: true });
+  } catch (err) {
+    browser = await chromium.launch({ channel: 'msedge', headless: true });
+  }
 
-  const context = await browser.newContext({
-    viewport: { width: 1440, height: 900 }
-  });
-
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
+  const baseUrl = 'http://localhost:3008';
 
   try {
-    // 1. Ir a login
-    console.log('1. Navegando a login en http://localhost:3008/login ...');
-    await page.goto('http://localhost:3008/login', { waitUntil: 'networkidle', timeout: 20000 });
+    console.log('1. Navegando a login...');
+    await page.goto(`${baseUrl}/login`, { waitUntil: 'domcontentloaded' });
 
-    // 2. Iniciar sesión como Lenny
-    console.log('2. Iniciando sesión...');
-    await page.fill('input[type="email"]', 'jose.gomez@labandmed.com');
-    await page.fill('input[type="password"]', 'Planner2026*');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('**/dashboard/**', { timeout: 15000 });
-    console.log('Login exitoso. URL actual:', page.url());
-
+    const lennyBtn = await page.$('text=José Lenny Gómez');
+    if (lennyBtn) {
+      await lennyBtn.click();
+      await page.waitForTimeout(300);
+    }
+    await page.click('button:has-text("Ingresar")');
     await page.waitForTimeout(2000);
 
-    // 3. Tomar captura del Sidebar con el nuevo botón de Alertas abajo de Dashboard Obligaciones
-    const sidebarShotPath = 'C:\\Users\\JosèLenyGòmezEnrique\\.gemini\\antigravity-ide\\brain\\dbf09ad8-5f16-40d7-a4ff-ba55ffe0cce2\\playwright_sidebar_alertas.png';
-    await page.screenshot({ path: sidebarShotPath, fullPage: false });
-    console.log('Captura de sidebar guardada en:', sidebarShotPath);
+    console.log('2. Navegando a /dashboard/contratos...');
+    await page.goto(`${baseUrl}/dashboard/contratos`, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1500);
 
-    // 4. Hacer clic en el botón de Alertas en el Sidebar
-    console.log('4. Clickeando el botón de Alertas en el sidebar...');
-    const alertButton = page.locator('aside button[title*="Alertas"]');
-    await alertButton.waitFor({ state: 'visible', timeout: 5000 });
-    await alertButton.click();
+    const artifactDir = 'C:\\Users\\JosèLenyGòmezEnrique\\.gemini\\antigravity-ide\\brain\\dbf09ad8-5f16-40d7-a4ff-ba55ffe0cce2';
+    const sidebarShotPath = path.join(artifactDir, 'playwright_sidebar_alertas_widget.png');
+    await page.screenshot({ path: sidebarShotPath });
+    console.log('📸 Screenshot sidebar con botón Alertas guardado en:', sidebarShotPath);
 
-    // 5. Esperar que se abra el modal del Centro de Alertas
-    console.log('5. Esperando modal del Centro de Alertas...');
-    await page.waitForSelector('text=Centro de Alertas: Oferta vs. Demanda', { timeout: 5000 });
-    await page.waitForTimeout(1000);
+    console.log('3. Haciendo clic en el widget de Alertas en el Sidebar...');
+    const alertBtn = page.locator('aside button[title*="Alertas"]');
+    await alertBtn.waitFor({ state: 'visible', timeout: 5000 });
+    await alertBtn.click();
+    await page.waitForTimeout(1500);
 
-    // 6. Tomar captura del Centro de Alertas Abierto
-    const modalShotPath = 'C:\\Users\\JosèLenyGòmezEnrique\\.gemini\\antigravity-ide\\brain\\dbf09ad8-5f16-40d7-a4ff-ba55ffe0cce2\\playwright_alertas_modal_opened.png';
-    await page.screenshot({ path: modalShotPath, fullPage: false });
-    console.log('Captura del modal de alertas abierta guardada en:', modalShotPath);
+    const modalShotPath = path.join(artifactDir, 'playwright_modal_alertas_opened.png');
+    await page.screenshot({ path: modalShotPath });
+    console.log('📸 Screenshot modal abierto guardado en:', modalShotPath);
 
     console.log('--- TEST PLAYWRIGHT EXITOSO ---');
   } catch (err) {
-    console.error('Error durante el test de Playwright:', err);
+    console.error('Error en test:', err);
   } finally {
     await browser.close();
   }
