@@ -41,7 +41,7 @@ export default function NeoChartPieDonut({
   innerRadius = 58,
   outerRadius = 92,
   showLegend = true,
-  formatValue = (v: number) => `${v} hitos`,
+  formatValue = (v: number) => `${v.toLocaleString()}`,
   badge,
   accentColor = 'cyan',
   insight,
@@ -391,7 +391,7 @@ export default function NeoChartPieDonut({
         <span className="flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> {slices.length} Categorías Analizadas
         </span>
-        <span className="text-cyan-300 font-black text-xs">Total: {total} Obligaciones</span>
+        <span className="text-cyan-300 font-black text-xs">Total: {formatValue ? formatValue(total) : total.toLocaleString()}</span>
       </div>
     </div>
   )

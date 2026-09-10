@@ -2107,7 +2107,7 @@ export default function StockProductosPage() {
                   centerLabel="Inventario"
                   centerValue="40.9K Kits"
                   badge="Kardex Live"
-                  formatValue={v => `${v.toLocaleString()} kits`}
+                  formatValue={v => `${v.toLocaleString()} Kits`}
                 />
               </div>
             )}
@@ -2384,7 +2384,7 @@ export default function StockProductosPage() {
                       centerLabel="Envíos Totales"
                       centerValue="320 Envíos"
                       badge="Densidad Logística"
-                      formatValue={v => `${v} pedidos`}
+                      formatValue={v => `${v} Envíos`}
                     />
 
                     <NeoChartPieDonut
@@ -2395,7 +2395,7 @@ export default function StockProductosPage() {
                       centerLabel="Incidencias"
                       centerValue="14 Casos"
                       badge="Control Calidad"
-                      formatValue={v => `${v} casos`}
+                      formatValue={v => `${v} Casos`}
                     />
                   </div>
                 )}

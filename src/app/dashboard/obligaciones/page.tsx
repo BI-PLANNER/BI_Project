@@ -735,6 +735,7 @@ export default function DashboardObligacionesPage() {
                 centerValue={total}
                 accentColor="emerald"
                 badge="100% Auditado"
+                formatValue={v => `${v} Obligaciones`}
                 insight="📌 DIAGNÓSTICO: El 61.5% (16 hitos) marchan en plazo verde. Existen 9 compromisos urgentes en rojo (Hospital Bloom SIS, ISBM y reactivos de Santa Ana) y 1 en advertencia que requieren seguimiento directo."
                 onSelectSlice={(slice) => {
                   const s = slice.label.toLowerCase()
@@ -757,6 +758,7 @@ export default function DashboardObligacionesPage() {
                 centerValue={areas.length}
                 accentColor="cyan"
                 badge="7 Áreas"
+                formatValue={v => `${v} Obligaciones`}
                 insight="📌 RECURSOS: Aplicaciones concentra el 34.6% (9 hitos) bajo Edgar Figuero, seguido por Project Management (PM) con 6 hitos (23.1%) e IT / Logística con 3 hitos cada uno."
                 onSelectSlice={(slice) => {
                   const rawArea = slice.label.replace('📁 ', '').trim()
@@ -776,6 +778,7 @@ export default function DashboardObligacionesPage() {
                 centerValue={clientes.length}
                 accentColor="amber"
                 badge="6 Hospitales"
+                formatValue={v => `${v} Obligaciones`}
                 insight="📌 DEMANDA: San Juan de Dios de Santa Ana (13 hitos) y Hospital Militar (7 hitos) representan el 76.9% del volumen total de obligaciones contractuales activas."
                 onSelectSlice={(slice) => {
                   const targetCliente = clientes.find(c => c.includes(slice.label.replace('HOSP. ', '')) || slice.label.includes(c))
@@ -797,6 +800,7 @@ export default function DashboardObligacionesPage() {
                 centerValue={total}
                 accentColor="purple"
                 badge="Clasificación"
+                formatValue={v => `${v} Obligaciones`}
                 insight="📌 MARCO LEGAL: 17 obligaciones (65.4%) son compromisos de Contratos Oficiales de Suministro, y 9 (34.6%) son adecuaciones físicas en terreno (visitas técnicas de Luis Orellana y PM)."
                 onSelectSlice={(slice) => {
                   const isContrato = slice.label.includes('Contrato')
