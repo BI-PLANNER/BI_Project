@@ -1076,8 +1076,6 @@ export default function StockProductosPage() {
 
             {/* Action Buttons Hub */}
             <div className="flex flex-wrap items-center gap-3">
-              <AlertsNotificationCenter />
-
               <button
                 onClick={handleSyncData}
                 disabled={syncing}
