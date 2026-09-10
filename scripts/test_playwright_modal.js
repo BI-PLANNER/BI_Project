@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 async function run() {
-  console.log('🚀 Iniciando prueba automatizada con Playwright...');
+  console.log('🚀 Iniciando prueba automatizada con Playwright en localhost:3008...');
   let browser;
   try {
     browser = await chromium.launch({
@@ -23,11 +23,11 @@ async function run() {
   });
   const page = await context.newPage();
 
-  const baseUrl = 'https://control-planner.vercel.app';
+  const baseUrl = 'http://localhost:3008';
   console.log(`📍 Navegando a ${baseUrl}/login...`);
   await page.goto(`${baseUrl}/login`, { waitUntil: 'networkidle', timeout: 30000 });
 
-  // Seleccionar perfil rápido "José Lenny Gómez" y dar click en Ingresar
+  // Iniciar sesión
   console.log('🔑 Iniciando sesión como José Lenny Gómez...');
   const lennyBtn = await page.$('text=José Lenny Gómez');
   if (lennyBtn) {
@@ -58,16 +58,38 @@ async function run() {
 
   // Llenar formulario de prueba
   console.log('✍️ Completando formulario de prueba...');
-  await page.fill('input[placeholder*="SM-022"]', 'CT-PLAYWRIGHT-TOP');
-  await page.fill('input[placeholder="0.00"]', '35000');
-  await page.fill('input[placeholder*="Suministro de reactivos"]', 'Prueba automatizada de modal alineado arriba');
+  await page.fill('input[placeholder*="SM-022"]', 'CT-PLAYWRIGHT-TOP-001');
+  await page.fill('input[placeholder="0.00"]', '45000');
+  await page.fill('input[placeholder*="Suministro de reactivos"]', 'Prueba automatizada de modal posicionado arriba');
 
   const screenshot3 = path.join(artifactDir, 'playwright_modal_filled.png');
   await page.screenshot({ path: screenshot3 });
   console.log('📸 Screenshot formulario completado:', screenshot3);
 
+  // Guardar contrato
+  console.log('💾 Guardando contrato...');
+  await page.click('button:has-text("Guardar Contrato")');
+  await page.waitForTimeout(2000);
+
+  const screenshot4 = path.join(artifactDir, 'playwright_contrato_guardado.png');
+  await page.screenshot({ path: screenshot4 });
+  console.log('📸 Screenshot contrato registrado:', screenshot4);
+
+  // Limpiar contrato de prueba
+  console.log('🧹 Limpiando contrato de prueba...');
+  page.on('dialog', async dialog => {
+    await dialog.accept();
+  });
+
+  const deleteBtn = await page.$('div:has-text("CT-PLAYWRIGHT-TOP-001") button[title="Eliminar Contrato"]');
+  if (deleteBtn) {
+    await deleteBtn.click();
+    await page.waitForTimeout(1500);
+    console.log('✅ Contrato de prueba eliminado limpiamente.');
+  }
+
   await browser.close();
-  console.log('🎉 ¡Validación de Playwright finalizada con éxito!');
+  console.log('🎉 ¡Validación completa con Playwright exitosa!');
 }
 
 run().catch(err => {
