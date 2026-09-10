@@ -16,13 +16,135 @@ const supabaseAdmin = createClient(
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { action, table, payload, id, pk = 'id' } = body
+    const { action, accion, table, payload, id, pk = 'id', licitaciones } = body
+
+    const admin: any = supabaseAdmin
+
+    // Handler Especial para Sincronización Diaria desde Microsoft Excel 365 (SharePoint)
+    if (action === 'sync_excel_licitaciones' || accion === 'SYNC_EXCEL_LICITACIONES' || table === 'sync_excel_licitaciones') {
+      const itemsToSync = licitaciones || payload || []
+      if (!Array.isArray(itemsToSync) || itemsToSync.length === 0) {
+        return NextResponse.json({ success: true, message: 'No hay licitaciones para sincronizar', synced: 0 })
+      }
+
+      // 1. Obtener Catálogos Maestros para Foreign Keys
+      const [clientesRes, empresasRes, estatusRes, personasRes] = await Promise.all([
+        admin.from('clientes').select('cliente_id, nombre_cliente'),
+        admin.from('empresas').select('empresa_id, nombre_empresa'),
+        admin.from('estatus').select('estatus_id, nombre_estatus'),
+        admin.from('personas').select('persona_id, nombre_completo')
+      ])
+
+      const clientesMap = new Map<string, number>()
+      clientesRes.data?.forEach((c: any) => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id))
+
+      const defaultEmpresaId = empresasRes.data?.[0]?.empresa_id || 1
+      const defaultEstatusId = estatusRes.data?.find((e: any) => e.nombre_estatus.toLowerCase().includes('pendiente') || e.nombre_estatus.toLowerCase().includes('en progreso'))?.estatus_id || 5
+      const defaultPersonaId = personasRes.data?.[0]?.persona_id || 1
+
+      // 2. Obtener licitaciones ya existentes para no duplicar
+      const { data: existingLics } = await admin.from('licitaciones_ofertas').select('licitacion_oferta_id, numero_oferta')
+      const existingMap = new Map<string, string>()
+      existingLics?.forEach((l: any) => {
+        if (l.numero_oferta) existingMap.set(l.numero_oferta.toLowerCase().trim(), l.licitacion_oferta_id)
+      })
+
+      const monthMap: Record<string, string> = {
+        'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04', 'MAYO': '05', 'JUNIO': '06',
+        'JULIO': '07', 'AGOSTO': '08', 'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
+      }
+
+      let insertedCount = 0
+      let updatedCount = 0
+
+      for (const lic of itemsToSync) {
+        const numOferta = (lic.no_oferta || lic.numero_oferta || lic['No. Oferta'] || '').toString().trim()
+        const nomOferta = (lic.nombre_oferta || lic['Nombre Oferta'] || 'Licitación Suministro').toString().trim()
+        const rawCliente = (lic.cliente || lic.institucion || lic['Cliente'] || lic['INS'] || 'MINSAL').toString().trim()
+        const rawMes = (lic.mes || lic['Mes'] || 'MARZO').toString().toUpperCase().trim()
+        const rawAnio = (lic.anio || lic.año || lic['AÑO'] || '2026').toString().trim()
+        const tipoProceso = (lic.tipo_proceso || lic['TIPO DE PROCESO'] || 'LICITACIÓN').toString().trim()
+        const presentacion = (lic.presentacion || lic['Presentación'] || '').toString().trim()
+
+        if (!numOferta && !nomOferta) continue
+
+        // Resolver o registrar cliente
+        let clienteId = clientesMap.get(rawCliente.toLowerCase())
+        if (!clienteId) {
+          // Buscar coincidencia parcial (ej. ISSS, MINSAL)
+          for (const [name, id] of clientesMap.entries()) {
+            if (rawCliente.toLowerCase().includes(name) || name.includes(rawCliente.toLowerCase())) {
+              clienteId = id
+              break
+            }
+          }
+          if (!clienteId) {
+            // Crear nuevo cliente institucional
+            const { data: newCli } = await admin.from('clientes').insert({
+              nombre_cliente: rawCliente,
+              tipo_institucion_id: 1,
+              activo: true
+            }).select('cliente_id').single()
+            if (newCli) {
+              clienteId = newCli.cliente_id
+              clientesMap.set(rawCliente.toLowerCase(), clienteId)
+            } else {
+              clienteId = 13 // Fallback ISSS
+            }
+          }
+        }
+
+        const mesNum = monthMap[rawMes] || '03'
+        const fechaPresentacion = `${rawAnio}-${mesNum}-01`
+
+        const observaciones = `TIPO: ${tipoProceso} | Presentación: ${presentacion || 'N/A'} | Fuente: Excel 365 SharePoint`
+
+        const existingId = existingMap.get(numOferta.toLowerCase())
+
+        if (existingId) {
+          // Actualizar registro existente
+          await admin.from('licitaciones_ofertas').update({
+            nombre_oferta: nomOferta,
+            cliente_id: clienteId,
+            empresa_id: defaultEmpresaId,
+            fecha_presentacion: fechaPresentacion,
+            observaciones,
+            actualizado_en: new Date().toISOString()
+          }).eq('licitacion_oferta_id', existingId)
+          updatedCount++
+        } else {
+          // Insertar nuevo registro
+          const { data: inserted } = await admin.from('licitaciones_ofertas').insert({
+            numero_oferta: numOferta,
+            nombre_oferta: nomOferta,
+            empresa_id: defaultEmpresaId,
+            cliente_id: clienteId,
+            fecha_presentacion: fechaPresentacion,
+            estatus_id: defaultEstatusId,
+            persona_id: defaultPersonaId,
+            observaciones
+          }).select('licitacion_oferta_id').single()
+
+          if (inserted) {
+            existingMap.set(numOferta.toLowerCase(), inserted.licitacion_oferta_id)
+            insertedCount++
+          }
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        tabla_destino: 'licitaciones_ofertas',
+        total_recibidos: itemsToSync.length,
+        nuevos_insertados: insertedCount,
+        actualizados: updatedCount,
+        timestamp: new Date().toISOString()
+      }, { status: 200 })
+    }
 
     if (!table) {
       return NextResponse.json({ error: 'Falta especificar la tabla' }, { status: 400 })
     }
-
-    const admin: any = supabaseAdmin
 
     switch (action) {
       case 'insert': {
