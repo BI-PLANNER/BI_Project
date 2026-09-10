@@ -1343,9 +1343,10 @@ export default function StockProductosPage() {
 
                     <div className="space-y-3 pt-1">
                       {topMarcasPorSKU.map((item, idx) => {
-                        const maxCount = topMarcasPorSKU[0]?.count || 1
-                        const percent = Math.round((item.count / (productos.length || 1)) * 100)
-                        const barWidth = Math.max(Math.round((item.count / maxCount) * 100), 5)
+                        const totalCatalog = productos.length || 1
+                        const rawPercent = (item.count / totalCatalog) * 100
+                        const percent = Math.round(rawPercent)
+                        const barWidth = Math.max(parseFloat(rawPercent.toFixed(1)), 2)
                         const colors = [
                           'from-cyan-500 to-blue-600',
                           'from-indigo-500 to-violet-600',
