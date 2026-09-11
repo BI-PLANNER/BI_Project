@@ -43,7 +43,35 @@ export async function POST(req: NextRequest) {
       const defaultEstatusId = estatusRes.data?.find((e: any) => e.nombre_estatus.toLowerCase().includes('pendiente') || e.nombre_estatus.toLowerCase().includes('en progreso'))?.estatus_id || 5
       const defaultPersonaId = personasRes.data?.[0]?.persona_id || 1
 
-      // 2. Obtener licitaciones ya existentes para no duplicar
+      // 2. Pre-identificar clientes nuevos necesarios y crearlos en batch
+      const neededClients = new Set<string>()
+      for (const lic of itemsToSync) {
+        const rawCli = (lic.cliente || lic.institucion || lic['Cliente'] || lic['INS'] || 'MINSAL').toString().trim()
+        if (rawCli && !clientesMap.has(rawCli.toLowerCase())) {
+          let found = false
+          for (const [name] of clientesMap.entries()) {
+            if (rawCli.toLowerCase().includes(name) || name.includes(rawCli.toLowerCase())) {
+              found = true
+              break
+            }
+          }
+          if (!found) {
+            neededClients.add(rawCli)
+          }
+        }
+      }
+
+      if (neededClients.size > 0) {
+        const newClientRows = Array.from(neededClients).map(name => ({
+          nombre_cliente: name,
+          tipo_institucion_id: 1,
+          activo: true
+        }))
+        const { data: createdClients } = await admin.from('clientes').insert(newClientRows).select('cliente_id, nombre_cliente')
+        createdClients?.forEach((c: any) => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id))
+      }
+
+      // 3. Obtener licitaciones ya existentes para no duplicar
       const { data: existingLics } = await admin.from('licitaciones_ofertas').select('licitacion_oferta_id, numero_oferta')
       const existingMap = new Map<string, string>()
       existingLics?.forEach((l: any) => {
@@ -55,8 +83,9 @@ export async function POST(req: NextRequest) {
         'JULIO': '07', 'AGOSTO': '08', 'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
       }
 
-      let insertedCount = 0
-      let updatedCount = 0
+      const toInsert: any[] = []
+      const toUpdate: { id: string; payload: any }[] = []
+      const seenInBatch = new Set<string>()
 
       for (const lic of itemsToSync) {
         const numOferta = (lic.no_oferta || lic.numero_oferta || lic['No. Oferta'] || '').toString().trim()
@@ -69,54 +98,42 @@ export async function POST(req: NextRequest) {
 
         if (!numOferta && !nomOferta) continue
 
-        // Resolver o registrar cliente
+        const key = (numOferta || nomOferta).toLowerCase()
+        if (seenInBatch.has(key)) continue
+        seenInBatch.add(key)
+
         let clienteId = clientesMap.get(rawCliente.toLowerCase())
         if (!clienteId) {
-          // Buscar coincidencia parcial (ej. ISSS, MINSAL)
           for (const [name, id] of clientesMap.entries()) {
             if (rawCliente.toLowerCase().includes(name) || name.includes(rawCliente.toLowerCase())) {
               clienteId = id
               break
             }
           }
-          if (!clienteId) {
-            // Crear nuevo cliente institucional
-            const { data: newCli } = await admin.from('clientes').insert({
-              nombre_cliente: rawCliente,
-              tipo_institucion_id: 1,
-              activo: true
-            }).select('cliente_id').single()
-            if (newCli) {
-              clienteId = newCli.cliente_id
-              clientesMap.set(rawCliente.toLowerCase(), clienteId)
-            } else {
-              clienteId = 13 // Fallback ISSS
-            }
-          }
+          if (!clienteId) clienteId = 13 // Fallback ISSS
         }
 
         const mesNum = monthMap[rawMes] || '03'
         const fechaPresentacion = `${rawAnio}-${mesNum}-01`
-
         const observaciones = `TIPO: ${tipoProceso} | Presentación: ${presentacion || 'N/A'} | Fuente: Excel 365 SharePoint`
 
-        const existingId = existingMap.get(numOferta.toLowerCase())
+        const existingId = numOferta ? existingMap.get(numOferta.toLowerCase()) : null
 
         if (existingId) {
-          // Actualizar registro existente
-          await admin.from('licitaciones_ofertas').update({
-            nombre_oferta: nomOferta,
-            cliente_id: clienteId,
-            empresa_id: defaultEmpresaId,
-            fecha_presentacion: fechaPresentacion,
-            observaciones,
-            actualizado_en: new Date().toISOString()
-          }).eq('licitacion_oferta_id', existingId)
-          updatedCount++
+          toUpdate.push({
+            id: existingId,
+            payload: {
+              nombre_oferta: nomOferta,
+              cliente_id: clienteId,
+              empresa_id: defaultEmpresaId,
+              fecha_presentacion: fechaPresentacion,
+              observaciones,
+              actualizado_en: new Date().toISOString()
+            }
+          })
         } else {
-          // Insertar nuevo registro
-          const { data: inserted } = await admin.from('licitaciones_ofertas').insert({
-            numero_oferta: numOferta,
+          toInsert.push({
+            numero_oferta: numOferta || `OF-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             nombre_oferta: nomOferta,
             empresa_id: defaultEmpresaId,
             cliente_id: clienteId,
@@ -124,12 +141,35 @@ export async function POST(req: NextRequest) {
             estatus_id: defaultEstatusId,
             persona_id: defaultPersonaId,
             observaciones
-          }).select('licitacion_oferta_id').single()
+          })
+        }
+      }
 
-          if (inserted) {
-            existingMap.set(numOferta.toLowerCase(), inserted.licitacion_oferta_id)
-            insertedCount++
+      // 4. Ejecutar inserciones en bulk y actualizaciones en lotes concurrentes
+      let insertedCount = 0
+      let updatedCount = 0
+
+      if (toInsert.length > 0) {
+        // Inserción en bloques de 100
+        for (let i = 0; i < toInsert.length; i += 100) {
+          const chunk = toInsert.slice(i, i + 100)
+          const { error: insErr } = await admin.from('licitaciones_ofertas').insert(chunk)
+          if (!insErr) {
+            insertedCount += chunk.length
+          } else {
+            console.error('Error en batch insert licitaciones:', insErr)
           }
+        }
+      }
+
+      if (toUpdate.length > 0) {
+        // Actualizaciones concurrentes en bloques de 20
+        for (let i = 0; i < toUpdate.length; i += 20) {
+          const chunk = toUpdate.slice(i, i + 20)
+          await Promise.all(chunk.map(item =>
+            admin.from('licitaciones_ofertas').update(item.payload).eq('licitacion_oferta_id', item.id)
+          ))
+          updatedCount += chunk.length
         }
       }
 
