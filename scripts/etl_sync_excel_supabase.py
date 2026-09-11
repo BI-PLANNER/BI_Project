@@ -123,11 +123,10 @@ def get_latest_n8n_execution_data():
     if excel_node and len(excel_node) > 0:
         raw_items = excel_node[0].get('data', {}).get('main', [[]])[0]
         
-    print(f"   ↳ Se extrajeron {len(raw_items)} registros crudos de Excel 365.")
     return raw_items
 
 def safe_float(val, default=0.0):
-    """Convierte de forma segura celdas de Excel a float, limpiando espacios duros \\xa0 y formatos de moneda"""
+    """Convierte de forma segura celdas de Excel a float, limpiando espacios duros \xa0 y formatos de moneda"""
     if val is None:
         return default
     if isinstance(val, (int, float)):
@@ -139,6 +138,40 @@ def safe_float(val, default=0.0):
         return float(s)
     except Exception:
         return default
+
+from datetime import datetime, timedelta
+
+def parse_excel_date(val):
+    """Convierte números de serie de Excel o cadenas a (Año, MesNombre, FechaISO YYYY-MM-DD)"""
+    if not val:
+        return None, None, None
+    months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+    
+    if isinstance(val, (int, float)) or (isinstance(val, str) and val.replace('.', '', 1).isdigit()):
+        try:
+            num = float(val)
+            if 30000 < num < 60000:
+                dt = datetime(1899, 12, 30) + timedelta(days=num)
+                return str(dt.year), months[dt.month - 1], dt.strftime('%Y-%m-%d')
+        except Exception:
+            pass
+            
+    s = str(val).strip()
+    match_iso = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', s)
+    if match_iso:
+        y, m, d = match_iso.groups()
+        mi = int(m)
+        if 1 <= mi <= 12:
+            return str(y), months[mi - 1], f"{y}-{mi:02d}-{int(d):02d}"
+            
+    match_dmy = re.search(r'(\d{1,2})[-/](\d{1,2})[-/](\d{4})', s)
+    if match_dmy:
+        d, m, y = match_dmy.groups()
+        mi = int(m)
+        if 1 <= mi <= 12:
+            return str(y), months[mi - 1], f"{y}-{mi:02d}-{int(d):02d}"
+            
+    return None, None, None
 
 def transform_data(raw_items):
     """Fase T (Transform): Normaliza datos a esquema relacional 3FN y clasifica empresas"""
@@ -172,6 +205,22 @@ def transform_data(raw_items):
             else:
                 emp_final = 'LABYMED'
                 emp_id = 3
+
+            # Prioridad 1: Fecha de Adjudicación ("la que manda")
+            adj_val = x.get('Fecha de adjudicacion') or x.get('Fecha de adjudicación') or x.get('Fecha adjudicacion')
+            adj_y, adj_m, adj_date = parse_excel_date(adj_val)
+
+            # Prioridad 2: Fecha de Presentación de Oferta
+            pres_val = x.get('Presentación de oferta (Fecha)') or x.get('Presentación') or x.get('Presentacion')
+            pres_y, pres_m, pres_date = parse_excel_date(pres_val)
+
+            # Prioridad 3: Columnas de texto Mes y AÑO
+            raw_mes = str(x.get('Mes') or 'ENERO').strip().upper()
+            raw_anio = str(x.get('AÑO') or '2025').strip()
+
+            final_anio = adj_y or pres_y or raw_anio
+            final_mes = adj_m or pres_m or raw_mes
+            final_fecha = adj_date or pres_date or ''
                 
             items_transformed.append({
                 'no_oferta': num_oferta,
@@ -181,9 +230,10 @@ def transform_data(raw_items):
                 'empresa': emp_final,
                 'empresa_id': emp_id,
                 'tipo_proceso': str(x.get('TIPO DE PROCESO ') or x.get('TIPO DE PROCESO') or 'LICITACION COMPETITIVA').strip(),
-                'anio': str(x.get('AÑO') or '2025').strip(),
-                'mes': str(x.get('Mes') or 'ENERO').strip().upper(),
-                'presentacion': str(x.get('Presentación de oferta (Fecha)') or x.get('Presentación') or '').strip(),
+                'anio': final_anio,
+                'mes': final_mes,
+                'fecha_adjudicacion': adj_date or '',
+                'presentacion': final_fecha or str(pres_val or ''),
                 'producto': producto,
                 'marca': str(x.get('Marca') or '').strip(),
                 'precio_unitario': safe_float(x.get('Precio (unitario)') or x.get('Precio')),
@@ -197,7 +247,7 @@ def transform_data(raw_items):
                 'observaciones': str(x.get('Observaciones') or '').strip()
             })
             
-    print(f"   ↳ {len(items_transformed)} renglones transformados correctamente.")
+    print(f"   ↳ {len(items_transformed)} renglones transformados correctamente (Prioridad: Fecha de Adjudicación).")
     return items_transformed
 
 def load_to_supabase(items):
