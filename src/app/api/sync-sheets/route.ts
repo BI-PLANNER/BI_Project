@@ -13,7 +13,7 @@ const supabaseAdmin = createClient(
 )
 
 const N8N_HOST = 'n8n.cyberedu.my'
-const N8N_API_KEY = process.env.N8N_API_KEY || ''
+const N8N_API_KEY = process.env.N8N_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZDk5YWZiMi02NjczLTQ2MjctYTI0ZS0zNmI2MDU4YTgzODUiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwianRpIjoiMzA0ZTgzMGUtZGJlNC00NDg1LWI3OTUtODMzYTlmMzM1ZDc5IiwiaWF0IjoxNzg4OTkxMTQ0fQ.AI8bX7_X8dGOYFHd8TTlIz_pri1yZAea6qh38XE6NwY'
 
 async function getLatestN8nExecItems() {
   if (!N8N_API_KEY) return []
