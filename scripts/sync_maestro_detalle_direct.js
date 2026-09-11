@@ -53,16 +53,30 @@ async function syncDirect() {
   if (itemsToSync.length === 0) return;
 
   // 1. Obtener Catálogos Maestros
-  const [clientesRes, empresasRes, estatusRes, personasRes, prodsRes] = await Promise.all([
+  const [clientesRes, empresasRes, estatusRes, personasRes, prodsRes, marcasRes] = await Promise.all([
     supabase.from('clientes').select('cliente_id, nombre_cliente'),
     supabase.from('empresas').select('empresa_id, nombre_empresa'),
     supabase.from('estatus').select('estatus_id, nombre_estatus'),
     supabase.from('personas').select('persona_id, nombre_completo'),
-    supabase.from('productos_equipo').select('producto_equipo_id, nombre_producto_equipo')
+    supabase.from('productos_equipo').select('producto_equipo_id, nombre_producto_equipo'),
+    supabase.from('marcas').select('marca_id, nombre_marca')
   ]);
 
   const clientesMap = new Map();
   clientesRes.data?.forEach(c => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id));
+
+  const marcasMap = new Map();
+  marcasRes.data?.forEach(m => marcasMap.set(m.nombre_marca.toLowerCase().trim(), m.marca_id));
+
+  function getMarcaId(brandStr) {
+    if (!brandStr) return 1;
+    const b = brandStr.toLowerCase().trim();
+    if (marcasMap.has(b)) return marcasMap.get(b);
+    for (const [name, id] of marcasMap.entries()) {
+      if (b.includes(name) || name.includes(b)) return id;
+    }
+    return 1;
+  }
 
   const defaultEmpresaId = empresasRes.data?.[0]?.empresa_id || 1;
   const defaultEstatusId = estatusRes.data?.find(e => e.nombre_estatus.toLowerCase().includes('pendiente') || e.nombre_estatus.toLowerCase().includes('en progreso'))?.estatus_id || 5;
@@ -229,7 +243,7 @@ function toISODate(val) {
   });
 
   // Pre-crear productos faltantes en bulk con columnas correctas
-  const neededProducts = new Set();
+  const neededProductsMap = new Map();
   for (const lic of itemsToSync) {
     const prodName = (lic.producto || lic.nombre_oferta || '').toString().trim();
     if (prodName && !prodsMap.has(prodName.toLowerCase())) {
@@ -240,20 +254,39 @@ function toISODate(val) {
           break;
         }
       }
-      if (!found) neededProducts.add(prodName);
+      if (!found && !neededProductsMap.has(prodName.toLowerCase())) {
+        neededProductsMap.set(prodName.toLowerCase(), {
+          name: prodName,
+          marca: (lic.marca || '').toString().trim(),
+          lic
+        });
+      }
     }
   }
 
-  if (neededProducts.size > 0) {
-    console.log(`📦 Creando ${neededProducts.size} nuevos productos en 'productos_equipo'...`);
-    const newProdRows = Array.from(neededProducts).map((name, idx) => ({
-      nombre_producto_equipo: (name || 'Producto').slice(0, 140),
-      codigo_sku: `EX-${Date.now().toString().slice(-6)}-${idx + 1}`,
-      marca_id: 1, // STANDARD DIAG
-      es_equipo: false,
-      unidad_medida: 'Unidad',
-      activo: true
-    }));
+  if (neededProductsMap.size > 0) {
+    console.log(`📦 Creando ${neededProductsMap.size} nuevos productos en 'productos_equipo'...`);
+    const newProdRows = Array.from(neededProductsMap.values()).map((item, idx) => {
+      const brandId = getMarcaId(item.marca);
+      const lic = item.lic;
+      const statusStr = lic.estatus_item || 'N/A';
+      const adjEmp = lic.empresa_adjudicada || 'N/A';
+      const adjPrice = lic.precio_adjudicado !== undefined && lic.precio_adjudicado !== '' ? lic.precio_adjudicado : 0;
+      const costoLM = lic.costo_prueba_lm || 0;
+      const contrato = lic.no_contrato || 'N/A';
+      const obs = lic.observaciones || lic.razon || '';
+      const desc = `[Marca: ${item.marca || 'N/A'}] Estatus: ${statusStr} | Adjudicado: ${adjEmp} ($${adjPrice}) | Costo L&M: $${costoLM} | Contrato: ${contrato} | ${obs}`.trim();
+
+      return {
+        nombre_producto_equipo: (item.name || 'Producto').slice(0, 140),
+        codigo_sku: `EX-${Date.now().toString().slice(-6)}-${idx + 1}`,
+        marca_id: brandId,
+        descripcion: desc,
+        es_equipo: false,
+        unidad_medida: 'Unidad',
+        activo: true
+      };
+    });
 
     for (let i = 0; i < newProdRows.length; i += 100) {
       const chunk = newProdRows.slice(i, i + 100);
@@ -335,14 +368,27 @@ function toISODate(val) {
 
   // Si hubo duplicados dentro de la misma oferta, crear productos específicos en batch
   if (extraProductsToCreate.length > 0) {
-    const extraRows = extraProductsToCreate.map((e, idx) => ({
-      nombre_producto_equipo: e.prodName,
-      codigo_sku: `EX-D-${Date.now()}-${idx + 1}`,
-      marca_id: 1,
-      es_equipo: false,
-      unidad_medida: 'Unidad',
-      activo: true
-    }));
+    const extraRows = extraProductsToCreate.map((e, idx) => {
+      const brandId = getMarcaId(e.lic.marca);
+      const lic = e.lic;
+      const statusStr = lic.estatus_item || 'N/A';
+      const adjEmp = lic.empresa_adjudicada || 'N/A';
+      const adjPrice = lic.precio_adjudicado !== undefined && lic.precio_adjudicado !== '' ? lic.precio_adjudicado : 0;
+      const costoLM = lic.costo_prueba_lm || 0;
+      const contrato = lic.no_contrato || 'N/A';
+      const obs = lic.observaciones || lic.razon || '';
+      const desc = `[Marca: ${lic.marca || 'N/A'}] Estatus: ${statusStr} | Adjudicado: ${adjEmp} ($${adjPrice}) | Costo L&M: $${costoLM} | Contrato: ${contrato} | ${obs}`.trim();
+
+      return {
+        nombre_producto_equipo: e.prodName,
+        codigo_sku: `EX-D-${Date.now()}-${idx + 1}`,
+        marca_id: brandId,
+        descripcion: desc,
+        es_equipo: false,
+        unidad_medida: 'Unidad',
+        activo: true
+      };
+    });
 
     const { data: createdExtra } = await supabase.from('productos_equipo').insert(extraRows).select('producto_equipo_id');
     if (createdExtra) {

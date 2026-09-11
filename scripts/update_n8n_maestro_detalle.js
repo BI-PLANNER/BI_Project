@@ -148,6 +148,10 @@ for (const item of items) {
   const no_contrato = String(row['No. De Contrato'] || row['No. Contrato'] || '').trim();
   const costo_prueba_lm = row['Costo de prueba L&M'] || 0;
   const observaciones = String(row['Observaciones'] || '').trim();
+  const precio_adjudicado = row['Precio adjudicado '] || row['Precio adjudicado'] || 0;
+  const empresa_adjudicada = String(row['Empresa adjudicada'] || row['Empresa adjudicada '] || '').trim();
+  const razon = String(row['Razon'] || row['Razon '] || '').trim();
+  const esperado = String(row['Esperado'] || '').trim();
 
   // Filtrar solo filas completamente vacías
   if (!no_oferta && !nombre_oferta && !producto && !cliente) continue;
@@ -172,6 +176,10 @@ for (const item of items) {
     cantidad: cantidad,
     total_ofertado: total_ofertado,
     estatus_item: estatus_item,
+    precio_adjudicado: precio_adjudicado,
+    empresa_adjudicada: empresa_adjudicada,
+    razon: razon,
+    esperado: esperado,
     no_contrato: no_contrato,
     costo_prueba_lm: costo_prueba_lm,
     observaciones: observaciones,
