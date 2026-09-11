@@ -37,6 +37,7 @@ import {
   ChevronUp
 } from 'lucide-react'
 import PresionEmailModal from '@/components/PresionEmailModal'
+import ExcelUploadModal from '@/components/ExcelUploadModal'
 import { dbInsert, dbUpdate, dbDelete, dbSelect } from '@/lib/api_3fn'
 
 // Definition of 21 Tables organized into 4 logical groups
@@ -340,6 +341,7 @@ export default function GestionTablasPage() {
   const [editingId, setEditingId] = useState<any>(null)
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [isRestrictedGerente, setIsRestrictedGerente] = useState(false)
+  const [isUploadOpen, setIsUploadOpen] = useState(false)
 
   // Presion Email Modal state
   const [presionModalOpen, setPresionModalOpen] = useState(false)
@@ -587,6 +589,13 @@ export default function GestionTablasPage() {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setIsUploadOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 border border-emerald-500/30 transition"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>📥 Cargar Excel / CSV Actualizado</span>
+          </button>
+          <button
             onClick={() => { loadTableData(selectedTable); loadCatalogs(); }}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/60 transition"
           >
@@ -602,6 +611,12 @@ export default function GestionTablasPage() {
           </button>
         </div>
       </div>
+
+      <ExcelUploadModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+        onSuccess={() => { loadTableData(selectedTable); loadCatalogs(); }}
+      />
 
       {/* Notification */}
       {notification && (
