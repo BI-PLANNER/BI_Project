@@ -403,14 +403,6 @@ export default function DashboardAnalisisPage() {
           </div>
 
           <button
-            onClick={() => setIsUploadOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 border border-emerald-500/30 transition"
-          >
-            <Tag className="w-3.5 h-3.5" />
-            <span>📥 Cargar Excel Actualizado</span>
-          </button>
-
-          <button
             onClick={() => window.location.reload()}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/60 transition"
           >
@@ -419,12 +411,6 @@ export default function DashboardAnalisisPage() {
           </button>
         </div>
       </div>
-
-      <ExcelUploadModal
-        isOpen={isUploadOpen}
-        onClose={() => setIsUploadOpen(false)}
-        onSuccess={() => window.location.reload()}
-      />
 
       {/* KPI Cards (Filtered by selectedMonth) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
