@@ -61,6 +61,7 @@ export default function DashboardAnalisisPage() {
   const [mounted, setMounted] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>('todos')
+  const [selectedYear, setSelectedYear] = useState<string>('TODOS')
   const [selectedMonth, setSelectedMonth] = useState<string>('TODOS')
   const [selectedEmpresa, setSelectedEmpresa] = useState<string>('TODOS')
   const [isUploadOpen, setIsUploadOpen] = useState(false)
@@ -118,6 +119,19 @@ export default function DashboardAnalisisPage() {
     return 'MARZO'
   }
 
+  function getYearFromLic(lic: any): string {
+    if (lic?.anio) return String(lic.anio)
+    if (lic?.fecha_presentacion) {
+      const d = new Date(lic.fecha_presentacion)
+      if (!isNaN(d.getTime())) return String(d.getFullYear())
+    }
+    if (lic?.numero_oferta) {
+      const match = String(lic.numero_oferta).match(/\b(202[0-9])\b/)
+      if (match) return match[1]
+    }
+    return '2025'
+  }
+
   function getEmpresaFromLic(lic: any): string {
     if (!lic) return 'LABYMED'
     const obs = (lic.observaciones || '').toUpperCase()
@@ -164,6 +178,7 @@ export default function DashboardAnalisisPage() {
           const lic = licsMap.get(item.licitacion_oferta_id)
           const prod = prodsMap.get(item.producto_equipo_id)
           const mesStr = getMonthFromLic(lic)
+          const anioStr = getYearFromLic(lic)
           const empresaStr = getEmpresaFromLic(lic)
           const clienteName = clientsMap.get(lic?.cliente_id)?.nombre_cliente || 'MINSAL'
           const brandName = marcasMap.get(prod?.marca_id)?.nombre_marca || 'N/A'
@@ -196,6 +211,7 @@ export default function DashboardAnalisisPage() {
             producto: prodName,
             marca: brandName,
             mes: mesStr,
+            anio: anioStr,
             cantidad: qty,
             precioLabymed: price,
             precioComp: compPriceVal,
@@ -219,14 +235,16 @@ export default function DashboardAnalisisPage() {
     loadAnalysisData()
   }, [])
 
-  // Process and Filter Data according to selectedMonth and selectedEmpresa
+  // Process and Filter Data according to selectedMonth, selectedEmpresa and selectedYear
   useEffect(() => {
     if (allItemsRaw.length === 0) return
 
-    // 0. Filter raw items by selectedEmpresa
-    const itemsByEmpresa = selectedEmpresa === 'TODOS'
-      ? allItemsRaw
-      : allItemsRaw.filter(i => i.empresa === selectedEmpresa)
+    // 0. Filter raw items by selectedEmpresa & selectedYear
+    const itemsFiltered = allItemsRaw.filter(i => {
+      const matchEmp = selectedEmpresa === 'TODOS' || i.empresa === selectedEmpresa
+      const matchYr = selectedYear === 'TODOS' || i.anio === selectedYear
+      return matchEmp && matchYr
+    })
 
     // 1. Calculate Monthly Efficiency Data (All 12 Months)
     const monthlyMap: Record<string, { ofertado: number, adjudicado: number, countAdj: number, countTotal: number }> = {}
@@ -236,7 +254,7 @@ export default function DashboardAnalisisPage() {
       monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
     })
 
-    itemsByEmpresa.forEach(item => {
+    itemsFiltered.forEach(item => {
       const m = item.mes
       if (!monthlyMap[m]) {
         monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
@@ -266,8 +284,8 @@ export default function DashboardAnalisisPage() {
 
     // 2. Filter items according to selectedMonth
     const filteredByMonth = selectedMonth === 'TODOS' 
-      ? itemsByEmpresa 
-      : itemsByEmpresa.filter(i => i.mes === selectedMonth)
+      ? itemsFiltered 
+      : itemsFiltered.filter(i => i.mes === selectedMonth)
 
     let totalOfertadoSum = 0
     let totalAdjudicadoSum = 0
@@ -338,7 +356,10 @@ export default function DashboardAnalisisPage() {
     ])
 
     setCompetitiveTable(rowsForTable)
-  }, [allItemsRaw, selectedMonth, selectedEmpresa])
+  }, [allItemsRaw, selectedMonth, selectedEmpresa, selectedYear])
+
+  const availableYears = Array.from(new Set(allItemsRaw.map(i => i.anio).filter(Boolean))).sort().reverse()
+  const yearOptions = availableYears.length > 0 ? ['TODOS', ...availableYears] : ['TODOS', '2026', '2025']
 
   const filteredRows = competitiveTable.filter(r => {
     const matchesSearch = searchQuery === '' || 
@@ -353,21 +374,21 @@ export default function DashboardAnalisisPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header & Month Filter */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-950/90 border border-slate-800 p-5 rounded-2xl shadow-xl">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
             <BarChart3 className="w-4 h-4" />
-            <span>Inteligencia de Mercado • Desglose por Empresa (LABYMED / LAB&MED / DIAGNOSAL) y Mes</span>
+            <span>Inteligencia de Mercado • Desglose por Empresa (LABYMED / LAB&MED / DIAGNOSAL), Año y Mes</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
             Análisis Competitivo & Eficiencia Financiera
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Filtra de manera independiente entre <strong className="text-emerald-400">LABYMED</strong>, <strong className="text-purple-400">LAB & MED</strong> y <strong className="text-amber-400">DIAGNOSAL</strong> para consultar montos y eficiencia por mes.
+            Filtra de manera independiente entre <strong className="text-emerald-400">LABYMED</strong>, <strong className="text-purple-400">LAB & MED</strong> y <strong className="text-amber-400">DIAGNOSAL</strong> para consultar montos y eficiencia por año y mes.
           </p>
         </div>
 
-        {/* Company & Month Selector Bar */}
+        {/* Company, Year & Month Selector Bar */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Empresa Selector */}
           <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
@@ -382,6 +403,23 @@ export default function DashboardAnalisisPage() {
               <option value="LABYMED">🔵 LABYMED S.A. de C.V.</option>
               <option value="LAB&MED">🟣 LAB & MED S.A. de C.V.</option>
               <option value="DIAGNOSAL">🟢 DIAGNOSAL S.A. de C.V.</option>
+            </select>
+          </div>
+
+          {/* Year Selector */}
+          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
+            <Calendar className="w-4 h-4 text-amber-400" />
+            <span className="text-xs font-bold text-slate-300">Año:</span>
+            <select
+              value={selectedYear}
+              onChange={e => setSelectedYear(e.target.value)}
+              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-amber-300 px-3 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
+            >
+              {yearOptions.map(y => (
+                <option key={y} value={y}>
+                  {y === 'TODOS' ? '🗓️ TODOS LOS AÑOS' : `📅 AÑO ${y}`}
+                </option>
+              ))}
             </select>
           </div>
 
