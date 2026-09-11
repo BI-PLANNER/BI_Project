@@ -19,7 +19,6 @@ async function getLatestN8nExecItems() {
   if (!N8N_API_KEY) return []
 
   try {
-    // 1. Get latest successful execution ID
     const listRes = await fetch(`https://${N8N_HOST}/api/v1/executions?limit=10`, {
       headers: {
         'Accept': 'application/json',
@@ -33,7 +32,6 @@ async function getLatestN8nExecItems() {
     const successExecs = listData.data?.filter((e: any) => e.status === 'success') || []
     const latestId = successExecs[0]?.id || '1040'
 
-    // 2. Fetch execution details with data
     const detailRes = await fetch(`https://${N8N_HOST}/api/v1/executions/${latestId}?includeData=true`, {
       headers: {
         'Accept': 'application/json',
@@ -66,7 +64,7 @@ async function getLatestN8nExecItems() {
 
 export async function POST() {
   try {
-    // Try triggering webhook first
+    // 1. Trigger webhook if available
     try {
       await fetch(`https://${N8N_HOST}/webhook/sync-sheets-supabase`, {
         method: 'GET',
@@ -75,7 +73,7 @@ export async function POST() {
       }).catch(() => null)
     } catch (_) {}
 
-    // Fetch latest items from n8n execution
+    // 2. Fetch raw items from latest n8n execution
     const rawItems = await getLatestN8nExecItems()
 
     if (rawItems.length === 0) {
@@ -87,7 +85,7 @@ export async function POST() {
 
     const admin: any = supabaseAdmin
 
-    // Fetch catalogs
+    // 3. Fetch catalogs
     const [clientesRes, empresasRes, estatusRes, personasRes, prodsRes, marcasRes] = await Promise.all([
       admin.from('clientes').select('cliente_id, nombre_cliente'),
       admin.from('empresas').select('empresa_id, nombre_empresa'),
@@ -104,6 +102,23 @@ export async function POST() {
     prodsRes.data?.forEach((p: any) => {
       if (p.nombre_producto_equipo) prodsMap.set(p.nombre_producto_equipo.toLowerCase().trim(), p.producto_equipo_id)
     })
+
+    const marcasMap = new Map<string, number>()
+    marcasRes.data?.forEach((m: any) => marcasMap.set(m.nombre_marca.toLowerCase().trim(), m.marca_id))
+
+    function getMarcaId(brandStr: string): number {
+      if (!brandStr) return 1
+      const b = brandStr.toLowerCase().trim()
+      if (marcasMap.has(b)) return marcasMap.get(b)!
+      for (const [name, id] of marcasMap.entries()) {
+        if (b.includes(name) || name.includes(b)) return id
+      }
+      return 1
+    }
+
+    const defaultEmpresaId = empresasRes.data?.[0]?.empresa_id || 1
+    const defaultEstatusId = estatusRes.data?.find((e: any) => e.nombre_estatus.toLowerCase().includes('pendiente') || e.nombre_estatus.toLowerCase().includes('en progreso'))?.estatus_id || 5
+    const defaultPersonaId = personasRes.data?.[0]?.persona_id || 1
 
     const itemsToSync = rawItems.map((item: any) => {
       const r = item.json?.licitaciones ? item.json : (item.json || {})
@@ -133,6 +148,32 @@ export async function POST() {
       }
     }).flat().filter((i: any) => i.no_oferta || i.nombre_oferta || i.producto)
 
+    // Pre-create missing clients
+    const neededClients = new Set<string>()
+    for (const lic of itemsToSync) {
+      const rawCli = (lic.cliente || lic.institucion || 'MINSAL').toString().trim()
+      if (rawCli && !clientesMap.has(rawCli.toLowerCase())) {
+        let found = false
+        for (const [name] of clientesMap.entries()) {
+          if (rawCli.toLowerCase().includes(name) || name.includes(rawCli.toLowerCase())) {
+            found = true
+            break
+          }
+        }
+        if (!found) neededClients.add(rawCli)
+      }
+    }
+
+    if (neededClients.size > 0) {
+      const newClientRows = Array.from(neededClients).map(name => ({
+        nombre_cliente: name,
+        tipo_institucion_id: 1,
+        activo: true
+      }))
+      const { data: createdClients } = await admin.from('clientes').insert(newClientRows).select('cliente_id, nombre_cliente')
+      createdClients?.forEach((c: any) => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id))
+    }
+
     // Pre-create missing products
     const neededProducts = new Set<string>()
     for (const lic of itemsToSync) {
@@ -159,10 +200,181 @@ export async function POST() {
       }
     }
 
+    // Sync licitaciones_ofertas (Master)
+    const { data: existingLics } = await admin.from('licitaciones_ofertas').select('licitacion_oferta_id, numero_oferta')
+    const existingMap = new Map<string, string>()
+    existingLics?.forEach((l: any) => {
+      if (l.numero_oferta) existingMap.set(l.numero_oferta.toLowerCase().trim(), l.licitacion_oferta_id)
+    })
+
+    const monthMap: Record<string, string> = {
+      'ENERO': '01', 'FEBRERO': '02', 'MARZO': '03', 'ABRIL': '04', 'MAYO': '05', 'JUNIO': '06',
+      'JULIO': '07', 'AGOSTO': '08', 'SEPTIEMBRE': '09', 'OCTUBRE': '10', 'NOVIEMBRE': '11', 'DICIEMBRE': '12'
+    }
+
+    const toInsert: any[] = []
+    const toUpdate: { id: string; payload: any }[] = []
+    const seenInBatch = new Set<string>()
+
+    for (const lic of itemsToSync) {
+      const numOferta = (lic.no_oferta || '').toString().trim()
+      const nomOferta = (lic.nombre_oferta || 'Licitación Suministro').toString().trim()
+      const rawCliente = (lic.cliente || lic.institucion || 'MINSAL').toString().trim()
+      const rawMes = (lic.mes || 'ENERO').toString().toUpperCase().trim()
+      const rawAnio = (lic.anio || '2025').toString().trim()
+      const tipoProceso = (lic.tipo_proceso || 'LICITACIÓN').toString().trim()
+      const presentacion = (lic.presentacion || '').toString().trim()
+      const empRaw = (lic.empresa || 'LABYMED').toString().toUpperCase().trim()
+
+      if (!numOferta && !nomOferta) continue
+
+      const key = (numOferta || nomOferta).toLowerCase()
+      if (seenInBatch.has(key)) continue
+      seenInBatch.add(key)
+
+      let clienteId = clientesMap.get(rawCliente.toLowerCase())
+      if (!clienteId) {
+        for (const [name, id] of clientesMap.entries()) {
+          if (rawCliente.toLowerCase().includes(name) || name.includes(rawCliente.toLowerCase())) {
+            clienteId = id
+            break
+          }
+        }
+        if (!clienteId) clienteId = 13
+      }
+
+      let empresaId = 3 // LABYMED default
+      let empFinal = 'LABYMED'
+      if (empRaw.includes('LAB&MED') || empRaw.includes('LAB & MED') || empRaw.includes('LABANDMED')) {
+        empresaId = 1
+        empFinal = 'LAB&MED'
+      } else if (empRaw.includes('DIAGNOSAL') || nomOferta.toUpperCase().includes('DIAGNOSAL') || nomOferta.toUpperCase().includes('BAJA CUANTIA')) {
+        empresaId = 4
+        empFinal = 'DIAGNOSAL'
+      }
+
+      const mesNum = monthMap[rawMes] || '01'
+      const fechaPresentacion = `${rawAnio}-${mesNum}-01`
+      const observaciones = `TIPO: ${tipoProceso} | Empresa: ${empFinal} | Presentación: ${presentacion || 'N/A'} | Fuente: Microsoft Excel 365`
+
+      const existingId = numOferta ? existingMap.get(numOferta.toLowerCase()) : null
+
+      if (existingId) {
+        toUpdate.push({
+          id: existingId,
+          payload: {
+            nombre_oferta: nomOferta,
+            cliente_id: clienteId,
+            empresa_id: empresaId,
+            fecha_presentacion: fechaPresentacion,
+            observaciones,
+            actualizado_en: new Date().toISOString()
+          }
+        })
+      } else {
+        toInsert.push({
+          numero_oferta: numOferta || `OF-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          nombre_oferta: nomOferta,
+          empresa_id: empresaId,
+          cliente_id: clienteId,
+          fecha_presentacion: fechaPresentacion,
+          estatus_id: defaultEstatusId,
+          persona_id: defaultPersonaId,
+          observaciones
+        })
+      }
+    }
+
+    if (toInsert.length > 0) {
+      for (let i = 0; i < toInsert.length; i += 100) {
+        const chunk = toInsert.slice(i, i + 100)
+        await admin.from('licitaciones_ofertas').insert(chunk)
+      }
+    }
+
+    if (toUpdate.length > 0) {
+      for (let i = 0; i < toUpdate.length; i += 20) {
+        const chunk = toUpdate.slice(i, i + 20)
+        await Promise.all(chunk.map(item =>
+          admin.from('licitaciones_ofertas').update(item.payload).eq('licitacion_oferta_id', item.id)
+        ))
+      }
+    }
+
+    // Refresh masterMap
+    const { data: allLics } = await admin.from('licitaciones_ofertas').select('licitacion_oferta_id, numero_oferta')
+    const masterMap = new Map<string, string>()
+    allLics?.forEach((l: any) => {
+      if (l.numero_oferta) masterMap.set(l.numero_oferta.toLowerCase().trim(), l.licitacion_oferta_id)
+    })
+
+    // Sync ofertas_items (Child Detail)
+    const activeMasterIds = Array.from(masterMap.values())
+    if (activeMasterIds.length > 0) {
+      for (let i = 0; i < activeMasterIds.length; i += 100) {
+        const chunk = activeMasterIds.slice(i, i + 100)
+        await admin.from('ofertas_items').delete().in('licitacion_oferta_id', chunk)
+      }
+    }
+
+    const defaultProductId = prodsRes.data?.[0]?.producto_equipo_id || 1
+    const childRowsToInsert: any[] = []
+
+    itemsToSync.forEach((lic: any, idx: number) => {
+      const numOferta = (lic.no_oferta || '').toString().trim()
+      const masterId = numOferta ? masterMap.get(numOferta.toLowerCase()) : null
+      if (!masterId) return
+
+      const prodName = (lic.producto || lic.nombre_oferta || '').toString().trim()
+      let prodId = prodsMap.get(prodName.toLowerCase())
+      if (!prodId) {
+        for (const [name, id] of prodsMap.entries()) {
+          if (prodName.toLowerCase().includes(name) || name.includes(prodName.toLowerCase())) {
+            prodId = id
+            break
+          }
+        }
+        if (!prodId) prodId = defaultProductId
+      }
+
+      const qty = Number(lic.cantidad) || 1
+      const pu = Number(lic.precio_unitario) || 0
+      const totalOfertado = Number(lic.total_ofertado) || (qty * pu)
+      const st = (lic.estatus_item || '').toString().toUpperCase().trim()
+      const esAdjudicado = st.includes('ADJUDICADA') || st.includes('GANADA') || st === 'ADJUDICADO'
+      const pa = Number(lic.precio_adjudicado) || 0
+      const empWinner = (lic.empresa_adjudicada || '').toString().trim()
+
+      let extraDesc = `Mes: ${lic.mes || 'ENERO'}`
+      if (empWinner) extraDesc += ` | Adjudicado: ${empWinner}`
+      if (pa > 0) extraDesc += ` ($${pa})`
+      if (lic.razon) extraDesc += ` | Razón: ${lic.razon}`
+      if (lic.no_contrato) extraDesc += ` | Contrato: ${lic.no_contrato}`
+
+      childRowsToInsert.push({
+        licitacion_oferta_id: masterId,
+        producto_equipo_id: prodId,
+        renglon_numero: idx + 1,
+        cantidad: qty,
+        precio_unitario: pu,
+        precio_total: totalOfertado,
+        es_adjudicado: esAdjudicado,
+        creado_en: new Date().toISOString()
+      })
+    })
+
+    if (childRowsToInsert.length > 0) {
+      for (let i = 0; i < childRowsToInsert.length; i += 100) {
+        const chunk = childRowsToInsert.slice(i, i + 100)
+        await admin.from('ofertas_items').insert(chunk)
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Sincronización con Microsoft Excel 365 completada exitosamente',
-      processedItems: itemsToSync.length
+      message: 'Sincronización completa con Microsoft Excel 365 procesada exitosamente en Supabase',
+      syncedLicitaciones: masterMap.size,
+      syncedItems: childRowsToInsert.length
     })
   } catch (err: any) {
     console.error('Sync error:', err)
