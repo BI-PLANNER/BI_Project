@@ -14,7 +14,10 @@ import {
   DollarSign,
   Search,
   Zap,
-  Tag
+  Tag,
+  Calendar,
+  Filter,
+  Percent
 } from 'lucide-react'
 import {
   BarChart,
@@ -27,10 +30,28 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell
+  Cell,
+  ComposedChart,
+  Line
 } from 'recharts'
 
 import { dbSelect } from '@/lib/api_3fn'
+
+const MONTH_NAMES = [
+  'TODOS',
+  'ENERO',
+  'FEBRERO',
+  'MARZO',
+  'ABRIL',
+  'MAYO',
+  'JUNIO',
+  'JULIO',
+  'AGOSTO',
+  'SEPTIEMBRE',
+  'OCTUBRE',
+  'NOVIEMBRE',
+  'DICIEMBRE'
+]
 
 export default function DashboardAnalisisPage() {
   const supabase = createClient()
@@ -38,10 +59,9 @@ export default function DashboardAnalisisPage() {
   const [mounted, setMounted] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>('todos')
+  const [selectedMonth, setSelectedMonth] = useState<string>('TODOS')
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const [allItemsRaw, setAllItemsRaw] = useState<any[]>([])
 
   const [stats, setStats] = useState({
     totalLicitaciones: 0,
@@ -50,12 +70,18 @@ export default function DashboardAnalisisPage() {
     totalAdjudicado: 0,
     itemsAdjudicadosCount: 0,
     itemsPerdidosCount: 0,
-    itemsDesiertosCount: 0
+    itemsDesiertosCount: 0,
+    eficienciaGlobalPct: 0
   })
 
   const [chartPriceData, setChartPriceData] = useState<any[]>([])
   const [chartStatusData, setChartStatusData] = useState<any[]>([])
+  const [monthlyEfficiencyData, setMonthlyEfficiencyData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   function cleanProductLabel(name: string): string {
     const n = name.toUpperCase()
@@ -78,6 +104,16 @@ export default function DashboardAnalisisPage() {
     return words.slice(0, 2).join(' ').toUpperCase() || name.slice(0, 15).toUpperCase()
   }
 
+  function getMonthFromLic(lic: any): string {
+    if (lic?.mes_presentacion) return lic.mes_presentacion.toUpperCase().trim()
+    if (lic?.fecha_presentacion) {
+      const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+      const d = new Date(lic.fecha_presentacion)
+      if (!isNaN(d.getTime())) return months[d.getMonth()]
+    }
+    return 'MARZO'
+  }
+
   useEffect(() => {
     async function loadAnalysisData() {
       setLoading(true)
@@ -85,13 +121,11 @@ export default function DashboardAnalisisPage() {
         // Fetch tables via admin backend API to bypass RLS restrictions
         const [lics, items, prods, clients, marcas] = await Promise.all([
           dbSelect('licitaciones_ofertas', { limit: 1000 }),
-          dbSelect('ofertas_items', { limit: 2000 }),
-          dbSelect('productos_equipo', { limit: 2000 }),
+          dbSelect('ofertas_items', { limit: 2500 }),
+          dbSelect('productos_equipo', { limit: 2500 }),
           dbSelect('clientes', { limit: 1000 }),
           dbSelect('marcas', { limit: 1000 })
         ])
-
-        const totalLics = lics?.length || 0
 
         const licsMap = new Map()
         lics?.forEach((l: any) => licsMap.set(l.licitacion_oferta_id, l))
@@ -110,18 +144,10 @@ export default function DashboardAnalisisPage() {
           return
         }
 
-        let totalOfertadoSum = 0
-        let totalAdjudicadoSum = 0
-        let countAdj = 0
-        let countPer = 0
-        let countDes = 0
-
-        const productPricesMap: Record<string, { labymedPrice: number, compPrice: number, count: number }> = {}
-        const rowsForTable: any[] = []
-
-        items.forEach((item: any) => {
+        const preparedItems = items.map((item: any) => {
           const lic = licsMap.get(item.licitacion_oferta_id)
           const prod = prodsMap.get(item.producto_equipo_id)
+          const mesStr = getMonthFromLic(lic)
           const clienteName = clientsMap.get(lic?.cliente_id)?.nombre_cliente || 'MINSAL'
           const brandName = marcasMap.get(prod?.marca_id)?.nombre_marca || 'N/A'
           const prodName = prod?.nombre_producto_equipo || 'Producto'
@@ -130,7 +156,6 @@ export default function DashboardAnalisisPage() {
           const qty = Number(item.cantidad || 1)
           const price = Number(item.precio_unitario || 0)
           const itemTotal = qty * price
-          totalOfertadoSum += itemTotal
 
           const isDesierta = desc.includes('desierta')
           const isAdjudicada = Boolean(item.es_adjudicado)
@@ -145,74 +170,27 @@ export default function DashboardAnalisisPage() {
             if (adjMatch[2]) compPriceVal = parseFloat(adjMatch[2].trim()) || 0
           }
 
-          if (isAdjudicada) {
-            countAdj++
-            totalAdjudicadoSum += itemTotal
-          } else if (isDesierta) {
-            countDes++
-          } else {
-            countPer++
-          }
-
-          // Group prices per core clean product key for bar chart
-          const normalizedProdKey = cleanProductLabel(prodName)
-          if (!productPricesMap[normalizedProdKey]) {
-            productPricesMap[normalizedProdKey] = { labymedPrice: 0, compPrice: 0, count: 0 }
-          }
-          productPricesMap[normalizedProdKey].labymedPrice += price
-          if (compPriceVal > 0) {
-            productPricesMap[normalizedProdKey].compPrice += compPriceVal
-          }
-          productPricesMap[normalizedProdKey].count++
-
-          rowsForTable.push({
+          return {
             id: item.oferta_item_id,
+            licId: item.licitacion_oferta_id,
             licitacion: lic?.numero_oferta || 'N/A',
             cliente: clienteName,
             producto: prodName,
             marca: brandName,
+            mes: mesStr,
             cantidad: qty,
             precioLabymed: price,
             precioComp: compPriceVal,
             winner: isAdjudicada ? 'LABYMED' : (isDesierta ? 'DESIERTA' : compWinner),
             status: isAdjudicada ? 'ADJUDICADA' : (isDesierta ? 'DESIERTA' : 'PERDIDA'),
-            total: itemTotal
-          })
+            total: itemTotal,
+            isAdjudicada,
+            isDesierta,
+            isPerdida
+          }
         })
 
-        setStats({
-          totalLicitaciones: totalLics,
-          totalItems: items.length,
-          totalOfertado: totalOfertadoSum,
-          totalAdjudicado: totalAdjudicadoSum,
-          itemsAdjudicadosCount: countAdj,
-          itemsPerdidosCount: countPer,
-          itemsDesiertosCount: countDes
-        })
-
-        // Chart Data 1: Price Comparison
-        const priceChartArr = Object.entries(productPricesMap)
-          .slice(0, 10)
-          .map(([key, val]) => ({
-            producto: key,
-            'Labymed ($)': Number((val.labymedPrice / val.count).toFixed(2)),
-            'Competencia ($)': val.compPrice > 0 ? Number((val.compPrice / val.count).toFixed(2)) : Number((val.labymedPrice * 0.85 / val.count).toFixed(2))
-          }))
-
-        setChartPriceData(priceChartArr)
-
-        // Chart Data 2: Status Distribution Pie
-        setChartStatusData([
-          { name: 'Adjudicadas', value: countAdj, color: '#10b981' },
-          { name: 'Perdidas', value: countPer, color: '#f43f5e' },
-          { name: 'Desiertas', value: countDes, color: '#f59e0b' }
-        ])
-
-        setCompetitiveTable(rowsForTable)
-
-        setCompetitiveTable(rowsForTable)
-
-        setCompetitiveTable(rowsForTable)
+        setAllItemsRaw(preparedItems)
       } catch (err) {
         console.error('Error loading analysis data:', err)
       } finally {
@@ -221,7 +199,123 @@ export default function DashboardAnalisisPage() {
     }
 
     loadAnalysisData()
-  }, [supabase])
+  }, [])
+
+  // Process and Filter Data according to selectedMonth
+  useEffect(() => {
+    if (allItemsRaw.length === 0) return
+
+    // 1. Calculate Monthly Efficiency Data (All 12 Months)
+    const monthlyMap: Record<string, { ofertado: number, adjudicado: number, countAdj: number, countTotal: number }> = {}
+    const monthsOrder = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+
+    monthsOrder.forEach(m => {
+      monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
+    })
+
+    allItemsRaw.forEach(item => {
+      const m = item.mes
+      if (!monthlyMap[m]) {
+        monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
+      }
+      monthlyMap[m].ofertado += item.total
+      monthlyMap[m].countTotal++
+      if (item.isAdjudicada) {
+        monthlyMap[m].adjudicado += item.total
+        monthlyMap[m].countAdj++
+      }
+    })
+
+    const monthlyArr = monthsOrder.map(m => {
+      const data = monthlyMap[m]
+      const efPct = data.ofertado > 0 ? (data.adjudicado / data.ofertado) * 100 : 0
+      return {
+        mes: m,
+        'Ofertado ($)': Number(data.ofertado.toFixed(2)),
+        'Adjudicado ($)': Number(data.adjudicado.toFixed(2)),
+        'Eficiencia (%)': Number(efPct.toFixed(1)),
+        countTotal: data.countTotal,
+        countAdj: data.countAdj
+      }
+    })
+
+    setMonthlyEfficiencyData(monthlyArr)
+
+    // 2. Filter items according to selectedMonth
+    const filteredByMonth = selectedMonth === 'TODOS' 
+      ? allItemsRaw 
+      : allItemsRaw.filter(i => i.mes === selectedMonth)
+
+    let totalOfertadoSum = 0
+    let totalAdjudicadoSum = 0
+    let countAdj = 0
+    let countPer = 0
+    let countDes = 0
+
+    const productPricesMap: Record<string, { labymedPrice: number, compPrice: number, count: number }> = {}
+    const rowsForTable: any[] = []
+    const uniqueLics = new Set()
+
+    filteredByMonth.forEach(item => {
+      uniqueLics.add(item.licId)
+      totalOfertadoSum += item.total
+
+      if (item.isAdjudicada) {
+        countAdj++
+        totalAdjudicadoSum += item.total
+      } else if (item.isDesierta) {
+        countDes++
+      } else {
+        countPer++
+      }
+
+      // Bar Chart grouping
+      const normalizedProdKey = cleanProductLabel(item.producto)
+      if (!productPricesMap[normalizedProdKey]) {
+        productPricesMap[normalizedProdKey] = { labymedPrice: 0, compPrice: 0, count: 0 }
+      }
+      productPricesMap[normalizedProdKey].labymedPrice += item.precioLabymed
+      if (item.precioComp > 0) {
+        productPricesMap[normalizedProdKey].compPrice += item.precioComp
+      }
+      productPricesMap[normalizedProdKey].count++
+
+      rowsForTable.push(item)
+    })
+
+    const eficienciaGlobal = totalOfertadoSum > 0 ? (totalAdjudicadoSum / totalOfertadoSum) * 100 : 0
+
+    setStats({
+      totalLicitaciones: uniqueLics.size,
+      totalItems: filteredByMonth.length,
+      totalOfertado: totalOfertadoSum,
+      totalAdjudicado: totalAdjudicadoSum,
+      itemsAdjudicadosCount: countAdj,
+      itemsPerdidosCount: countPer,
+      itemsDesiertosCount: countDes,
+      eficienciaGlobalPct: Number(eficienciaGlobal.toFixed(1))
+    })
+
+    // Price Chart Data
+    const priceChartArr = Object.entries(productPricesMap)
+      .slice(0, 10)
+      .map(([key, val]) => ({
+        producto: key,
+        'Labymed ($)': Number((val.labymedPrice / val.count).toFixed(2)),
+        'Competencia ($)': val.compPrice > 0 ? Number((val.compPrice / val.count).toFixed(2)) : Number((val.labymedPrice * 0.85 / val.count).toFixed(2))
+      }))
+
+    setChartPriceData(priceChartArr)
+
+    // Status Pie Data
+    setChartStatusData([
+      { name: 'Adjudicadas', value: countAdj, color: '#10b981' },
+      { name: 'Perdidas', value: countPer, color: '#f43f5e' },
+      { name: 'Desiertas', value: countDes, color: '#f59e0b' }
+    ])
+
+    setCompetitiveTable(rowsForTable)
+  }, [allItemsRaw, selectedMonth])
 
   const filteredRows = competitiveTable.filter(r => {
     const matchesSearch = searchQuery === '' || 
@@ -235,38 +329,55 @@ export default function DashboardAnalisisPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header & Month Filter */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-xl">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
             <BarChart3 className="w-4 h-4" />
-            <span>Inteligencia de Mercado • Análisis Comparativo de Precios</span>
+            <span>Inteligencia de Mercado • Análisis Financiero y por Mes</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            Análisis Competitivo & Resultados por Renglón
+            Análisis Competitivo & Eficiencia Financiera
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Comparativa directa entre Precio Ofertado Labymed vs. Precio Adjudicado Competencia y distribución de ofertas.
+            Selecciona un mes específico o consulta el rendimiento consolidado anual.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Month Selector Bar */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 shadow-inner">
+            <Calendar className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-bold text-slate-300">Seleccionar Mes:</span>
+            <select
+              value={selectedMonth}
+              onChange={e => setSelectedMonth(e.target.value)}
+              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-indigo-300 px-3 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
+            >
+              {MONTH_NAMES.map(m => (
+                <option key={m} value={m}>
+                  {m === 'TODOS' ? '🗓️ TODOS LOS MESES (AÑO COMPLETO)' : `📅 ${m}`}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             onClick={() => window.location.reload()}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/60 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            <span>Refrescar Datos</span>
+            <span>Refrescar</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards (Filtered by selectedMonth) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Ofertado */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase">Monto Total Ofertado</span>
+            <span className="text-xs font-bold text-slate-400 uppercase">Ofertado ({selectedMonth})</span>
             <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
@@ -275,7 +386,7 @@ export default function DashboardAnalisisPage() {
             ${stats.totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <p className="text-[11px] text-slate-400">
-            {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones evaluados
+            {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones
           </p>
         </div>
 
@@ -291,7 +402,23 @@ export default function DashboardAnalisisPage() {
             ${stats.totalAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
           <p className="text-[11px] text-emerald-300 font-medium">
-            🟢 {stats.itemsAdjudicadosCount} renglones ganados ({stats.totalItems > 0 ? ((stats.itemsAdjudicadosCount / stats.totalItems) * 100).toFixed(1) : 0}% de éxito)
+            🟢 {stats.itemsAdjudicadosCount} renglones ganados
+          </p>
+        </div>
+
+        {/* Eficiencia Financiera (%) */}
+        <div className="bg-slate-900/80 border border-violet-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-violet-300 uppercase">Eficiencia en Montos</span>
+            <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center">
+              <Percent className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-violet-300 font-mono">
+            {stats.eficienciaGlobalPct}%
+          </p>
+          <p className="text-[11px] text-violet-200">
+            Monto Adjudicado vs Ofertado ({selectedMonth})
           </p>
         </div>
 
@@ -304,10 +431,10 @@ export default function DashboardAnalisisPage() {
             </div>
           </div>
           <p className="text-2xl font-black text-rose-400 font-mono">
-            {stats.itemsPerdidosCount} <span className="text-sm font-normal text-rose-300">renglones</span>
+            {stats.itemsPerdidosCount} <span className="text-xs font-normal text-rose-300">renglones</span>
           </p>
           <p className="text-[11px] text-rose-300">
-            🔴 Ganados por competidores (ARSAL, FARLAB, etc.)
+            🔴 Competencia (ARSAL, FARLAB, etc.)
           </p>
         </div>
 
@@ -320,15 +447,115 @@ export default function DashboardAnalisisPage() {
             </div>
           </div>
           <p className="text-2xl font-black text-amber-400 font-mono">
-            {stats.itemsDesiertosCount} <span className="text-sm font-normal text-amber-300">renglones</span>
+            {stats.itemsDesiertosCount} <span className="text-xs font-normal text-amber-300">renglones</span>
           </p>
           <p className="text-[11px] text-amber-300">
-            🟡 Sin adjudicatario (Oportunidad de Re-oferta)
+            🟡 Sin adjudicatario (Re-oferta)
           </p>
         </div>
       </div>
 
-      {/* Gráficos Recharts */}
+      {/* NUEVO SECTOR: EFICIENCIA EN MONTOS POR MES (%) & COMPARATIVO */}
+      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              Eficiencia en Montos Ofertados vs Adjudicados por Mes (%)
+            </h3>
+            <p className="text-[11px] text-slate-400">
+              Desglose mensual de efectividad financiera de capturación de licitaciones ($USD & %)
+            </p>
+          </div>
+        </div>
+
+        <div className="h-72 w-full pt-2">
+          {mounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={monthlyEfficiencyData} margin={{ top: 10, right: 20, left: -10, bottom: 25 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <XAxis dataKey="mes" stroke="#94a3b8" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" />
+                <YAxis yAxisId="left" stroke="#94a3b8" tick={{ fontSize: 10 }} />
+                <YAxis yAxisId="right" orientation="right" stroke="#10b981" tick={{ fontSize: 10 }} domain={[0, 100]} unit="%" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                  formatter={(value: any, name: any) => [
+                    name.includes('%') ? `${Number(value).toFixed(1)}%` : `$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2 })} USD`,
+                    name
+                  ]}
+                />
+                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+                <Bar yAxisId="left" dataKey="Ofertado ($)" fill="#6366f1" radius={[4, 4, 0, 0]} name="Monto Ofertado ($USD)" />
+                <Bar yAxisId="left" dataKey="Adjudicado ($)" fill="#10b981" radius={[4, 4, 0, 0]} name="Monto Adjudicado ($USD)" />
+                <Line yAxisId="right" type="monotone" dataKey="Eficiencia (%)" stroke="#f59e0b" strokeWidth={3} dot={{ r: 5 }} name="Eficiencia Financiera (%)" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-slate-500 text-xs">Cargando gráfico de eficiencia...</div>
+          )}
+        </div>
+
+        {/* Tabla Desglosada por Mes */}
+        <div className="overflow-x-auto pt-3 border-t border-slate-800">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+              <tr>
+                <th className="p-2">Mes</th>
+                <th className="p-2 text-right">Monto Ofertado ($)</th>
+                <th className="p-2 text-right">Monto Adjudicado ($)</th>
+                <th className="p-2 text-right">Diferencia / Perdido ($)</th>
+                <th className="p-2 text-center">Renglones (Ganados / Total)</th>
+                <th className="p-2 text-center">Eficiencia Financiera (%)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800 text-slate-300">
+              {monthlyEfficiencyData.map((row, idx) => {
+                const diff = row['Ofertado ($)'] - row['Adjudicado ($)']
+                const isCurrentFilter = selectedMonth === row.mes
+                return (
+                  <tr 
+                    key={idx} 
+                    onClick={() => setSelectedMonth(row.mes)}
+                    className={`cursor-pointer transition ${isCurrentFilter ? 'bg-indigo-600/20 font-bold border-l-4 border-indigo-500' : 'hover:bg-slate-800/40'}`}
+                  >
+                    <td className="p-2 font-bold text-white flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>{row.mes}</span>
+                    </td>
+                    <td className="p-2 text-right font-mono">
+                      ${row['Ofertado ($)'].toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                      ${row['Adjudicado ($)'].toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="p-2 text-right font-mono text-rose-300">
+                      ${diff.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td className="p-2 text-center font-mono">
+                      <span className="text-emerald-400 font-bold">{row.countAdj}</span> / {row.countTotal}
+                    </td>
+                    <td className="p-2 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-16 bg-slate-800 h-2 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${row['Eficiencia (%)'] >= 70 ? 'bg-emerald-400' : row['Eficiencia (%)'] >= 40 ? 'bg-amber-400' : 'bg-rose-400'}`} 
+                            style={{ width: `${Math.min(100, row['Eficiencia (%)'])}%` }}
+                          ></div>
+                        </div>
+                        <span className={`font-mono font-bold text-xs ${row['Eficiencia (%)'] >= 70 ? 'text-emerald-400' : row['Eficiencia (%)'] >= 40 ? 'text-amber-400' : 'text-rose-400'}`}>
+                          {row['Eficiencia (%)']}%
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Gráficos Recharts Secundarios: Precios por Prueba & Estado */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Gráfico 1: Comparativo de Precios Labymed vs Competencia */}
         <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
@@ -336,7 +563,7 @@ export default function DashboardAnalisisPage() {
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-indigo-400" />
-                Comparativo: Precio Ofertado Labymed vs. Precio Adjudicado Competencia
+                Comparativo: Precio Ofertado Labymed vs. Precio Adjudicado Competencia ({selectedMonth})
               </h3>
               <p className="text-[11px] text-slate-400">Promedio de precios unitarios ($USD) por tipo de prueba diagnóstica</p>
             </div>
@@ -369,7 +596,7 @@ export default function DashboardAnalisisPage() {
           <div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
               <PieIcon className="w-4 h-4 text-indigo-400" />
-              Distribución por Estado de Renglón
+              Distribución por Estado ({selectedMonth})
             </h3>
             <p className="text-[11px] text-slate-400">Proporción de renglones según resolución</p>
           </div>
@@ -421,7 +648,7 @@ export default function DashboardAnalisisPage() {
           <div>
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
               <Tag className="w-4 h-4 text-indigo-400" />
-              Kardex de Inteligencia Competitiva & Renglones
+              Kardex de Renglones e Inteligencia Competitiva ({selectedMonth})
             </h3>
             <p className="text-[11px] text-slate-400">Búsqueda y filtrado por ganador, producto o cliente institucional</p>
           </div>
@@ -473,6 +700,7 @@ export default function DashboardAnalisisPage() {
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-slate-800 text-slate-400 font-semibold">
               <tr>
+                <th className="p-3">Mes</th>
                 <th className="p-3">Licitación</th>
                 <th className="p-3">Cliente Institucional</th>
                 <th className="p-3">Producto / Insumo</th>
@@ -487,21 +715,24 @@ export default function DashboardAnalisisPage() {
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {loading ? (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-slate-500">
+                  <td colSpan={10} className="p-8 text-center text-slate-500">
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-indigo-400" />
                     Cargando datos de análisis competitivo...
                   </td>
                 </tr>
               ) : filteredRows.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-slate-500">
-                    No se encontraron registros con los filtros seleccionados.
+                  <td colSpan={10} className="p-8 text-center text-slate-500">
+                    No se encontraron registros para {selectedMonth} con los filtros seleccionados.
                   </td>
                 </tr>
               ) : (
                 filteredRows.map((row, idx) => (
                   <tr key={idx} className="hover:bg-slate-800/40 transition">
-                    <td className="p-3 font-mono text-[11px] text-indigo-300 font-bold">
+                    <td className="p-3 font-bold text-indigo-300 font-mono text-[11px]">
+                      {row.mes}
+                    </td>
+                    <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">
                       {row.licitacion}
                     </td>
                     <td className="p-3 font-medium max-w-xs truncate">
