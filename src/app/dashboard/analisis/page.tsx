@@ -30,6 +30,8 @@ import {
   Cell
 } from 'recharts'
 
+import { dbSelect } from '@/lib/api_3fn'
+
 export default function DashboardAnalisisPage() {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
@@ -59,28 +61,33 @@ export default function DashboardAnalisisPage() {
     async function loadAnalysisData() {
       setLoading(true)
       try {
-        // Fetch licitaciones Count
-        const { data: lics } = await supabase.from('licitaciones_ofertas').select('licitacion_oferta_id')
+        // Fetch tables via admin backend API to bypass RLS restrictions
+        const [lics, items, prods, clients, marcas] = await Promise.all([
+          dbSelect('licitaciones_ofertas', { limit: 1000 }),
+          dbSelect('ofertas_items', { limit: 2000 }),
+          dbSelect('productos_equipo', { limit: 2000 }),
+          dbSelect('clientes', { limit: 1000 }),
+          dbSelect('marcas', { limit: 1000 })
+        ])
+
         const totalLics = lics?.length || 0
 
-        // Fetch ofertas_items with product and brand metadata
-        const { data: items } = await supabase
-          .from('ofertas_items')
-          .select(`
-            *,
-            licitaciones_ofertas (
-              numero_oferta,
-              nombre_oferta,
-              clientes (nombre_cliente)
-            ),
-            productos_equipo (
-              nombre_producto_equipo,
-              descripcion,
-              marcas (nombre_marca)
-            )
-          `)
+        const licsMap = new Map()
+        lics?.forEach((l: any) => licsMap.set(l.licitacion_oferta_id, l))
 
-        if (!items) return
+        const prodsMap = new Map()
+        prods?.forEach((p: any) => prodsMap.set(p.producto_equipo_id, p))
+
+        const clientsMap = new Map()
+        clients?.forEach((c: any) => clientsMap.set(c.cliente_id, c))
+
+        const marcasMap = new Map()
+        marcas?.forEach((m: any) => marcasMap.set(m.marca_id, m))
+
+        if (!items || items.length === 0) {
+          setLoading(false)
+          return
+        }
 
         let totalOfertadoSum = 0
         let totalAdjudicadoSum = 0
@@ -91,16 +98,18 @@ export default function DashboardAnalisisPage() {
         const productPricesMap: Record<string, { labymedPrice: number, compPrice: number, count: number }> = {}
         const rowsForTable: any[] = []
 
-        items.forEach(item => {
+        items.forEach((item: any) => {
+          const lic = licsMap.get(item.licitacion_oferta_id)
+          const prod = prodsMap.get(item.producto_equipo_id)
+          const clienteName = clientsMap.get(lic?.cliente_id)?.nombre_cliente || 'MINSAL'
+          const brandName = marcasMap.get(prod?.marca_id)?.nombre_marca || 'N/A'
+          const prodName = prod?.nombre_producto_equipo || 'Producto'
+          const desc = (prod?.descripcion || '').toLowerCase()
+
           const qty = Number(item.cantidad || 1)
           const price = Number(item.precio_unitario || 0)
           const itemTotal = qty * price
           totalOfertadoSum += itemTotal
-
-          const desc = (item.productos_equipo?.descripcion || '').toLowerCase()
-          const prodName = item.productos_equipo?.nombre_producto_equipo || 'Producto'
-          const brandName = item.productos_equipo?.marcas?.nombre_marca || 'N/A'
-          const clienteName = item.licitaciones_ofertas?.clientes?.nombre_cliente || 'MINSAL'
 
           const isDesierta = desc.includes('desierta')
           const isAdjudicada = Boolean(item.es_adjudicado)
@@ -109,7 +118,7 @@ export default function DashboardAnalisisPage() {
           let compWinner = 'N/A'
           let compPriceVal = 0
 
-          const adjMatch = item.productos_equipo?.descripcion?.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/)
+          const adjMatch = prod?.descripcion?.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/)
           if (adjMatch) {
             compWinner = adjMatch[1].trim()
             if (adjMatch[2]) compPriceVal = parseFloat(adjMatch[2].trim()) || 0
@@ -125,7 +134,8 @@ export default function DashboardAnalisisPage() {
           }
 
           // Group prices per core product key for bar chart
-          const normalizedProdKey = prodName.split(' ')[0].toUpperCase() + (prodName.split(' ')[1] ? ' ' + prodName.split(' ')[1].toUpperCase() : '')
+          const words = prodName.split(' ')
+          const normalizedProdKey = words[0].toUpperCase() + (words[1] ? ' ' + words[1].toUpperCase() : '')
           if (!productPricesMap[normalizedProdKey]) {
             productPricesMap[normalizedProdKey] = { labymedPrice: 0, compPrice: 0, count: 0 }
           }
@@ -137,7 +147,7 @@ export default function DashboardAnalisisPage() {
 
           rowsForTable.push({
             id: item.oferta_item_id,
-            licitacion: item.licitaciones_ofertas?.numero_oferta || 'N/A',
+            licitacion: lic?.numero_oferta || 'N/A',
             cliente: clienteName,
             producto: prodName,
             marca: brandName,
@@ -177,6 +187,8 @@ export default function DashboardAnalisisPage() {
           { name: 'Perdidas', value: countPer, color: '#f43f5e' },
           { name: 'Desiertas', value: countDes, color: '#f59e0b' }
         ])
+
+        setCompetitiveTable(rowsForTable)
 
         setCompetitiveTable(rowsForTable)
       } catch (err) {
