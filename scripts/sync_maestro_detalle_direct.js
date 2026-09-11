@@ -9,7 +9,9 @@ envContent.split('\n').forEach(line => {
   if (idx > 0) {
     const key = line.substring(0, idx).trim();
     let val = line.substring(idx + 1).trim();
-    if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
     env[key] = val;
   }
 });
@@ -44,13 +46,46 @@ async function getExecDetail(id) {
 }
 
 async function syncDirect() {
-  console.log('📥 Obteniendo datos reales del Excel desde última ejecución de n8n (1002)...');
+  console.log('📥 Obteniendo los 1,586 renglones reales del Excel desde n8n...');
   const detail = await getExecDetail(1002);
-  const mapNode = detail.data?.resultData?.runData?.['Mapear Licitaciones Excel 365 (3FN)'];
-  const itemsToSync = mapNode?.[0]?.data?.main?.[0]?.[0]?.json?.licitaciones || [];
+  const runData = detail.data?.resultData?.runData || {};
+  const excelNode = runData['Microsoft Excel 365: REPORTE DE LICITACIONES'] || runData['Mapear Licitaciones Excel 365 (3FN)'];
+  const rawItems = excelNode?.[0]?.data?.main?.[0] || [];
 
-  console.log(`Total filas a sincronizar: ${itemsToSync.length}`);
-  if (itemsToSync.length === 0) return;
+  console.log(`Raw Excel items en ejecución: ${rawItems.length}`);
+  if (rawItems.length === 0) return;
+
+  const itemsToSync = rawItems.map(item => {
+    const r = item.json?.licitaciones ? item.json : (item.json || {});
+    // Si viene dentro de un arreglo agrupado
+    if (r.licitaciones && Array.isArray(r.licitaciones)) return r.licitaciones;
+
+    return {
+      no_oferta: String(r['No. Oferta'] || r['No Oferta'] || r['Oferta'] || '').trim(),
+      nombre_oferta: String(r['Nombre Oferta'] || r['Nombre de Oferta'] || '').trim(),
+      cliente: String(r['Cliente'] || r['CLIENTE'] || '').trim(),
+      institucion: String(r['INST.'] || 'MINSAL').trim(),
+      empresa: String(r['EMPR'] || 'LABYMED').trim(),
+      tipo_proceso: String(r['TIPO DE PROCESO '] || r['TIPO DE PROCESO'] || 'LICITACION COMPETITIVA').trim(),
+      anio: String(r['AÑO'] || '2025').trim(),
+      mes: String(r['Mes'] || 'ENERO').trim().toUpperCase(),
+      presentacion: r['Presentación de oferta (Fecha)'] || r['Presentación'] || '',
+      producto: String(r['Producto'] || '').trim(),
+      marca: String(r['Marca'] || '').trim(),
+      precio_unitario: r['Precio (unitario)'] !== undefined ? r['Precio (unitario)'] : 0,
+      cantidad: r['Cantidad (unitaria)'] !== undefined ? r['Cantidad (unitaria)'] : 1,
+      total_ofertado: r['Total Ofertado'] !== undefined ? r['Total Ofertado'] : 0,
+      estatus_item: String(r['Estatus'] || r['ESTADO'] || '').trim(),
+      precio_adjudicado: r['Precio adjudicado '] !== undefined ? r['Precio adjudicado '] : (r['Precio adjudicado'] || 0),
+      empresa_adjudicada: String(r['Empresa adjudicada'] || r['Empresa adjudicada '] || '').trim(),
+      razon: String(r['Razon'] || r['Razon '] || '').trim(),
+      no_contrato: String(r['No. De Contrato'] || r['No. Contrato'] || '').trim(),
+      costo_prueba_lm: r['Costo de prueba L&M'] !== undefined ? r['Costo de prueba L&M'] : 0,
+      observaciones: String(r['Observaciones'] || '').trim()
+    };
+  }).flat().filter(i => i.no_oferta || i.nombre_oferta || i.producto);
+
+  console.log(`Total renglones válidos procesados: ${itemsToSync.length}`);
 
   // 1. Obtener Catálogos Maestros
   const [clientesRes, empresasRes, estatusRes, personasRes, prodsRes, marcasRes] = await Promise.all([
@@ -129,45 +164,45 @@ async function syncDirect() {
   const toUpdate = [];
   const seenInBatch = new Set();
 
-function toISODate(val) {
-  if (val === null || val === undefined || val === '') return null;
-  const num = Number(val);
-  if (!isNaN(num) && num > 30000 && num < 70000) {
-    const excelEpoch = new Date(1899, 11, 30);
-    const d = new Date(excelEpoch.getTime() + num * 24 * 60 * 60 * 1000);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
+  function toISODate(val) {
+    if (val === null || val === undefined || val === '') return null;
+    const num = Number(val);
+    if (!isNaN(num) && num > 30000 && num < 70000) {
+      const excelEpoch = new Date(1899, 11, 30);
+      const d = new Date(excelEpoch.getTime() + num * 24 * 60 * 60 * 1000);
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const str = String(val).trim();
+    const slashParts = str.split('/');
+    if (slashParts.length === 3) {
+      const p0 = slashParts[0].padStart(2, '0');
+      const p1 = slashParts[1].padStart(2, '0');
+      let p2 = slashParts[2].trim();
+      if (p2.length === 2) p2 = '20' + p2;
+      if (p0.length === 4) return `${p0}-${p1}-${p2.padStart(2, '0')}`;
+      return `${p2}-${p1}-${p0}`;
+    }
+    const hyphenParts = str.split('-');
+    if (hyphenParts.length === 3) {
+      if (hyphenParts[0].length === 4) return str;
+      let p2 = hyphenParts[2].trim();
+      if (p2.length === 2) p2 = '20' + p2;
+      return `${p2}-${hyphenParts[1].padStart(2, '0')}-${hyphenParts[0].padStart(2, '0')}`;
+    }
+    return null;
   }
-  const str = String(val).trim();
-  const slashParts = str.split('/');
-  if (slashParts.length === 3) {
-    const p0 = slashParts[0].padStart(2, '0');
-    const p1 = slashParts[1].padStart(2, '0');
-    let p2 = slashParts[2].trim();
-    if (p2.length === 2) p2 = '20' + p2;
-    if (p0.length === 4) return `${p0}-${p1}-${p2.padStart(2, '0')}`;
-    return `${p2}-${p1}-${p0}`;
-  }
-  const hyphenParts = str.split('-');
-  if (hyphenParts.length === 3) {
-    if (hyphenParts[0].length === 4) return str;
-    let p2 = hyphenParts[2].trim();
-    if (p2.length === 2) p2 = '20' + p2;
-    return `${p2}-${hyphenParts[1].padStart(2, '0')}-${hyphenParts[0].padStart(2, '0')}`;
-  }
-  return null;
-}
 
   for (const lic of itemsToSync) {
     const numOferta = (lic.no_oferta || '').toString().trim();
     const nomOferta = (lic.nombre_oferta || 'Licitación Suministro').toString().trim();
     const rawCliente = (lic.cliente || lic.institucion || 'MINSAL').toString().trim();
     const rawMes = (lic.mes || 'MARZO').toString().toUpperCase().trim();
-    const rawAnio = (lic.anio || '2026').toString().trim();
+    const rawAnio = (lic.anio || '2025').toString().trim();
     const tipoProceso = (lic.tipo_proceso || 'LICITACIÓN').toString().trim();
-    const presentacion = (lic['Presentación de oferta (Fecha)'] || lic.presentacion || '').toString().trim();
+    const presentacion = (lic.presentacion || '').toString().trim();
 
     if (!numOferta && !nomOferta) continue;
 
@@ -188,7 +223,7 @@ function toISODate(val) {
 
     const mesNum = monthMap[rawMes] || '03';
     const fechaPresentacion = toISODate(presentacion) || `${rawAnio}-${mesNum}-01`;
-    const observaciones = `TIPO: ${tipoProceso} | Presentación: ${presentacion || 'N/A'} | Fuente: Excel 365 SharePoint`;
+    const observaciones = `TIPO: ${tipoProceso} | Presentación: ${presentacion || 'N/A'} | Fuente: Microsoft Excel 365`;
 
     const existingId = numOferta ? existingMap.get(numOferta.toLowerCase()) : null;
 

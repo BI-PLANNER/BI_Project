@@ -57,6 +57,27 @@ export default function DashboardAnalisisPage() {
   const [chartStatusData, setChartStatusData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
 
+  function cleanProductLabel(name: string): string {
+    const n = name.toUpperCase()
+    if (n.includes('SANGRE OCULTA') || n.includes('FOB')) return 'SANGRE OCULTA'
+    if (n.includes('CHAGAS')) return 'CHAGAS'
+    if (n.includes('HEPATITIS B') || n.includes('HBSAG')) return 'HEPATITIS B'
+    if (n.includes('HEPATITIS C') || n.includes('HCV')) return 'HEPATITIS C'
+    if (n.includes('SIFILIS') || n.includes('SYPHILIS')) return 'SIFILIS'
+    if (n.includes('EMBARAZO') || n.includes('HCG')) return 'EMBARAZO'
+    if (n.includes('PILORY') || n.includes('PYLORI')) return 'H. PYLORI'
+    if (n.includes('PROCALCITONINA')) return 'PROCALCITONINA'
+    if (n.includes('VIH') || n.includes('HIV')) return 'VIH / HIV'
+    if (n.includes('COVID')) return 'COVID 19'
+    if (n.includes('TROPONINA')) return 'TROPONINA I'
+    if (n.includes('DIMERO')) return 'DIMERO D'
+    if (n.includes('EUROCOLOR') || n.includes('UROCOLOR') || n.includes('ORINA')) return 'UROCOLOR'
+    if (n.includes('ELECTROLITOS') || n.includes('CLORO') || n.includes('POTASIO') || n.includes('SODIO')) return 'ELECTROLITOS'
+
+    const words = name.split(' ').filter(w => w.length > 3 && !['SUMINISTRO', 'REACTIVOS', 'ADQUISICION', 'PRUEBAS', 'LABORATORIO', 'CLINICO', 'PARA', 'EQUIPO', 'COMODATO'].includes(w.toUpperCase()))
+    return words.slice(0, 2).join(' ').toUpperCase() || name.slice(0, 15).toUpperCase()
+  }
+
   useEffect(() => {
     async function loadAnalysisData() {
       setLoading(true)
@@ -133,9 +154,8 @@ export default function DashboardAnalisisPage() {
             countPer++
           }
 
-          // Group prices per core product key for bar chart
-          const words = prodName.split(' ')
-          const normalizedProdKey = words[0].toUpperCase() + (words[1] ? ' ' + words[1].toUpperCase() : '')
+          // Group prices per core clean product key for bar chart
+          const normalizedProdKey = cleanProductLabel(prodName)
           if (!productPricesMap[normalizedProdKey]) {
             productPricesMap[normalizedProdKey] = { labymedPrice: 0, compPrice: 0, count: 0 }
           }
@@ -187,6 +207,8 @@ export default function DashboardAnalisisPage() {
           { name: 'Perdidas', value: countPer, color: '#f43f5e' },
           { name: 'Desiertas', value: countDes, color: '#f59e0b' }
         ])
+
+        setCompetitiveTable(rowsForTable)
 
         setCompetitiveTable(rowsForTable)
 
