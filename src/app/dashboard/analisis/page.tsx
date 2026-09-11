@@ -33,8 +33,13 @@ import {
 export default function DashboardAnalisisPage() {
   const supabase = createClient()
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>('todos')
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [stats, setStats] = useState({
     totalLicitaciones: 0,
@@ -304,20 +309,24 @@ export default function DashboardAnalisisPage() {
           </div>
 
           <div className="h-72 w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartPriceData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="producto" stroke="#94a3b8" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" />
-                <YAxis stroke="#94a3b8" tick={{ fontSize: 10 }} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
-                  formatter={(value: any) => [`$${Number(value).toFixed(2)} USD`]}
-                />
-                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                <Bar dataKey="Labymed ($)" fill="#6366f1" radius={[4, 4, 0, 0]} name="Precio Ofertado Labymed" />
-                <Bar dataKey="Competencia ($)" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Precio Adjudicado Competencia" />
-              </BarChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartPriceData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                  <XAxis dataKey="producto" stroke="#94a3b8" tick={{ fontSize: 10 }} interval={0} angle={-25} textAnchor="end" />
+                  <YAxis stroke="#94a3b8" tick={{ fontSize: 10 }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                    formatter={(value: any) => [`$${Number(value).toFixed(2)} USD`]}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+                  <Bar dataKey="Labymed ($)" fill="#6366f1" radius={[4, 4, 0, 0]} name="Precio Ofertado Labymed" />
+                  <Bar dataKey="Competencia ($)" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Precio Adjudicado Competencia" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">Cargando gráfico...</div>
+            )}
           </div>
         </div>
 
@@ -332,26 +341,30 @@ export default function DashboardAnalisisPage() {
           </div>
 
           <div className="h-56 w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={chartStatusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {chartStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {chartStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">Cargando gráfico...</div>
+            )}
           </div>
 
           <div className="space-y-1.5 pt-2 border-t border-slate-800">

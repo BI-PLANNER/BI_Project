@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   LayoutDashboard,
   BookOpen,
-  Truck
+  Truck,
+  BarChart3
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -130,6 +131,13 @@ export default function Sidebar() {
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
     }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
+    {
+      href: '/dashboard/analisis',
+      label: 'Análisis & Precios BI',
+      icon: BarChart3,
+      badge: 'NUEVO',
+      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold'
+    },
     {
       href: '/dashboard/obligaciones',
       label: 'Dashboard Obligaciones',
