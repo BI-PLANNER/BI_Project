@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const defaultProductId = prodsData?.[0]?.producto_equipo_id || 80
+      const defaultProductId = 1
 
       // Limpiar ofertas_items anteriores de estas licitaciones para sincronización idempotente
       const activeMasterIds = Array.from(masterMap.values())
