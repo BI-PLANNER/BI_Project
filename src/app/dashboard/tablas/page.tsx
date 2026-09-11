@@ -740,14 +740,36 @@ export default function GestionTablasPage() {
                           return (
                             <td key={f.key} className="p-3 max-w-xs truncate">
                               {f.type === 'boolean' ? (
-                                rawVal ? (
-                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                    🟢 Sí / Adjudicada
-                                  </span>
+                                f.key === 'es_adjudicado' ? (
+                                  rawVal ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                      🟢 Adjudicada
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                                      🔴 Perdida
+                                    </span>
+                                  )
+                                ) : f.key === 'activo' ? (
+                                  rawVal ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                      🟢 Activo
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                                      ⚪ Inactivo
+                                    </span>
+                                  )
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                                    🔴 No / Perdida
-                                  </span>
+                                  rawVal ? (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                      🟢 Sí
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                                      🔴 No
+                                    </span>
+                                  )
                                 )
                               ) : f.type === 'select' ? (
                                 <span className="font-medium text-indigo-300">
