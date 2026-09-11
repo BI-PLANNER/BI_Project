@@ -29,15 +29,21 @@ export async function POST(req: NextRequest) {
       }
 
       // 1. Obtener Catálogos Maestros para Foreign Keys
-      const [clientesRes, empresasRes, estatusRes, personasRes] = await Promise.all([
+      const [clientesRes, empresasRes, estatusRes, personasRes, prodsRes] = await Promise.all([
         admin.from('clientes').select('cliente_id, nombre_cliente'),
         admin.from('empresas').select('empresa_id, nombre_empresa'),
         admin.from('estatus').select('estatus_id, nombre_estatus'),
-        admin.from('personas').select('persona_id, nombre_completo')
+        admin.from('personas').select('persona_id, nombre_completo'),
+        admin.from('productos_equipo').select('producto_equipo_id, nombre_producto_equipo')
       ])
 
       const clientesMap = new Map<string, number>()
       clientesRes.data?.forEach((c: any) => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id))
+
+      const prodsMap = new Map<string, number>()
+      prodsRes.data?.forEach((p: any) => {
+        if (p.nombre_producto_equipo) prodsMap.set(p.nombre_producto_equipo.toLowerCase().trim(), p.producto_equipo_id)
+      })
 
       const defaultEmpresaId = empresasRes.data?.[0]?.empresa_id || 1
       const defaultEstatusId = estatusRes.data?.find((e: any) => e.nombre_estatus.toLowerCase().includes('pendiente') || e.nombre_estatus.toLowerCase().includes('en progreso'))?.estatus_id || 5
