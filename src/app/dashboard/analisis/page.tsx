@@ -60,6 +60,7 @@ export default function DashboardAnalisisPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>('todos')
   const [selectedMonth, setSelectedMonth] = useState<string>('TODOS')
+  const [selectedEmpresa, setSelectedEmpresa] = useState<string>('TODOS')
 
   const [allItemsRaw, setAllItemsRaw] = useState<any[]>([])
 
@@ -114,6 +115,18 @@ export default function DashboardAnalisisPage() {
     return 'MARZO'
   }
 
+  function getEmpresaFromLic(lic: any): string {
+    if (!lic) return 'LABYMED'
+    const obs = (lic.observaciones || '').toUpperCase()
+    const num = (lic.numero_oferta || '').toUpperCase()
+    const nom = (lic.nombre_oferta || '').toUpperCase()
+    const empId = lic.empresa_id
+
+    if (empId === 4 || obs.includes('DIAGNOSAL') || nom.includes('DIAGNOSAL') || num.includes('DIAGNOSAL')) return 'DIAGNOSAL'
+    if (empId === 1 || obs.includes('LAB&MED') || obs.includes('LAB & MED') || obs.includes('LABANDMED') || num.includes('17/2025') || num.includes('03/2025') || num.includes('04/2025')) return 'LAB&MED'
+    return 'LABYMED'
+  }
+
   useEffect(() => {
     async function loadAnalysisData() {
       setLoading(true)
@@ -148,6 +161,7 @@ export default function DashboardAnalisisPage() {
           const lic = licsMap.get(item.licitacion_oferta_id)
           const prod = prodsMap.get(item.producto_equipo_id)
           const mesStr = getMonthFromLic(lic)
+          const empresaStr = getEmpresaFromLic(lic)
           const clienteName = clientsMap.get(lic?.cliente_id)?.nombre_cliente || 'MINSAL'
           const brandName = marcasMap.get(prod?.marca_id)?.nombre_marca || 'N/A'
           const prodName = prod?.nombre_producto_equipo || 'Producto'
@@ -174,6 +188,7 @@ export default function DashboardAnalisisPage() {
             id: item.oferta_item_id,
             licId: item.licitacion_oferta_id,
             licitacion: lic?.numero_oferta || 'N/A',
+            empresa: empresaStr,
             cliente: clienteName,
             producto: prodName,
             marca: brandName,
@@ -181,7 +196,7 @@ export default function DashboardAnalisisPage() {
             cantidad: qty,
             precioLabymed: price,
             precioComp: compPriceVal,
-            winner: isAdjudicada ? 'LABYMED' : (isDesierta ? 'DESIERTA' : compWinner),
+            winner: isAdjudicada ? empresaStr : (isDesierta ? 'DESIERTA' : compWinner),
             status: isAdjudicada ? 'ADJUDICADA' : (isDesierta ? 'DESIERTA' : 'PERDIDA'),
             total: itemTotal,
             isAdjudicada,
@@ -201,9 +216,14 @@ export default function DashboardAnalisisPage() {
     loadAnalysisData()
   }, [])
 
-  // Process and Filter Data according to selectedMonth
+  // Process and Filter Data according to selectedMonth and selectedEmpresa
   useEffect(() => {
     if (allItemsRaw.length === 0) return
+
+    // 0. Filter raw items by selectedEmpresa
+    const itemsByEmpresa = selectedEmpresa === 'TODOS'
+      ? allItemsRaw
+      : allItemsRaw.filter(i => i.empresa === selectedEmpresa)
 
     // 1. Calculate Monthly Efficiency Data (All 12 Months)
     const monthlyMap: Record<string, { ofertado: number, adjudicado: number, countAdj: number, countTotal: number }> = {}
@@ -213,7 +233,7 @@ export default function DashboardAnalisisPage() {
       monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
     })
 
-    allItemsRaw.forEach(item => {
+    itemsByEmpresa.forEach(item => {
       const m = item.mes
       if (!monthlyMap[m]) {
         monthlyMap[m] = { ofertado: 0, adjudicado: 0, countAdj: 0, countTotal: 0 }
@@ -243,8 +263,8 @@ export default function DashboardAnalisisPage() {
 
     // 2. Filter items according to selectedMonth
     const filteredByMonth = selectedMonth === 'TODOS' 
-      ? allItemsRaw 
-      : allItemsRaw.filter(i => i.mes === selectedMonth)
+      ? itemsByEmpresa 
+      : itemsByEmpresa.filter(i => i.mes === selectedMonth)
 
     let totalOfertadoSum = 0
     let totalAdjudicadoSum = 0
@@ -315,7 +335,7 @@ export default function DashboardAnalisisPage() {
     ])
 
     setCompetitiveTable(rowsForTable)
-  }, [allItemsRaw, selectedMonth])
+  }, [allItemsRaw, selectedMonth, selectedEmpresa])
 
   const filteredRows = competitiveTable.filter(r => {
     const matchesSearch = searchQuery === '' || 
@@ -334,21 +354,38 @@ export default function DashboardAnalisisPage() {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
             <BarChart3 className="w-4 h-4" />
-            <span>Inteligencia de Mercado • Análisis Financiero y por Mes</span>
+            <span>Inteligencia de Mercado • Desglose por Empresa (LABYMED / LAB&MED / DIAGNOSAL) y Mes</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
             Análisis Competitivo & Eficiencia Financiera
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Selecciona un mes específico o consulta el rendimiento consolidado anual.
+            Filtra de manera independiente entre <strong className="text-emerald-400">LABYMED</strong>, <strong className="text-purple-400">LAB & MED</strong> y <strong className="text-amber-400">DIAGNOSAL</strong> para consultar montos y eficiencia por mes.
           </p>
         </div>
 
-        {/* Month Selector Bar */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 shadow-inner">
+        {/* Company & Month Selector Bar */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Empresa Selector */}
+          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
+            <Building2 className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-bold text-slate-300">Empresa:</span>
+            <select
+              value={selectedEmpresa}
+              onChange={e => setSelectedEmpresa(e.target.value)}
+              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-emerald-300 px-3 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer"
+            >
+              <option value="TODOS">🏢 TODAS LAS EMPRESAS</option>
+              <option value="LABYMED">🔵 LABYMED S.A. de C.V.</option>
+              <option value="LAB&MED">🟣 LAB & MED S.A. de C.V.</option>
+              <option value="DIAGNOSAL">🟢 DIAGNOSAL S.A. de C.V.</option>
+            </select>
+          </div>
+
+          {/* Month Selector Bar */}
+          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
             <Calendar className="w-4 h-4 text-indigo-400" />
-            <span className="text-xs font-bold text-slate-300">Seleccionar Mes:</span>
+            <span className="text-xs font-bold text-slate-300">Mes:</span>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(e.target.value)}
@@ -356,7 +393,7 @@ export default function DashboardAnalisisPage() {
             >
               {MONTH_NAMES.map(m => (
                 <option key={m} value={m}>
-                  {m === 'TODOS' ? '🗓️ TODOS LOS MESES (AÑO COMPLETO)' : `📅 ${m}`}
+                  {m === 'TODOS' ? '🗓️ TODOS LOS MESES' : `📅 ${m}`}
                 </option>
               ))}
             </select>
@@ -701,12 +738,13 @@ export default function DashboardAnalisisPage() {
             <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-slate-800 text-slate-400 font-semibold">
               <tr>
                 <th className="p-3">Mes</th>
+                <th className="p-3">Empresa</th>
                 <th className="p-3">Licitación</th>
                 <th className="p-3">Cliente Institucional</th>
                 <th className="p-3">Producto / Insumo</th>
                 <th className="p-3">Marca</th>
                 <th className="p-3 text-right">Cant.</th>
-                <th className="p-3 text-right">P. Ofertado Labymed</th>
+                <th className="p-3 text-right">P. Ofertado</th>
                 <th className="p-3 text-right">P. Adjudicado Competencia</th>
                 <th className="p-3 text-center">Estado</th>
                 <th className="p-3">Adjudicatario / Competidor</th>
@@ -715,15 +753,15 @@ export default function DashboardAnalisisPage() {
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {loading ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-slate-500">
+                  <td colSpan={11} className="p-8 text-center text-slate-500">
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-indigo-400" />
                     Cargando datos de análisis competitivo...
                   </td>
                 </tr>
               ) : filteredRows.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-slate-500">
-                    No se encontraron registros para {selectedMonth} con los filtros seleccionados.
+                  <td colSpan={11} className="p-8 text-center text-slate-500">
+                    No se encontraron registros para {selectedMonth} y empresa {selectedEmpresa} con los filtros seleccionados.
                   </td>
                 </tr>
               ) : (
@@ -731,6 +769,17 @@ export default function DashboardAnalisisPage() {
                   <tr key={idx} className="hover:bg-slate-800/40 transition">
                     <td className="p-3 font-bold text-indigo-300 font-mono text-[11px]">
                       {row.mes}
+                    </td>
+                    <td className="p-3">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        row.empresa === 'LABYMED' 
+                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
+                          : (row.empresa === 'LAB&MED' 
+                              ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' 
+                              : 'bg-amber-500/20 text-amber-400 border border-amber-500/30')
+                      }`}>
+                        {row.empresa}
+                      </span>
                     </td>
                     <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">
                       {row.licitacion}
