@@ -173,12 +173,94 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      // 5. SINCRONIZACIÓN HIJA EN TABLA 'ofertas_items' (445+ Renglones/Productos)
+      // Refrescar mapa de licitaciones maestras
+      const { data: allLics } = await admin.from('licitaciones_ofertas').select('licitacion_oferta_id, numero_oferta')
+      const masterMap = new Map<string, string>()
+      allLics?.forEach((l: any) => {
+        if (l.numero_oferta) masterMap.set(l.numero_oferta.toLowerCase().trim(), l.licitacion_oferta_id)
+      })
+
+      // Catálogo de productos para vincular FK producto_equipo_id
+      const { data: prodsData } = await admin.from('productos_equipo').select('producto_equipo_id, nombre_producto_equipo')
+      const prodsMap = new Map<string, number>()
+      prodsData?.forEach((p: any) => {
+        if (p.nombre_producto_equipo) prodsMap.set(p.nombre_producto_equipo.toLowerCase().trim(), p.producto_equipo_id)
+      })
+
+      // Limpiar ítems anteriores de estas licitaciones para sincronización idempotente
+      const activeMasterIds = Array.from(masterMap.values())
+      if (activeMasterIds.length > 0) {
+        // Borrar en bloques para evitar límites de URL
+        for (let i = 0; i < activeMasterIds.length; i += 50) {
+          const chunkIds = activeMasterIds.slice(i, i + 50)
+          await admin.from('ofertas_items').delete().in('licitacion_oferta_id', chunkIds)
+        }
+      }
+
+      const ofertaRenglonCounter = new Map<string, number>()
+      const itemsToInsert: any[] = []
+
+      for (const lic of itemsToSync) {
+        const numOferta = (lic.no_oferta || lic.numero_oferta || lic['No. Oferta'] || '').toString().trim()
+        const licId = masterMap.get(numOferta.toLowerCase())
+        if (!licId) continue
+
+        const currentRenglon = (ofertaRenglonCounter.get(licId) || 0) + 1
+        ofertaRenglonCounter.set(licId, currentRenglon)
+
+        const prodName = (lic.producto || lic['Producto'] || lic.nombre_oferta || '').toString().trim()
+        let prodId = prodsMap.get(prodName.toLowerCase())
+        if (!prodId && prodName) {
+          for (const [name, id] of prodsMap.entries()) {
+            if (prodName.toLowerCase().includes(name) || name.includes(prodName.toLowerCase())) {
+              prodId = id
+              break
+            }
+          }
+        }
+
+        // Limpieza de campos numéricos y booleanos
+        const rawQty = lic.cantidad || lic['Cantidad (unitaria)'] || lic['Cantidad'] || 1
+        const cleanQty = typeof rawQty === 'number' ? rawQty : (parseFloat(String(rawQty).replace(/[^0-9.-]+/g, '')) || 1)
+
+        const rawPrice = lic.precio_unitario || lic['Precio (unitario)'] || lic['Precio unitario'] || 0
+        const cleanPrice = typeof rawPrice === 'number' ? rawPrice : (parseFloat(String(rawPrice).replace(/[^0-9.-]+/g, '')) || 0)
+
+        const rawStatus = (lic.estatus_item || lic['Estatus'] || lic['ESTADO'] || '').toString().toLowerCase()
+        const esAdjudicado = rawStatus.includes('adjudicad') || rawStatus.includes('ganad')
+
+        itemsToInsert.push({
+          licitacion_oferta_id: licId,
+          producto_equipo_id: prodId || null,
+          renglon_numero: currentRenglon,
+          cantidad: Math.max(1, cleanQty),
+          precio_unitario: Math.max(0, cleanPrice),
+          es_adjudicado: esAdjudicado
+        })
+      }
+
+      let itemsInsertedCount = 0
+      if (itemsToInsert.length > 0) {
+        for (let i = 0; i < itemsToInsert.length; i += 100) {
+          const chunk = itemsToInsert.slice(i, i + 100)
+          const { error: itemErr } = await admin.from('ofertas_items').insert(chunk)
+          if (!itemErr) {
+            itemsInsertedCount += chunk.length
+          } else {
+            console.error('Error insertando ofertas_items:', itemErr)
+          }
+        }
+      }
+
       return NextResponse.json({
         success: true,
-        tabla_destino: 'licitaciones_ofertas',
+        estructura: 'Maestro-Detalle (3FN)',
+        tabla_maestra: 'licitaciones_ofertas',
+        total_maestras: activeMasterIds.length,
+        tabla_detalle: 'ofertas_items',
+        total_items_ofertados: itemsInsertedCount,
         total_recibidos: itemsToSync.length,
-        nuevos_insertados: insertedCount,
-        actualizados: updatedCount,
         timestamp: new Date().toISOString()
       }, { status: 200 })
     }
