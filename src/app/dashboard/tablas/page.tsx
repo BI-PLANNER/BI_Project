@@ -32,7 +32,9 @@ import {
   Zap,
   HelpCircle,
   Bookmark,
-  PieChart as PieIcon
+  PieChart as PieIcon,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react'
 import PresionEmailModal from '@/components/PresionEmailModal'
 import { dbInsert, dbUpdate, dbDelete, dbSelect } from '@/lib/api_3fn'
@@ -342,6 +344,42 @@ export default function GestionTablasPage() {
   // Presion Email Modal state
   const [presionModalOpen, setPresionModalOpen] = useState(false)
   const [selectedTaskForPressure, setSelectedTaskForPressure] = useState<any>(null)
+
+  // Expandable row state for licitaciones_ofertas sub-table
+  const [expandedOfferId, setExpandedOfferId] = useState<string | null>(null)
+  const [offerItemsMap, setOfferItemsMap] = useState<Record<string, any[]>>({})
+  const [loadingItems, setLoadingItems] = useState(false)
+
+  const toggleExpandOffer = async (offerId: string) => {
+    if (expandedOfferId === offerId) {
+      setExpandedOfferId(null)
+      return
+    }
+    setExpandedOfferId(offerId)
+    if (!offerItemsMap[offerId]) {
+      setLoadingItems(true)
+      try {
+        const { data: items } = await supabase
+          .from('ofertas_items')
+          .select(`
+            *,
+            productos_equipo (
+              nombre_producto_equipo,
+              descripcion,
+              marcas (nombre_marca)
+            )
+          `)
+          .eq('licitacion_oferta_id', offerId)
+          .order('renglon_numero', { ascending: true })
+
+        setOfferItemsMap(prev => ({ ...prev, [offerId]: items || [] }))
+      } catch (err) {
+        console.warn('Error fetching items for offer:', err)
+      } finally {
+        setLoadingItems(false)
+      }
+    }
+  }
 
   useEffect(() => {
     async function checkUserRole() {
@@ -676,58 +714,206 @@ export default function GestionTablasPage() {
               ) : (
                 filteredData.map((row, idx) => {
                   const pkVal = row[config.pk]
+                  const isLicitacionesTable = selectedTable === 'licitaciones_ofertas'
+                  const isExpanded = expandedOfferId === String(pkVal)
+                  const subItems = offerItemsMap[String(pkVal)] || []
+
                   return (
-                    <tr key={idx} className="hover:bg-slate-800/40 transition group">
-                      <td className="p-3 font-mono text-[11px] text-slate-400 font-semibold">
-                        #{pkVal}
-                      </td>
-                      {config.fields.map(f => {
-                        const rawVal = row[f.key]
-                        return (
-                          <td key={f.key} className="p-3 max-w-xs truncate">
-                            {f.type === 'boolean' ? (
-                              rawVal ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
-                                  Sí
+                    <React.Fragment key={idx}>
+                      <tr className="hover:bg-slate-800/40 transition group">
+                        <td className="p-3 font-mono text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                          {isLicitacionesTable && (
+                            <button
+                              onClick={() => toggleExpandOffer(String(pkVal))}
+                              className="p-1 rounded bg-slate-800 hover:bg-indigo-600/30 text-indigo-400 transition"
+                              title="Desplegar Renglones Ofertados"
+                            >
+                              {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                            </button>
+                          )}
+                          <span>#{pkVal}</span>
+                        </td>
+                        {config.fields.map(f => {
+                          const rawVal = row[f.key]
+                          return (
+                            <td key={f.key} className="p-3 max-w-xs truncate">
+                              {f.type === 'boolean' ? (
+                                rawVal ? (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                    🟢 Sí / Adjudicada
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                                    🔴 No / Perdida
+                                  </span>
+                                )
+                              ) : f.type === 'select' ? (
+                                <span className="font-medium text-indigo-300">
+                                  {getRelationLabel(f, rawVal)}
+                                </span>
+                              ) : f.type === 'number' && f.key.includes('precio') ? (
+                                <span className="font-mono text-emerald-400 font-semibold">
+                                  ${Number(rawVal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-500">
-                                  No
-                                </span>
-                              )
-                            ) : f.type === 'select' ? (
-                              <span className="font-medium text-indigo-300">
-                                {getRelationLabel(f, rawVal)}
-                              </span>
-                            ) : f.type === 'number' && f.key.includes('precio') ? (
-                              <span className="font-mono text-emerald-400 font-semibold">
-                                ${Number(rawVal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                              </span>
-                            ) : (
-                              <span>{rawVal !== null && rawVal !== undefined && rawVal !== '' ? String(rawVal) : '-'}</span>
+                                <span>{rawVal !== null && rawVal !== undefined && rawVal !== '' ? String(rawVal) : '-'}</span>
+                              )}
+                            </td>
+                          )
+                        })}
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {isLicitacionesTable && (
+                              <button
+                                onClick={() => toggleExpandOffer(String(pkVal))}
+                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 text-[11px] font-bold transition flex items-center gap-1 border border-indigo-500/30"
+                              >
+                                {isExpanded ? 'Ocultar Items' : 'Ver Renglones'}
+                              </button>
                             )}
+                            <button
+                              onClick={() => handleOpenEdit(row)}
+                              title="Editar"
+                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 transition"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(pkVal)}
+                              title="Eliminar"
+                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-600/30 text-slate-300 hover:text-rose-400 transition"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Sub-tabla Expandible de Renglones / Ítems */}
+                      {isLicitacionesTable && isExpanded && (
+                        <tr className="bg-slate-950/90 border-b border-indigo-500/30">
+                          <td colSpan={config.fields.length + 2} className="p-4 bg-slate-950/60">
+                            <div className="space-y-3 p-3 bg-slate-900/90 rounded-2xl border border-indigo-500/30 shadow-inner">
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-xs font-bold text-indigo-300 flex items-center gap-2">
+                                  <Boxes className="w-4 h-4 text-indigo-400" />
+                                  Detalle de Renglones Ofertados (Oferta #{pkVal}: {row.numero_oferta})
+                                </h4>
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-200 font-mono">
+                                  {subItems.length} renglones registrados
+                                </span>
+                              </div>
+
+                              {loadingItems ? (
+                                <div className="p-4 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+                                  <RefreshCw className="w-4 h-4 animate-spin text-indigo-400" />
+                                  <span>Cargando renglones del servidor...</span>
+                                </div>
+                              ) : subItems.length === 0 ? (
+                                <p className="text-xs text-slate-500 italic p-2">No se encontraron renglones registrados para esta oferta.</p>
+                              ) : (
+                                <div className="overflow-x-auto">
+                                  <table className="w-full text-left text-[11px]">
+                                    <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                                      <tr>
+                                        <th className="p-2">Renglón</th>
+                                        <th className="p-2">Producto Ofertado</th>
+                                        <th className="p-2">Marca</th>
+                                        <th className="p-2 text-right">Cantidad</th>
+                                        <th className="p-2 text-right">P. Unitario</th>
+                                        <th className="p-2 text-right">Total Ofertado</th>
+                                        <th className="p-2 text-center">Estado Renglón</th>
+                                        <th className="p-2">Ganador / Competencia</th>
+                                        <th className="p-2">Contrato / Detalle</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-800 text-slate-300">
+                                      {subItems.map((item, itemIdx) => {
+                                        const prodName = item.productos_equipo?.nombre_producto_equipo || 'Producto'
+                                        const brandName = item.productos_equipo?.marcas?.nombre_marca || 'N/A'
+                                        const desc = item.productos_equipo?.descripcion || ''
+
+                                        const isDesierta = desc.toLowerCase().includes('desierta')
+                                        const isAdjudicada = Boolean(item.es_adjudicado)
+                                        const isPerdida = !isAdjudicada && !isDesierta
+
+                                        // Parse adjudicated info from description string
+                                        let adjWinner = 'N/A'
+                                        let adjPrice = '-'
+                                        let contratoNum = '-'
+
+                                        const adjMatch = desc.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/)
+                                        if (adjMatch) {
+                                          adjWinner = adjMatch[1].trim()
+                                          if (adjMatch[2]) adjPrice = `$${adjMatch[2].trim()}`
+                                        }
+
+                                        const contractMatch = desc.match(/Contrato:\s*([^|]+)/)
+                                        if (contractMatch) contratoNum = contractMatch[1].trim()
+
+                                        const totalOfertado = (Number(item.cantidad || 0) * Number(item.precio_unitario || 0))
+
+                                        return (
+                                          <tr key={itemIdx} className="hover:bg-slate-800/60 transition">
+                                            <td className="p-2 font-mono font-bold text-slate-400">
+                                              #{item.renglon_numero || itemIdx + 1}
+                                            </td>
+                                            <td className="p-2 font-bold text-white max-w-xs truncate">
+                                              {prodName}
+                                            </td>
+                                            <td className="p-2 font-semibold text-indigo-300">
+                                              {brandName}
+                                            </td>
+                                            <td className="p-2 text-right font-mono">
+                                              {Number(item.cantidad || 0).toLocaleString()}
+                                            </td>
+                                            <td className="p-2 text-right font-mono text-emerald-300">
+                                              ${Number(item.precio_unitario || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                                              ${totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="p-2 text-center">
+                                              {isAdjudicada ? (
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                                  🟢 ADJUDICADA
+                                                </span>
+                                              ) : isDesierta ? (
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                                  🟡 DESIERTA
+                                                </span>
+                                              ) : (
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                                                  🔴 PERDIDA
+                                                </span>
+                                              )}
+                                            </td>
+                                            <td className="p-2">
+                                              {isPerdida ? (
+                                                <span className="text-rose-300 font-medium">
+                                                  {adjWinner} {adjPrice !== '-' ? `(${adjPrice})` : ''}
+                                                </span>
+                                              ) : isAdjudicada ? (
+                                                <span className="text-emerald-300 font-semibold">LABYMED</span>
+                                              ) : (
+                                                <span className="text-amber-300 font-medium">Sin Adjudicatario</span>
+                                              )}
+                                            </td>
+                                            <td className="p-2 text-slate-400 font-mono text-[10px] truncate max-w-xs">
+                                              {contratoNum !== '-' ? contratoNum : desc.slice(0, 50)}
+                                            </td>
+                                          </tr>
+                                        )
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+                            </div>
                           </td>
-                        )
-                      })}
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => handleOpenEdit(row)}
-                            title="Editar"
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 transition"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(pkVal)}
-                            title="Eliminar"
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-600/30 text-slate-300 hover:text-rose-400 transition"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   )
                 })
               )}
