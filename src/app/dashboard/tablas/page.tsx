@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -721,7 +721,7 @@ export default function GestionTablasPage() {
                   const subItems = offerItemsMap[String(pkVal)] || []
 
                   return (
-                    <React.Fragment key={idx}>
+                    <Fragment key={idx}>
                       <tr className="hover:bg-slate-800/40 transition group">
                         <td className="p-3 font-mono text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
                           {isLicitacionesTable && (
@@ -915,7 +915,7 @@ export default function GestionTablasPage() {
                           </td>
                         </tr>
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   )
                 })
               )}
