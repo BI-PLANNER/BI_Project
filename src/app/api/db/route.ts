@@ -181,25 +181,54 @@ export async function POST(req: NextRequest) {
         if (l.numero_oferta) masterMap.set(l.numero_oferta.toLowerCase().trim(), l.licitacion_oferta_id)
       })
 
-      // Catálogo de productos para vincular FK producto_equipo_id
-      const { data: prodsData } = await admin.from('productos_equipo').select('producto_equipo_id, nombre_producto_equipo')
-      const prodsMap = new Map<string, number>()
-      prodsData?.forEach((p: any) => {
-        if (p.nombre_producto_equipo) prodsMap.set(p.nombre_producto_equipo.toLowerCase().trim(), p.producto_equipo_id)
-      })
+      // Pre-crear productos faltantes en bulk con columnas correctas
+      const neededProducts = new Set<string>()
+      for (const lic of itemsToSync) {
+        const prodName = (lic.producto || lic.nombre_oferta || '').toString().trim()
+        if (prodName && !prodsMap.has(prodName.toLowerCase())) {
+          let found = false
+          for (const [name] of prodsMap.entries()) {
+            if (prodName.toLowerCase().includes(name) || name.includes(prodName.toLowerCase())) {
+              found = true
+              break
+            }
+          }
+          if (!found) neededProducts.add(prodName)
+        }
+      }
 
-      // Limpiar ítems anteriores de estas licitaciones para sincronización idempotente
+      if (neededProducts.size > 0) {
+        const newProdRows = Array.from(neededProducts).map((name, idx) => ({
+          nombre_producto_equipo: (name || 'Producto').slice(0, 140),
+          codigo_sku: `EX-${Date.now().toString().slice(-6)}-${idx + 1}`,
+          marca_id: 1, // STANDARD DIAG
+          es_equipo: false,
+          unidad_medida: 'Unidad',
+          activo: true
+        }))
+
+        for (let i = 0; i < newProdRows.length; i += 100) {
+          const chunk = newProdRows.slice(i, i + 100)
+          const { data: createdProds } = await admin.from('productos_equipo').insert(chunk).select('producto_equipo_id, nombre_producto_equipo')
+          createdProds?.forEach((p: any) => prodsMap.set(p.nombre_producto_equipo.toLowerCase().trim(), p.producto_equipo_id))
+        }
+      }
+
+      const defaultProductId = prodsData?.[0]?.producto_equipo_id || 80
+
+      // Limpiar ofertas_items anteriores de estas licitaciones para sincronización idempotente
       const activeMasterIds = Array.from(masterMap.values())
       if (activeMasterIds.length > 0) {
-        // Borrar en bloques para evitar límites de URL
         for (let i = 0; i < activeMasterIds.length; i += 50) {
           const chunkIds = activeMasterIds.slice(i, i + 50)
           await admin.from('ofertas_items').delete().in('licitacion_oferta_id', chunkIds)
         }
       }
 
+      const ofertaProductSeen = new Map<string, boolean>()
       const ofertaRenglonCounter = new Map<string, number>()
       const itemsToInsert: any[] = []
+      const extraProductsToCreate: any[] = []
 
       for (const lic of itemsToSync) {
         const numOferta = (lic.no_oferta || lic.numero_oferta || lic['No. Oferta'] || '').toString().trim()
@@ -209,9 +238,10 @@ export async function POST(req: NextRequest) {
         const currentRenglon = (ofertaRenglonCounter.get(licId) || 0) + 1
         ofertaRenglonCounter.set(licId, currentRenglon)
 
-        const prodName = (lic.producto || lic['Producto'] || lic.nombre_oferta || '').toString().trim()
+        let prodName = (lic.producto || lic['Producto'] || lic.nombre_oferta || `Producto Renglón ${currentRenglon}`).toString().trim()
         let prodId = prodsMap.get(prodName.toLowerCase())
-        if (!prodId && prodName) {
+
+        if (!prodId) {
           for (const [name, id] of prodsMap.entries()) {
             if (prodName.toLowerCase().includes(name) || name.includes(prodName.toLowerCase())) {
               prodId = id
@@ -219,8 +249,21 @@ export async function POST(req: NextRequest) {
             }
           }
         }
+        if (!prodId) prodId = defaultProductId
 
-        // Limpieza de campos numéricos y booleanos
+        const pairKey = `${licId}_${prodId}`
+        if (ofertaProductSeen.has(pairKey)) {
+          extraProductsToCreate.push({
+            licId,
+            currentRenglon,
+            prodName: `${prodName} (Rngl. ${currentRenglon} - ${numOferta})`.slice(0, 140),
+            lic
+          })
+          continue
+        }
+
+        ofertaProductSeen.set(pairKey, true)
+
         const rawQty = lic.cantidad || lic['Cantidad (unitaria)'] || lic['Cantidad'] || 1
         const cleanQty = typeof rawQty === 'number' ? rawQty : (parseFloat(String(rawQty).replace(/[^0-9.-]+/g, '')) || 1)
 
@@ -232,12 +275,44 @@ export async function POST(req: NextRequest) {
 
         itemsToInsert.push({
           licitacion_oferta_id: licId,
-          producto_equipo_id: prodId || null,
+          producto_equipo_id: prodId,
           renglon_numero: currentRenglon,
           cantidad: Math.max(1, cleanQty),
           precio_unitario: Math.max(0, cleanPrice),
           es_adjudicado: esAdjudicado
         })
+      }
+
+      if (extraProductsToCreate.length > 0) {
+        const extraRows = extraProductsToCreate.map((e, idx) => ({
+          nombre_producto_equipo: e.prodName,
+          codigo_sku: `EX-D-${Date.now().toString().slice(-6)}-${idx + 1}`,
+          marca_id: 1,
+          es_equipo: false,
+          unidad_medida: 'Unidad',
+          activo: true
+        }))
+
+        const { data: createdExtra } = await admin.from('productos_equipo').insert(extraRows).select('producto_equipo_id')
+        if (createdExtra) {
+          createdExtra.forEach((p: any, idx: number) => {
+            const itemContext = extraProductsToCreate[idx]
+            const rawQty = itemContext.lic.cantidad || itemContext.lic['Cantidad (unitaria)'] || 1
+            const cleanQty = typeof rawQty === 'number' ? rawQty : (parseFloat(String(rawQty).replace(/[^0-9.-]+/g, '')) || 1)
+            const rawPrice = itemContext.lic.precio_unitario || itemContext.lic['Precio (unitario)'] || 0
+            const cleanPrice = typeof rawPrice === 'number' ? rawPrice : (parseFloat(String(rawPrice).replace(/[^0-9.-]+/g, '')) || 0)
+            const rawStatus = (itemContext.lic.estatus_item || itemContext.lic['Estatus'] || '').toString().toLowerCase()
+
+            itemsToInsert.push({
+              licitacion_oferta_id: itemContext.licId,
+              producto_equipo_id: p.producto_equipo_id,
+              renglon_numero: itemContext.currentRenglon,
+              cantidad: Math.max(1, cleanQty),
+              precio_unitario: Math.max(0, cleanPrice),
+              es_adjudicado: rawStatus.includes('adjudicad') || rawStatus.includes('ganad')
+            })
+          })
+        }
       }
 
       let itemsInsertedCount = 0
