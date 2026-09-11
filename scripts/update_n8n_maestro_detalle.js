@@ -50,10 +50,71 @@ async function updateMappingWithFullProductData() {
   const wf = wfRes.data;
 
   const jsCode = `// ==========================================================================
-// LIMPIEZA & NORMALIZACIÓN 3FN MAESTRO-DETALLE (EXCEL 365 -> SUPABASE)
+// LIMPIEZA & NORMALIZACIÓN 3FN MAESTRO-DETALLE + PARSER FECHAS EXCEL (SERIAL 46052 -> YYYY-MM-DD / DD/MM/YYYY)
 // ==========================================================================
 const items = $input.all();
 const licitaciones = [];
+
+function parseExcelOrStandardDate(val) {
+  if (val === null || val === undefined || val === '') return '';
+  const num = Number(val);
+  if (!isNaN(num) && num > 30000 && num < 70000) {
+    const excelEpoch = new Date(1899, 11, 30);
+    const d = new Date(excelEpoch.getTime() + num * 24 * 60 * 60 * 1000);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return \`\${dd}/\${mm}/\${yyyy}\`;
+  }
+  const str = String(val).trim();
+  const slashParts = str.split('/');
+  if (slashParts.length === 3) {
+    const p0 = slashParts[0].padStart(2, '0');
+    const p1 = slashParts[1].padStart(2, '0');
+    let p2 = slashParts[2].trim();
+    if (p2.length === 2) p2 = '20' + p2;
+    if (p0.length === 4) return \`\${slashParts[2].padStart(2,'0')}/\${p1}/\${p0}\`;
+    return \`\${p0}/\${p1}/\${p2}\`;
+  }
+  const hyphenParts = str.split('-');
+  if (hyphenParts.length === 3) {
+    if (hyphenParts[0].length === 4) {
+      return \`\${hyphenParts[2].padStart(2,'0')}/\${hyphenParts[1].padStart(2,'0')}/\${hyphenParts[0]}\`;
+    }
+  }
+  return str;
+}
+
+function toISODate(val) {
+  if (val === null || val === undefined || val === '') return null;
+  const num = Number(val);
+  if (!isNaN(num) && num > 30000 && num < 70000) {
+    const excelEpoch = new Date(1899, 11, 30);
+    const d = new Date(excelEpoch.getTime() + num * 24 * 60 * 60 * 1000);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return \`\${yyyy}-\${mm}-\${dd}\`;
+  }
+  const str = String(val).trim();
+  const slashParts = str.split('/');
+  if (slashParts.length === 3) {
+    const p0 = slashParts[0].padStart(2, '0');
+    const p1 = slashParts[1].padStart(2, '0');
+    let p2 = slashParts[2].trim();
+    if (p2.length === 2) p2 = '20' + p2;
+    if (p0.length === 4) return \`\${p0}-\${p1}-\${p2.padStart(2, '0')}\`;
+    return \`\${p2}-\${p1}-\${p0}\`;
+  }
+  const hyphenParts = str.split('-');
+  if (hyphenParts.length === 3) {
+    if (hyphenParts[0].length === 4) return str;
+    let p2 = hyphenParts[2].trim();
+    if (p2.length === 2) p2 = '20' + p2;
+    return \`\${p2}-\${hyphenParts[1].padStart(2, '0')}-\${hyphenParts[0].padStart(2, '0')}\`;
+  }
+  return null;
+}
 
 for (const item of items) {
   const row = item.json || {};
@@ -66,9 +127,18 @@ for (const item of items) {
   const tipo_proceso = String(row['TIPO DE PROCESO'] || row['TIPO DE PROCESO '] || row['Tipo Proceso'] || 'LICITACION COMPETITIVA').trim().toUpperCase();
   const anio = String(row['AÑO'] || row['Año'] || row['ANIO'] || '2026').trim();
   const mes = String(row['Mes'] || row['MES'] || '').trim().toUpperCase();
-  const presentacion = String(row['Presentación de oferta (Fecha)'] || row['Presentación'] || row['Presentacion'] || '').trim();
   
+  const rawPresentacion = row['Presentación de oferta (Fecha)'] || row['Presentación'] || row['Presentacion'] || '';
+  const rawAdjudicacion = row['Fecha de adjudicacion'] || row['Fecha Adjudicación'] || row['Fecha Adjudicacion'] || '';
+
+  const presentacion_formateada = parseExcelOrStandardDate(rawPresentacion);
+  const presentacion_iso = toISODate(rawPresentacion);
+  
+  const adjudicacion_formateada = parseExcelOrStandardDate(rawAdjudicacion);
+  const adjudicacion_iso = toISODate(rawAdjudicacion);
+
   // Datos específicos del producto / renglón
+  const renglon = row['No. Renglón'] || row['Renglón'] || row['Renglon'] || row['No. Item'] || null;
   const producto = String(row['Producto'] || row['PRODUCTO'] || row['Insumo'] || nombre_oferta || '').trim();
   const marca = String(row['Marca'] || row['MARCA'] || '').trim();
   const precio_unitario = row['Precio (unitario)'] || row['Precio Unitario'] || row['PRECIO'] || 0;
@@ -91,7 +161,11 @@ for (const item of items) {
     tipo_proceso: tipo_proceso || 'LICITACION COMPETITIVA',
     anio: anio || '2026',
     mes: mes || 'MARZO',
-    presentacion: presentacion || '',
+    'Presentación de oferta (Fecha)': presentacion_formateada || 'N/A',
+    presentacion_iso: presentacion_iso,
+    'Fecha de adjudicacion': adjudicacion_formateada || 'N/A',
+    adjudicacion_iso: adjudicacion_iso,
+    renglon: renglon,
     producto: producto,
     marca: marca,
     precio_unitario: precio_unitario,
@@ -119,27 +193,22 @@ return [{
       mode: 'runOnceForAllItems',
       jsCode: jsCode
     };
-    console.log('✅ Nodo de Mapeo actualizado con campos completos de producto y renglón.');
   }
 
-  console.log('📤 Enviando actualización de workflow a n8n...');
-  const updateRes = await n8nRequest(`/api/v1/workflows/${WORKFLOW_ID}`, 'PUT', {
+  const payload = {
     name: wf.name,
     nodes: wf.nodes,
     connections: wf.connections,
-    settings: {
-      executionOrder: "v1",
-      saveDataSuccessExecution: "all",
-      saveExecutionProgress: true,
-      saveManualExecutions: true
-    }
-  });
+    settings: { executionOrder: 'v1' }
+  };
 
+  console.log('📤 Enviando actualización de workflow a n8n con formateador de fechas Excel...');
+  const updateRes = await n8nRequest(`/api/v1/workflows/${WORKFLOW_ID}`, 'PUT', payload);
   if (updateRes.status === 200) {
-    console.log('🎉 Workflow actualizado con éxito.');
+    console.log('🎉 Workflow de n8n actualizado con éxito (Fechas Excel Seriales corregidas).');
   } else {
-    console.error('Error al actualizar:', updateRes.data);
+    console.error('Error al actualizar workflow:', updateRes.data);
   }
 }
 
-updateMappingWithFullProductData();
+updateMappingWithFullProductData().catch(console.error);

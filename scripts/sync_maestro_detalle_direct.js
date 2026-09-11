@@ -115,6 +115,37 @@ async function syncDirect() {
   const toUpdate = [];
   const seenInBatch = new Set();
 
+function toISODate(val) {
+  if (val === null || val === undefined || val === '') return null;
+  const num = Number(val);
+  if (!isNaN(num) && num > 30000 && num < 70000) {
+    const excelEpoch = new Date(1899, 11, 30);
+    const d = new Date(excelEpoch.getTime() + num * 24 * 60 * 60 * 1000);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  const str = String(val).trim();
+  const slashParts = str.split('/');
+  if (slashParts.length === 3) {
+    const p0 = slashParts[0].padStart(2, '0');
+    const p1 = slashParts[1].padStart(2, '0');
+    let p2 = slashParts[2].trim();
+    if (p2.length === 2) p2 = '20' + p2;
+    if (p0.length === 4) return `${p0}-${p1}-${p2.padStart(2, '0')}`;
+    return `${p2}-${p1}-${p0}`;
+  }
+  const hyphenParts = str.split('-');
+  if (hyphenParts.length === 3) {
+    if (hyphenParts[0].length === 4) return str;
+    let p2 = hyphenParts[2].trim();
+    if (p2.length === 2) p2 = '20' + p2;
+    return `${p2}-${hyphenParts[1].padStart(2, '0')}-${hyphenParts[0].padStart(2, '0')}`;
+  }
+  return null;
+}
+
   for (const lic of itemsToSync) {
     const numOferta = (lic.no_oferta || '').toString().trim();
     const nomOferta = (lic.nombre_oferta || 'Licitación Suministro').toString().trim();
@@ -122,7 +153,7 @@ async function syncDirect() {
     const rawMes = (lic.mes || 'MARZO').toString().toUpperCase().trim();
     const rawAnio = (lic.anio || '2026').toString().trim();
     const tipoProceso = (lic.tipo_proceso || 'LICITACIÓN').toString().trim();
-    const presentacion = (lic.presentacion || '').toString().trim();
+    const presentacion = (lic['Presentación de oferta (Fecha)'] || lic.presentacion || '').toString().trim();
 
     if (!numOferta && !nomOferta) continue;
 
@@ -142,7 +173,7 @@ async function syncDirect() {
     }
 
     const mesNum = monthMap[rawMes] || '03';
-    const fechaPresentacion = `${rawAnio}-${mesNum}-01`;
+    const fechaPresentacion = toISODate(presentacion) || `${rawAnio}-${mesNum}-01`;
     const observaciones = `TIPO: ${tipoProceso} | Presentación: ${presentacion || 'N/A'} | Fuente: Excel 365 SharePoint`;
 
     const existingId = numOferta ? existingMap.get(numOferta.toLowerCase()) : null;
