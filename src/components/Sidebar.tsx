@@ -113,13 +113,6 @@ export default function Sidebar() {
 
   // Navigation items
   const navItems = [
-    {
-      href: '/dashboard/pedidos',
-      label: 'Envíos & Mensajería BI',
-      icon: Truck,
-      badge: 'Live',
-      badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30 font-bold'
-    },
     { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
