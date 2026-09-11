@@ -122,7 +122,7 @@ export default function DashboardAnalisisPage() {
     const nom = (lic.nombre_oferta || '').toUpperCase()
     const empId = lic.empresa_id
 
-    if (empId === 4 || obs.includes('DIAGNOSAL') || nom.includes('DIAGNOSAL') || num.includes('DIAGNOSAL')) return 'DIAGNOSAL'
+    if (empId === 4 || obs.includes('DIAGNOSAL') || nom.includes('DIAGNOSAL') || num.includes('DIAGNOSAL') || nom.includes('BAJA CUANTIA') || num.includes('BAJA CUANTIA')) return 'DIAGNOSAL'
     if (empId === 1 || obs.includes('LAB&MED') || obs.includes('LAB & MED') || obs.includes('LABANDMED') || num.includes('17/2025') || num.includes('03/2025') || num.includes('04/2025')) return 'LAB&MED'
     return 'LABYMED'
   }
