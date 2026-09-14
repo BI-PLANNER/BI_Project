@@ -84,6 +84,7 @@ export default function DashboardAnalisisPage() {
   const [monthlyEfficiencyData, setMonthlyEfficiencyData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
   const [orgChartData, setOrgChartData] = useState<any[]>([])
+  const [perdidasData, setPerdidasData] = useState<{ rows: any[], byCompetidor: any[], totalMonto: number, topCliente: string }>({ rows: [], byCompetidor: [], totalMonto: 0, topCliente: '' })
 
   useEffect(() => {
     setMounted(true)
@@ -384,6 +385,30 @@ export default function DashboardAnalisisPage() {
       .sort((a, b) => b['Total'] - a['Total'])
       .slice(0, 12)
     setOrgChartData(orgArr)
+
+    // ── Análisis de Pérdidas ──
+    const perdidasRows = filteredByMonth.filter(i => i.isPerdida)
+    const totalMontoPerdido = perdidasRows.reduce((s, i) => s + i.total, 0)
+
+    // Agrupar por competidor/ganador
+    const compMap: Record<string, { monto: number, count: number }> = {}
+    perdidasRows.forEach(i => {
+      const comp = i.winner && i.winner !== 'N/A' ? i.winner : 'COMPETENCIA'
+      if (!compMap[comp]) compMap[comp] = { monto: 0, count: 0 }
+      compMap[comp].monto += i.total
+      compMap[comp].count++
+    })
+    const byCompetidor = Object.entries(compMap)
+      .map(([name, v]) => ({ name: name.length > 22 ? name.slice(0, 22) + '…' : name, nameFull: name, monto: Number(v.monto.toFixed(2)), count: v.count }))
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 10)
+
+    // Top cliente que más monto perdimos
+    const clienteLostMap: Record<string, number> = {}
+    perdidasRows.forEach(i => { clienteLostMap[i.cliente] = (clienteLostMap[i.cliente] || 0) + i.total })
+    const topCliente = Object.entries(clienteLostMap).sort((a, b) => b[1] - a[1])[0]?.[0] || '-'
+
+    setPerdidasData({ rows: perdidasRows, byCompetidor, totalMonto: Number(totalMontoPerdido.toFixed(2)), topCliente })
 
     setCompetitiveTable(rowsForTable)
   }, [allItemsRaw, selectedMonth, selectedEmpresa, selectedYear])
@@ -993,6 +1018,128 @@ export default function DashboardAnalisisPage() {
                         <span className="text-rose-400">{row.winner}</span>
                       )}
                     </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ─── SLIDE: ANÁLISIS DE PÉRDIDAS ─── */}
+      <div className="bg-slate-950 border border-rose-500/40 rounded-2xl p-6 space-y-6 shadow-2xl">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold text-rose-400 uppercase tracking-widest mb-1">
+              <XCircle className="w-4 h-4" />
+              Slide de Pérdidas • {selectedMonth} {selectedYear !== 'TODOS' ? selectedYear : ''} {selectedEmpresa !== 'TODOS' ? `• ${selectedEmpresa}` : ''}
+            </div>
+            <h2 className="text-xl font-black text-white">Análisis Completo de Licitaciones Perdidas</h2>
+            <p className="text-[11px] text-slate-400 mt-0.5">Todos los renglones donde la competencia obtuvo la adjudicación</p>
+          </div>
+        </div>
+
+        {/* KPIs de Pérdidas */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="bg-rose-950/40 border border-rose-500/30 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-rose-300 uppercase mb-1">Total Perdido ($)</p>
+            <p className="text-2xl font-black text-rose-400 font-mono">
+              ${perdidasData.totalMonto.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            </p>
+            <p className="text-[10px] text-rose-300 mt-1">{perdidasData.rows.length} renglones perdidos</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Competidores Distintos</p>
+            <p className="text-2xl font-black text-white font-mono">{perdidasData.byCompetidor.length}</p>
+            <p className="text-[10px] text-slate-400 mt-1">empresas que ganaron</p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Principal Competidor</p>
+            <p className="text-sm font-black text-amber-400 leading-tight">{perdidasData.byCompetidor[0]?.nameFull || '-'}</p>
+            <p className="text-[10px] text-slate-400 mt-1">
+              ${(perdidasData.byCompetidor[0]?.monto || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            </p>
+          </div>
+          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Cliente con Mayor Pérdida</p>
+            <p className="text-sm font-black text-cyan-400 leading-tight">{perdidasData.topCliente}</p>
+            <p className="text-[10px] text-slate-400 mt-1">mayor monto no capturado</p>
+          </div>
+        </div>
+
+        {/* Gráfica: Monto Perdido por Competidor */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+            <BarChart3 className="w-4 h-4 text-rose-400" />
+            Monto Perdido por Competidor ($USD)
+          </h3>
+          <div className="h-64 w-full">
+            {mounted && perdidasData.byCompetidor.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={perdidasData.byCompetidor} layout="vertical" margin={{ top: 5, right: 60, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
+                  <XAxis type="number" stroke="#94a3b8" tick={{ fontSize: 10 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
+                  <YAxis type="category" dataKey="name" stroke="#94a3b8" tick={{ fontSize: 10, fill: '#fca5a5' }} width={160} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                    formatter={(value: any, _: any, props: any) => [`$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2 })} USD (${props.payload.count} renglón(es))`, 'Perdido']}
+                    labelFormatter={(label) => perdidasData.byCompetidor.find(c => c.name === label)?.nameFull || label}
+                  />
+                  <Bar dataKey="monto" fill="#f43f5e" radius={[0, 4, 4, 0]} name="Monto Perdido" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+                {perdidasData.rows.length === 0 ? '✅ No hay renglones perdidos con los filtros actuales' : 'Cargando gráfico...'}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Tabla Detallada de Pérdidas */}
+        <div className="overflow-x-auto max-h-[420px]">
+          <table className="w-full text-left text-xs">
+            <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-rose-500/30 text-slate-400 font-semibold">
+              <tr>
+                <th className="p-3">Mes</th>
+                <th className="p-3">Empresa</th>
+                <th className="p-3">Licitación</th>
+                <th className="p-3">Cliente</th>
+                <th className="p-3">Producto / Insumo</th>
+                <th className="p-3">Marca</th>
+                <th className="p-3 text-right">Cant.</th>
+                <th className="p-3 text-right">P. Ofertado</th>
+                <th className="p-3 text-right">Total Perdido</th>
+                <th className="p-3">Competidor Ganador</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              {perdidasData.rows.length === 0 ? (
+                <tr>
+                  <td colSpan={10} className="p-8 text-center text-slate-500">
+                    ✅ No hay renglones perdidos con los filtros actuales
+                  </td>
+                </tr>
+              ) : (
+                perdidasData.rows.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-rose-950/20 transition">
+                    <td className="p-3 font-bold text-rose-300 font-mono text-[11px]">{row.mes}</td>
+                    <td className="p-3">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        row.empresa === 'LABYMED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                        : row.empresa === 'LAB&MED' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                      }`}>{row.empresa}</span>
+                    </td>
+                    <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">{row.licitacion}</td>
+                    <td className="p-3 font-medium max-w-[160px] truncate" title={row.cliente}>{row.cliente}</td>
+                    <td className="p-3 font-bold text-white max-w-[180px] truncate" title={row.producto}>{row.producto}</td>
+                    <td className="p-3 text-slate-400">{row.marca}</td>
+                    <td className="p-3 text-right font-mono">{row.cantidad.toLocaleString()}</td>
+                    <td className="p-3 text-right font-mono text-slate-300">${row.precioLabymed.toFixed(4)}</td>
+                    <td className="p-3 text-right font-mono text-rose-400 font-bold">${row.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 font-bold text-amber-300">{row.winner !== 'N/A' ? row.winner : '-'}</td>
                   </tr>
                 ))
               )}
