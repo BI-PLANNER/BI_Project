@@ -83,6 +83,7 @@ export default function DashboardAnalisisPage() {
   const [chartStatusData, setChartStatusData] = useState<any[]>([])
   const [monthlyEfficiencyData, setMonthlyEfficiencyData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
+  const [orgChartData, setOrgChartData] = useState<any[]>([])
 
   useEffect(() => {
     setMounted(true)
@@ -354,6 +355,35 @@ export default function DashboardAnalisisPage() {
       { name: 'Perdidas', value: countPer, color: '#f43f5e' },
       { name: 'Desiertas', value: countDes, color: '#f59e0b' }
     ])
+
+    // Licitaciones por Organización/Cliente (con montos)
+    const orgMap: Record<string, { total: Set<string>, ganadas: Set<string>, perdidas: Set<string>, montoOfertado: number, montoAdjudicado: number }> = {}
+    filteredByMonth.forEach(item => {
+      const org = item.cliente || 'MINSAL'
+      if (!orgMap[org]) orgMap[org] = { total: new Set(), ganadas: new Set(), perdidas: new Set(), montoOfertado: 0, montoAdjudicado: 0 }
+      orgMap[org].total.add(item.licId)
+      orgMap[org].montoOfertado += item.total
+      if (item.isAdjudicada) {
+        orgMap[org].ganadas.add(item.licId)
+        orgMap[org].montoAdjudicado += item.total
+      } else {
+        orgMap[org].perdidas.add(item.licId)
+      }
+    })
+    const orgArr = Object.entries(orgMap)
+      .map(([org, val]) => ({
+        org: org.length > 20 ? org.slice(0, 20) + '…' : org,
+        orgFull: org,
+        'Total': val.total.size,
+        'Ganadas': val.ganadas.size,
+        'Perdidas': val.perdidas.size,
+        efectividad: val.total.size > 0 ? Number(((val.ganadas.size / val.total.size) * 100).toFixed(1)) : 0,
+        montoOfertado: Number(val.montoOfertado.toFixed(2)),
+        montoAdjudicado: Number(val.montoAdjudicado.toFixed(2))
+      }))
+      .sort((a, b) => b['Total'] - a['Total'])
+      .slice(0, 12)
+    setOrgChartData(orgArr)
 
     setCompetitiveTable(rowsForTable)
   }, [allItemsRaw, selectedMonth, selectedEmpresa, selectedYear])
@@ -628,6 +658,102 @@ export default function DashboardAnalisisPage() {
                   </tr>
                 )
               })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ── NUEVA GRÁFICA: Licitaciones por Organización ── */}
+      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div>
+          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-cyan-400" />
+            Licitaciones por Organización ({selectedMonth})
+          </h3>
+          <p className="text-[11px] text-slate-400">Número de licitaciones únicas por institución/cliente — Ganadas vs. Perdidas</p>
+        </div>
+
+        <div className="h-80 w-full pt-2">
+          {mounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={orgChartData}
+                layout="vertical"
+                margin={{ top: 5, right: 40, left: 10, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
+                <XAxis type="number" stroke="#94a3b8" tick={{ fontSize: 10 }} allowDecimals={false} />
+                <YAxis
+                  type="category"
+                  dataKey="org"
+                  stroke="#94a3b8"
+                  tick={{ fontSize: 10, fill: '#cbd5e1' }}
+                  width={130}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                  formatter={(value: any, name: any) => [`${value} licitación(es)`, name]}
+                  labelFormatter={(label) => {
+                    const found = orgChartData.find(o => o.org === label)
+                    return found?.orgFull || label
+                  }}
+                />
+                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                <Bar dataKey="Ganadas" fill="#10b981" radius={[0, 4, 4, 0]} name="Ganadas" stackId="a" />
+                <Bar dataKey="Perdidas" fill="#f43f5e" radius={[0, 4, 4, 0]} name="Perdidas" stackId="a" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-slate-500 text-xs">Cargando gráfico...</div>
+          )}
+        </div>
+
+        {/* Tabla resumen por Organización */}
+        <div className="overflow-x-auto border-t border-slate-800 pt-4">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+              <tr>
+                <th className="p-2">Organización</th>
+                <th className="p-2 text-center">Total Lic.</th>
+                <th className="p-2 text-center text-emerald-400">Ganadas</th>
+                <th className="p-2 text-center text-rose-400">Perdidas</th>
+                <th className="p-2 text-center">Efectividad</th>
+                <th className="p-2 text-right">Monto Ofertado</th>
+                <th className="p-2 text-right">Monto Adjudicado</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800 text-slate-300">
+              {orgChartData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-slate-800/40 transition">
+                  <td className="p-2 font-bold text-white max-w-xs">
+                    <span title={row.orgFull}>{row.orgFull}</span>
+                  </td>
+                  <td className="p-2 text-center font-mono font-bold text-white">{row['Total']}</td>
+                  <td className="p-2 text-center font-mono font-bold text-emerald-400">{row['Ganadas']}</td>
+                  <td className="p-2 text-center font-mono font-bold text-rose-400">{row['Perdidas']}</td>
+                  <td className="p-2 text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-14 bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${
+                            row.efectividad >= 60 ? 'bg-emerald-400' : row.efectividad >= 35 ? 'bg-amber-400' : 'bg-rose-400'
+                          }`}
+                          style={{ width: `${Math.min(100, row.efectividad)}%` }}
+                        />
+                      </div>
+                      <span className={`font-mono font-bold ${
+                        row.efectividad >= 60 ? 'text-emerald-400' : row.efectividad >= 35 ? 'text-amber-400' : 'text-rose-400'
+                      }`}>{row.efectividad}%</span>
+                    </div>
+                  </td>
+                  <td className="p-2 text-right font-mono text-slate-300">
+                    ${row.montoOfertado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </td>
+                  <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                    ${row.montoAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
