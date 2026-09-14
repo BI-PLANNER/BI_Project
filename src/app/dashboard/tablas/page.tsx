@@ -369,6 +369,12 @@ export default function GestionTablasPage() {
               nombre_producto_equipo,
               descripcion,
               marcas (nombre_marca)
+            ),
+            licitaciones_ofertas (
+              numero_oferta,
+              clientes (
+                nombre_cliente
+              )
             )
           `)
           .eq('licitacion_oferta_id', offerId)
@@ -841,6 +847,7 @@ export default function GestionTablasPage() {
                                     <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
                                       <tr>
                                         <th className="p-2">Renglón</th>
+                                        <th className="p-2">Cliente Institucional</th>
                                         <th className="p-2">Producto Ofertado</th>
                                         <th className="p-2">Marca</th>
                                         <th className="p-2 text-right">Cantidad</th>
@@ -881,6 +888,9 @@ export default function GestionTablasPage() {
                                           <tr key={itemIdx} className="hover:bg-slate-800/60 transition">
                                             <td className="p-2 font-mono font-bold text-slate-400">
                                               #{item.renglon_numero || itemIdx + 1}
+                                            </td>
+                                            <td className="p-2 font-bold text-cyan-300 max-w-xs truncate">
+                                              {item.licitaciones_ofertas?.clientes?.nombre_cliente || row.nombre_oferta?.split(' ').slice(0,3).join(' ') || 'INSTITUCIONAL'}
                                             </td>
                                             <td className="p-2 font-bold text-white max-w-xs truncate">
                                               {prodName}
