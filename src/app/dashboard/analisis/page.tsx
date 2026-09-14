@@ -501,7 +501,7 @@ export default function DashboardAnalisisPage() {
         {/* Total Adjudicado */}
         <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-400 uppercase">Adjudicado Labymed</span>
+            <span className="text-xs font-bold text-emerald-400 uppercase">Adjudicado</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
