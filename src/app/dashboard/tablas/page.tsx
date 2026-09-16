@@ -554,13 +554,13 @@ export default function GestionTablasPage() {
   if (isRestrictedGerente) {
     return (
       <div className="p-6 max-w-xl mx-auto mt-16 text-center space-y-6">
-        <div className="glass-card p-10 rounded-3xl border border-white/10 shadow-md space-y-5 bg-slate-950/80">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center mx-auto border border-gray-200">
+        <div className="glass-card p-10 rounded-3xl border border-slate-200 shadow-sm space-y-5 bg-white">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center mx-auto border border-gray-200">
             <ShieldAlert className="w-8 h-8" />
           </div>
           <h2 className="text-xl font-bold text-gray-900">Módulo Operativo Restringido</h2>
           <p className="text-xs text-gray-500 leading-relaxed">
-            Tu perfil de <strong className="text-amber-300">Gerente General</strong> está configurado con acceso exclusivo a los <strong>Dashboards Estratégicos y de Obligaciones</strong>.
+            Tu perfil de <strong className="text-amber-700">Gerente General</strong> está configurado con acceso exclusivo a los <strong>Dashboards Estratégicos y de Obligaciones</strong>.
           </p>
           <div className="pt-2">
             <Link
@@ -581,14 +581,14 @@ export default function GestionTablasPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-700 uppercase tracking-wider mb-1">
             <Database className="w-4 h-4" />
             <span>Gestor Integral de Base de Datos • 21 Tablas 3FN</span>
           </div>
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
             Gestión y Llenado de Datos Maestros
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-700 mt-0.5">
             Administración centralizada con integridad referencial, dropdowns automáticos y validación completa.
           </p>
         </div>
@@ -596,7 +596,7 @@ export default function GestionTablasPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { loadTableData(selectedTable); loadCatalogs(); }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-gray-200 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-gray-200 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Actualizar</span>
@@ -615,11 +615,11 @@ export default function GestionTablasPage() {
       {notification && (
         <div className={`p-3 rounded-xl flex items-center justify-between text-xs font-medium border animate-fade-in ${
           notification.type === 'success'
-            ? 'bg-emerald-500/10 text-emerald-300 border-gray-200'
-            : 'bg-rose-500/10 text-rose-300 border-gray-200'
+            ? 'bg-emerald-500/10 text-emerald-700 border-gray-200'
+            : 'bg-rose-500/10 text-rose-700 border-gray-200'
         }`}>
           <div className="flex items-center gap-2">
-            {notification.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <AlertCircle className="w-4 h-4 text-rose-400" />}
+            {notification.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-700" /> : <AlertCircle className="w-4 h-4 text-rose-700" />}
             <span>{notification.message}</span>
           </div>
           <button onClick={() => setNotification(null)} className="opacity-70 hover:opacity-100">✕</button>
@@ -629,10 +629,10 @@ export default function GestionTablasPage() {
       {/* 4 Logical Groups Tab Selector */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {TABLE_GROUPS.map((group, gIdx) => (
-          <div key={gIdx} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-3.5 flex flex-col space-y-2">
+          <div key={gIdx} className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-300 truncate">{group.groupName}</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-mono font-bold">
+              <span className="text-[11px] font-bold text-slate-700 truncate">{group.groupName}</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-700 font-mono font-bold">
                 {group.badge}
               </span>
             </div>
@@ -646,12 +646,12 @@ export default function GestionTablasPage() {
                     onClick={() => setSelectedTable(t.id)}
                     className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between transition ${
                       isSelected
-                        ? 'bg-white border border-gray-200 text-indigo-200 font-bold border border-gray-200 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-gray-100'
+                        ? 'bg-white border border-gray-200 text-indigo-800 font-bold border border-gray-200 shadow-sm'
+                        : 'text-slate-700 hover:text-slate-800 hover:bg-gray-100'
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <IconComponent className={`w-3.5 h-3.5 flex-shrink-0 ${isSelected ? 'text-indigo-400' : 'text-slate-500'}`} />
+                      <IconComponent className={`w-3.5 h-3.5 flex-shrink-0 ${isSelected ? 'text-indigo-700' : 'text-slate-500'}`} />
                       <span className="truncate">{t.name}</span>
                     </div>
                     {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>}
@@ -664,15 +664,15 @@ export default function GestionTablasPage() {
       </div>
 
       {/* Table Content & Search */}
-      <div className="bg-slate-900/80 border border-gray-200 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
         {/* Table Header toolbar */}
-        <div className="p-4 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <Database className="w-4 h-4 text-indigo-400" />
-              Tabla: <span className="text-indigo-300 font-mono">`{selectedTable}`</span>
+              <Database className="w-4 h-4 text-indigo-700" />
+              Tabla: <span className="text-indigo-700 font-mono">`{selectedTable}`</span>
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-mono">
+            <span className="text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono">
               {filteredData.length} registros
             </span>
           </div>
@@ -685,7 +685,7 @@ export default function GestionTablasPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder={`Buscar en ${config.label}...`}
-              className="w-full pl-9 pr-3 py-1.5 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+              className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
         </div>
@@ -693,7 +693,7 @@ export default function GestionTablasPage() {
         {/* Dynamic Table */}
         <div className="overflow-x-auto max-h-[500px]">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-slate-950/90 backdrop-blur border-b border-slate-800 text-slate-400 font-semibold z-10">
+            <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-200 text-slate-700 font-semibold z-10">
               <tr>
                 <th className="p-3 w-16">PK</th>
                 {config.fields.map(f => (
@@ -704,18 +704,18 @@ export default function GestionTablasPage() {
                 <th className="p-3 text-right w-24">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50 text-slate-300">
+            <tbody className="divide-y divide-slate-800/50 text-slate-700">
               {loading ? (
                 <tr>
                   <td colSpan={config.fields.length + 2} className="p-8 text-center text-slate-500">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-400" />
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-700" />
                     Cargando registros de `{selectedTable}`...
                   </td>
                 </tr>
               ) : filteredData.length === 0 ? (
                 <tr>
                   <td colSpan={config.fields.length + 2} className="p-8 text-center text-slate-500">
-                    <p className="font-semibold text-slate-400">No hay registros en esta tabla</p>
+                    <p className="font-semibold text-slate-700">No hay registros en esta tabla</p>
                     <p className="text-[11px] text-slate-500 mt-1">Haz clic en &quot;Nuevo Registro&quot; para agregar datos.</p>
                   </td>
                 </tr>
@@ -729,11 +729,11 @@ export default function GestionTablasPage() {
                   return (
                     <Fragment key={idx}>
                       <tr className="hover:bg-gray-100 transition group">
-                        <td className="p-3 font-mono text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
+                        <td className="p-3 font-mono text-[11px] text-slate-700 font-semibold flex items-center gap-1.5">
                           {isLicitacionesTable && (
                             <button
                               onClick={() => toggleExpandOffer(String(pkVal))}
-                              className="p-1 rounded bg-slate-800 hover:bg-gray-100 text-indigo-400 transition"
+                              className="p-1 rounded bg-slate-100 hover:bg-gray-100 text-indigo-700 transition"
                               title="Desplegar Renglones Ofertados"
                             >
                               {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -748,41 +748,41 @@ export default function GestionTablasPage() {
                               {f.type === 'boolean' ? (
                                 f.key === 'es_adjudicado' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
                                       🟢 Adjudicada
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-gray-200">
                                       🔴 Perdida
                                     </span>
                                   )
                                 ) : f.key === 'activo' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
                                       🟢 Activo
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-700">
                                       ⚪ Inactivo
                                     </span>
                                   )
                                 ) : (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
                                       🟢 Sí
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-700">
                                       🔴 No
                                     </span>
                                   )
                                 )
                               ) : f.type === 'select' ? (
-                                <span className="font-medium text-indigo-300">
+                                <span className="font-medium text-indigo-700">
                                   {getRelationLabel(f, rawVal)}
                                 </span>
                               ) : f.type === 'number' && f.key.includes('precio') ? (
-                                <span className="font-mono text-emerald-400 font-semibold">
+                                <span className="font-mono text-emerald-700 font-semibold">
                                   ${Number(rawVal || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                 </span>
                               ) : (
@@ -796,7 +796,7 @@ export default function GestionTablasPage() {
                             {isLicitacionesTable && (
                               <button
                                 onClick={() => toggleExpandOffer(String(pkVal))}
-                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-gray-100 text-indigo-300 text-[11px] font-bold transition flex items-center gap-1 border border-gray-200"
+                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-gray-100 text-indigo-700 text-[11px] font-bold transition flex items-center gap-1 border border-gray-200"
                               >
                                 {isExpanded ? 'Ocultar Items' : 'Ver Renglones'}
                               </button>
@@ -804,14 +804,14 @@ export default function GestionTablasPage() {
                             <button
                               onClick={() => handleOpenEdit(row)}
                               title="Editar"
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-gray-100 text-slate-300 hover:text-indigo-300 transition"
+                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-gray-100 text-slate-700 hover:text-indigo-700 transition"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDelete(pkVal)}
                               title="Eliminar"
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-gray-100 text-slate-300 hover:text-rose-400 transition"
+                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-gray-100 text-slate-700 hover:text-rose-700 transition"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -821,22 +821,22 @@ export default function GestionTablasPage() {
 
                       {/* Sub-tabla Expandible de Renglones / Ítems */}
                       {isLicitacionesTable && isExpanded && (
-                        <tr className="bg-slate-950/90 border-b border-gray-200">
-                          <td colSpan={config.fields.length + 2} className="p-4 bg-slate-950/60">
-                            <div className="space-y-3 p-3 bg-slate-900/90 rounded-2xl border border-gray-200 shadow-inner">
+                        <tr className="bg-white border-b border-gray-200">
+                          <td colSpan={config.fields.length + 2} className="p-4 bg-white">
+                            <div className="space-y-3 p-3 bg-white rounded-2xl border border-gray-200 shadow-inner">
                               <div className="flex items-center justify-between">
-                                <h4 className="text-xs font-bold text-indigo-300 flex items-center gap-2">
-                                  <Boxes className="w-4 h-4 text-indigo-400" />
+                                <h4 className="text-xs font-bold text-indigo-700 flex items-center gap-2">
+                                  <Boxes className="w-4 h-4 text-indigo-700" />
                                   Detalle de Renglones Ofertados (Oferta #{pkVal}: {row.numero_oferta})
                                 </h4>
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-200 font-mono">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-800 font-mono">
                                   {subItems.length} renglones registrados
                                 </span>
                               </div>
 
                               {loadingItems ? (
-                                <div className="p-4 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
-                                  <RefreshCw className="w-4 h-4 animate-spin text-indigo-400" />
+                                <div className="p-4 text-center text-xs text-slate-700 flex items-center justify-center gap-2">
+                                  <RefreshCw className="w-4 h-4 animate-spin text-indigo-700" />
                                   <span>Cargando renglones del servidor...</span>
                                 </div>
                               ) : subItems.length === 0 ? (
@@ -844,7 +844,7 @@ export default function GestionTablasPage() {
                               ) : (
                                 <div className="overflow-x-auto">
                                   <table className="w-full text-left text-[11px]">
-                                    <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                                    <thead className="bg-white text-slate-700 border-b border-slate-200">
                                       <tr>
                                         <th className="p-2">Renglón</th>
                                         <th className="p-2">Cliente Institucional</th>
@@ -858,7 +858,7 @@ export default function GestionTablasPage() {
                                         <th className="p-2">Contrato / Detalle</th>
                                       </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-800 text-slate-300">
+                                    <tbody className="divide-y divide-slate-800 text-slate-700">
                                       {subItems.map((item, itemIdx) => {
                                         const prodName = item.productos_equipo?.nombre_producto_equipo || 'Producto'
                                         const brandName = item.productos_equipo?.marcas?.nombre_marca || 'N/A'
@@ -886,54 +886,54 @@ export default function GestionTablasPage() {
 
                                         return (
                                           <tr key={itemIdx} className="hover:bg-gray-100 transition">
-                                            <td className="p-2 font-mono font-bold text-slate-400">
+                                            <td className="p-2 font-mono font-bold text-slate-700">
                                               #{item.renglon_numero || itemIdx + 1}
                                             </td>
-                                            <td className="p-2 font-bold text-cyan-300 max-w-xs truncate">
+                                            <td className="p-2 font-bold text-cyan-700 max-w-xs truncate">
                                               {item.licitaciones_ofertas?.clientes?.nombre_cliente || row.nombre_oferta?.split(' ').slice(0,3).join(' ') || 'INSTITUCIONAL'}
                                             </td>
                                             <td className="p-2 font-bold text-gray-900 max-w-xs truncate">
                                               {prodName}
                                             </td>
-                                            <td className="p-2 font-semibold text-indigo-300">
+                                            <td className="p-2 font-semibold text-indigo-700">
                                               {brandName}
                                             </td>
                                             <td className="p-2 text-right font-mono">
                                               {Number(item.cantidad || 0).toLocaleString()}
                                             </td>
-                                            <td className="p-2 text-right font-mono text-emerald-300">
+                                            <td className="p-2 text-right font-mono text-emerald-700">
                                               ${Number(item.precio_unitario || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                             </td>
-                                            <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                                            <td className="p-2 text-right font-mono text-emerald-700 font-bold">
                                               ${totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                                             </td>
                                             <td className="p-2 text-center">
                                               {isAdjudicada ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
                                                   🟢 ADJUDICADA
                                                 </span>
                                               ) : isDesierta ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 border border-gray-200">
                                                   🟡 DESIERTA
                                                 </span>
                                               ) : (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-gray-200">
                                                   🔴 PERDIDA
                                                 </span>
                                               )}
                                             </td>
                                             <td className="p-2">
                                               {isPerdida ? (
-                                                <span className="text-rose-300 font-medium">
+                                                <span className="text-rose-700 font-medium">
                                                   {adjWinner} {adjPrice !== '-' ? `(${adjPrice})` : ''}
                                                 </span>
                                               ) : isAdjudicada ? (
-                                                <span className="text-emerald-300 font-semibold">LABYMED</span>
+                                                <span className="text-emerald-700 font-semibold">LABYMED</span>
                                               ) : (
-                                                <span className="text-amber-300 font-medium">Sin Adjudicatario</span>
+                                                <span className="text-amber-700 font-medium">Sin Adjudicatario</span>
                                               )}
                                             </td>
-                                            <td className="p-2 text-slate-400 font-mono text-[10px] truncate max-w-xs">
+                                            <td className="p-2 text-slate-700 font-mono text-[10px] truncate max-w-xs">
                                               {contratoNum !== '-' ? contratoNum : desc.slice(0, 50)}
                                             </td>
                                           </tr>
@@ -958,24 +958,24 @@ export default function GestionTablasPage() {
 
       {/* Modal Form for Create / Edit */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-gray-200 rounded-2xl w-full max-w-xl shadow-md overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-sm animate-fade-in">
+          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-xl shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold">
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-700 flex items-center justify-center font-bold">
                   {editingId ? <Edit2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-gray-900">
                     {editingId ? `Editar ${config.label} (#${editingId})` : `Nuevo ${config.label}`}
                   </h3>
-                  <p className="text-[11px] text-slate-400">Tabla `{selectedTable}`</p>
+                  <p className="text-[11px] text-slate-700">Tabla `{selectedTable}`</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-gray-900 hover:bg-slate-800 transition"
+                className="p-1.5 rounded-lg text-slate-700 hover:text-gray-900 hover:bg-slate-100 transition"
               >
                 ✕
               </button>
@@ -987,8 +987,8 @@ export default function GestionTablasPage() {
                 const val = formData[f.key]
                 return (
                   <div key={f.key} className="space-y-1">
-                    <label className="block text-xs font-semibold text-slate-300">
-                      {f.label} {f.required && <span className="text-rose-400">*</span>}
+                    <label className="block text-xs font-semibold text-slate-700">
+                      {f.label} {f.required && <span className="text-rose-700">*</span>}
                     </label>
 
                     {f.type === 'select' ? (
@@ -996,7 +996,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       >
                         <option value="">-- Seleccionar {f.label} --</option>
                         {(relCatalogs[f.relation || ''] || []).map(item => {
@@ -1015,9 +1015,9 @@ export default function GestionTablasPage() {
                           type="checkbox"
                           checked={Boolean(val)}
                           onChange={e => setFormData({ ...formData, [f.key]: e.target.checked })}
-                          className="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-800 focus:ring-0"
+                          className="w-4 h-4 rounded text-indigo-600 bg-white border-slate-200 focus:ring-0"
                         />
-                        <span className="text-xs text-slate-300">Habilitado / Activo</span>
+                        <span className="text-xs text-slate-700">Habilitado / Activo</span>
                       </label>
                     ) : f.type === 'date' ? (
                       <input
@@ -1025,7 +1025,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : f.type === 'number' ? (
                       <input
@@ -1035,7 +1035,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : (
                       <input
@@ -1044,7 +1044,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     )}
                   </div>
@@ -1052,11 +1052,11 @@ export default function GestionTablasPage() {
               })}
 
               {/* Modal Footer */}
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-2">
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-semibold transition"
                 >
                   Cancelar
                 </button>

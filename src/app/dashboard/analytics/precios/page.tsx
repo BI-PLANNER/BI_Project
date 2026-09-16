@@ -429,30 +429,30 @@ export default function DashboardAnalisisPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header & Month Filter */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-950/90 border border-slate-800 p-5 rounded-2xl shadow-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-700 uppercase tracking-wider mb-1">
             <BarChart3 className="w-4 h-4" />
             <span>Inteligencia de Mercado • Desglose por Empresa (LABYMED / LAB&MED / DIAGNOSAL), Año y Mes</span>
           </div>
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">
             Análisis Competitivo & Eficiencia Financiera
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Filtra de manera independiente entre <strong className="text-emerald-400">LABYMED</strong>, <strong className="text-purple-400">LAB & MED</strong> y <strong className="text-amber-400">DIAGNOSAL</strong> para consultar montos y eficiencia por año y mes.
+          <p className="text-xs text-slate-700 mt-0.5">
+            Filtra de manera independiente entre <strong className="text-emerald-700">LABYMED</strong>, <strong className="text-purple-700">LAB & MED</strong> y <strong className="text-amber-700">DIAGNOSAL</strong> para consultar montos y eficiencia por año y mes.
           </p>
         </div>
 
         {/* Company, Year & Month Selector Bar */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Empresa Selector */}
-          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
-            <Building2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs font-bold text-slate-300">Empresa:</span>
+          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-inner">
+            <Building2 className="w-4 h-4 text-emerald-700" />
+            <span className="text-xs font-bold text-slate-700">Empresa:</span>
             <select
               value={selectedEmpresa}
               onChange={e => setSelectedEmpresa(e.target.value)}
-              className="bg-slate-900 border border-gray-200 rounded-lg text-xs font-bold text-emerald-300 px-3 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-white border border-gray-200 rounded-lg text-xs font-bold text-emerald-700 px-3 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="TODOS">🏢 TODAS LAS EMPRESAS</option>
               <option value="LABYMED">🔵 LABYMED S.A. de C.V.</option>
@@ -462,13 +462,13 @@ export default function DashboardAnalisisPage() {
           </div>
 
           {/* Year Selector */}
-          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
-            <Calendar className="w-4 h-4 text-amber-400" />
-            <span className="text-xs font-bold text-slate-300">Año:</span>
+          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-inner">
+            <Calendar className="w-4 h-4 text-amber-700" />
+            <span className="text-xs font-bold text-slate-700">Año:</span>
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(e.target.value)}
-              className="bg-slate-900 border border-gray-200 rounded-lg text-xs font-bold text-amber-300 px-3 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
+              className="bg-white border border-gray-200 rounded-lg text-xs font-bold text-amber-700 px-3 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
             >
               {yearOptions.map(y => (
                 <option key={y} value={y}>
@@ -479,13 +479,13 @@ export default function DashboardAnalisisPage() {
           </div>
 
           {/* Month Selector Bar */}
-          <div className="flex items-center gap-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 shadow-inner">
-            <Calendar className="w-4 h-4 text-indigo-400" />
-            <span className="text-xs font-bold text-slate-300">Mes:</span>
+          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-inner">
+            <Calendar className="w-4 h-4 text-indigo-700" />
+            <span className="text-xs font-bold text-slate-700">Mes:</span>
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(e.target.value)}
-              className="bg-slate-900 border border-gray-200 rounded-lg text-xs font-bold text-indigo-300 px-3 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="bg-white border border-gray-200 rounded-lg text-xs font-bold text-indigo-700 px-3 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               {MONTH_NAMES.map(m => (
                 <option key={m} value={m}>
@@ -497,7 +497,7 @@ export default function DashboardAnalisisPage() {
 
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-gray-200 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-gray-200 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refrescar</span>
@@ -508,95 +508,95 @@ export default function DashboardAnalisisPage() {
       {/* KPI Cards (Filtered by selectedMonth) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Ofertado */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase">Ofertado ({selectedMonth})</span>
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+            <span className="text-xs font-bold text-slate-700 uppercase">Ofertado ({selectedMonth})</span>
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-700 flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-gray-900 font-mono">
             ${stats.totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-slate-700">
             {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones
           </p>
         </div>
 
         {/* Total Adjudicado */}
-        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-400 uppercase">Adjudicado</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <span className="text-xs font-bold text-emerald-700 uppercase">Adjudicado</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-700 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-emerald-400 font-mono">
+          <p className="text-2xl font-black text-emerald-700 font-mono">
             ${stats.totalAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[11px] text-emerald-300 font-medium">
+          <p className="text-[11px] text-emerald-700 font-medium">
             🟢 {stats.itemsAdjudicadosCount} renglones ganados
           </p>
         </div>
 
         {/* Eficiencia Financiera (%) */}
-        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-violet-300 uppercase">Eficiencia en Montos</span>
-            <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center">
+            <span className="text-xs font-bold text-violet-700 uppercase">Eficiencia en Montos</span>
+            <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-700 flex items-center justify-center">
               <Percent className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-violet-300 font-mono">
+          <p className="text-2xl font-black text-violet-700 font-mono">
             {stats.eficienciaGlobalPct}%
           </p>
-          <p className="text-[11px] text-violet-200">
+          <p className="text-[11px] text-violet-800">
             Monto Adjudicado vs Ofertado ({selectedMonth})
           </p>
         </div>
 
         {/* Renglones Perdidos */}
-        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-rose-400 uppercase">Renglones Perdidos</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+            <span className="text-xs font-bold text-rose-700 uppercase">Renglones Perdidos</span>
+            <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-700 flex items-center justify-center">
               <XCircle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-rose-400 font-mono">
-            {stats.itemsPerdidosCount} <span className="text-xs font-normal text-rose-300">renglones</span>
+          <p className="text-2xl font-black text-rose-700 font-mono">
+            {stats.itemsPerdidosCount} <span className="text-xs font-normal text-rose-700">renglones</span>
           </p>
-          <p className="text-[11px] text-rose-300">
+          <p className="text-[11px] text-rose-700">
             🔴 Competencia (ARSAL, FARLAB, etc.)
           </p>
         </div>
 
         {/* Renglones Desiertos */}
-        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-400 uppercase">Declarados Desiertos</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <span className="text-xs font-bold text-amber-700 uppercase">Declarados Desiertos</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-amber-400 font-mono">
-            {stats.itemsDesiertosCount} <span className="text-xs font-normal text-amber-300">renglones</span>
+          <p className="text-2xl font-black text-amber-700 font-mono">
+            {stats.itemsDesiertosCount} <span className="text-xs font-normal text-amber-700">renglones</span>
           </p>
-          <p className="text-[11px] text-amber-300">
+          <p className="text-[11px] text-amber-700">
             🟡 Sin adjudicatario (Re-oferta)
           </p>
         </div>
       </div>
 
       {/* NUEVO SECTOR: EFICIENCIA EN MONTOS POR MES (%) & COMPARATIVO */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <TrendingUp className="w-4 h-4 text-emerald-700" />
               Eficiencia en Montos Ofertados vs Adjudicados por Mes (%)
             </h3>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-700">
               Desglose mensual de efectividad financiera de capturación de licitaciones ($USD & %)
             </p>
           </div>
@@ -629,9 +629,9 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Tabla Desglosada por Mes */}
-        <div className="overflow-x-auto pt-3 border-t border-slate-800">
+        <div className="overflow-x-auto pt-3 border-t border-slate-200">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+            <thead className="bg-white text-slate-700 font-semibold border-b border-slate-200">
               <tr>
                 <th className="p-2">Mes</th>
                 <th className="p-2 text-right">Monto Ofertado ($)</th>
@@ -641,7 +641,7 @@ export default function DashboardAnalisisPage() {
                 <th className="p-2 text-center">Eficiencia Financiera (%)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-300">
+            <tbody className="divide-y divide-slate-800 text-slate-700">
               {monthlyEfficiencyData.map((row, idx) => {
                 const diff = row['Ofertado ($)'] - row['Adjudicado ($)']
                 const isCurrentFilter = selectedMonth === row.mes
@@ -652,30 +652,30 @@ export default function DashboardAnalisisPage() {
                     className={`cursor-pointer transition ${isCurrentFilter ? 'bg-indigo-600/20 font-bold border-l-4 border-indigo-500' : 'hover:bg-gray-100'}`}
                   >
                     <td className="p-2 font-bold text-gray-900 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-indigo-400" />
+                      <Calendar className="w-3.5 h-3.5 text-indigo-700" />
                       <span>{row.mes}</span>
                     </td>
                     <td className="p-2 text-right font-mono">
                       ${row['Ofertado ($)'].toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                    <td className="p-2 text-right font-mono text-emerald-700 font-bold">
                       ${row['Adjudicado ($)'].toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="p-2 text-right font-mono text-rose-300">
+                    <td className="p-2 text-right font-mono text-rose-700">
                       ${diff.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </td>
                     <td className="p-2 text-center font-mono">
-                      <span className="text-emerald-400 font-bold">{row.countAdj}</span> / {row.countTotal}
+                      <span className="text-emerald-700 font-bold">{row.countAdj}</span> / {row.countTotal}
                     </td>
                     <td className="p-2 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <div className="w-16 bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div className="w-16 bg-slate-100 h-2 rounded-full overflow-hidden">
                           <div 
                             className={`h-full rounded-full ${row['Eficiencia (%)'] >= 70 ? 'bg-emerald-400' : row['Eficiencia (%)'] >= 40 ? 'bg-amber-400' : 'bg-rose-400'}`} 
                             style={{ width: `${Math.min(100, row['Eficiencia (%)'])}%` }}
                           ></div>
                         </div>
-                        <span className={`font-mono font-bold text-xs ${row['Eficiencia (%)'] >= 70 ? 'text-emerald-400' : row['Eficiencia (%)'] >= 40 ? 'text-amber-400' : 'text-rose-400'}`}>
+                        <span className={`font-mono font-bold text-xs ${row['Eficiencia (%)'] >= 70 ? 'text-emerald-700' : row['Eficiencia (%)'] >= 40 ? 'text-amber-700' : 'text-rose-700'}`}>
                           {row['Eficiencia (%)']}%
                         </span>
                       </div>
@@ -689,13 +689,13 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* ── NUEVA GRÁFICA: Licitaciones por Organización ── */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
         <div>
           <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-cyan-400" />
+            <Building2 className="w-4 h-4 text-cyan-700" />
             Licitaciones por Organización ({selectedMonth})
           </h3>
-          <p className="text-[11px] text-slate-400">Número de licitaciones únicas por institución/cliente — Ganadas vs. Perdidas</p>
+          <p className="text-[11px] text-slate-700">Número de licitaciones únicas por institución/cliente — Ganadas vs. Perdidas</p>
         </div>
 
         <div className="h-80 w-full pt-2">
@@ -734,31 +734,31 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Tabla resumen por Organización */}
-        <div className="overflow-x-auto border-t border-slate-800 pt-4">
+        <div className="overflow-x-auto border-t border-slate-200 pt-4">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 text-slate-400 font-semibold border-b border-slate-800">
+            <thead className="bg-white text-slate-700 font-semibold border-b border-slate-200">
               <tr>
                 <th className="p-2">Organización</th>
                 <th className="p-2 text-center">Total Lic.</th>
-                <th className="p-2 text-center text-emerald-400">Ganadas</th>
-                <th className="p-2 text-center text-rose-400">Perdidas</th>
+                <th className="p-2 text-center text-emerald-700">Ganadas</th>
+                <th className="p-2 text-center text-rose-700">Perdidas</th>
                 <th className="p-2 text-center">Efectividad</th>
                 <th className="p-2 text-right">Monto Ofertado</th>
                 <th className="p-2 text-right">Monto Adjudicado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-300">
+            <tbody className="divide-y divide-slate-800 text-slate-700">
               {orgChartData.map((row, idx) => (
                 <tr key={idx} className="hover:bg-gray-100 transition">
                   <td className="p-2 font-bold text-gray-900 max-w-xs">
                     <span title={row.orgFull}>{row.orgFull}</span>
                   </td>
                   <td className="p-2 text-center font-mono font-bold text-gray-900">{row['Total']}</td>
-                  <td className="p-2 text-center font-mono font-bold text-emerald-400">{row['Ganadas']}</td>
-                  <td className="p-2 text-center font-mono font-bold text-rose-400">{row['Perdidas']}</td>
+                  <td className="p-2 text-center font-mono font-bold text-emerald-700">{row['Ganadas']}</td>
+                  <td className="p-2 text-center font-mono font-bold text-rose-700">{row['Perdidas']}</td>
                   <td className="p-2 text-center">
                     <div className="flex items-center justify-center gap-2">
-                      <div className="w-14 bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <div className="w-14 bg-slate-100 h-2 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             row.efectividad >= 60 ? 'bg-emerald-400' : row.efectividad >= 35 ? 'bg-amber-400' : 'bg-rose-400'
@@ -767,14 +767,14 @@ export default function DashboardAnalisisPage() {
                         />
                       </div>
                       <span className={`font-mono font-bold ${
-                        row.efectividad >= 60 ? 'text-emerald-400' : row.efectividad >= 35 ? 'text-amber-400' : 'text-rose-400'
+                        row.efectividad >= 60 ? 'text-emerald-700' : row.efectividad >= 35 ? 'text-amber-700' : 'text-rose-700'
                       }`}>{row.efectividad}%</span>
                     </div>
                   </td>
-                  <td className="p-2 text-right font-mono text-slate-300">
+                  <td className="p-2 text-right font-mono text-slate-700">
                     ${row.montoOfertado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
-                  <td className="p-2 text-right font-mono text-emerald-400 font-bold">
+                  <td className="p-2 text-right font-mono text-emerald-700 font-bold">
                     ${row.montoAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
                 </tr>
@@ -787,14 +787,14 @@ export default function DashboardAnalisisPage() {
       {/* Gráficos Recharts Secundarios: Precios por Prueba & Estado */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Gráfico 1: Comparativo de Precios Labymed vs Competencia */}
-        <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-indigo-400" />
+                <BarChart3 className="w-4 h-4 text-indigo-700" />
                 Comparativo: Precio Ofertado Labymed vs. Precio Adjudicado Competencia ({selectedMonth})
               </h3>
-              <p className="text-[11px] text-slate-400">Promedio de precios unitarios ($USD) por tipo de prueba diagnóstica</p>
+              <p className="text-[11px] text-slate-700">Promedio de precios unitarios ($USD) por tipo de prueba diagnóstica</p>
             </div>
           </div>
 
@@ -821,13 +821,13 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Gráfico 2: PieChart de Resultados por Renglón */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
           <div>
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <PieIcon className="w-4 h-4 text-indigo-400" />
+              <PieIcon className="w-4 h-4 text-indigo-700" />
               Distribución por Estado ({selectedMonth})
             </h3>
-            <p className="text-[11px] text-slate-400">Proporción de renglones según resolución</p>
+            <p className="text-[11px] text-slate-700">Proporción de renglones según resolución</p>
           </div>
 
           <div className="h-56 w-full flex items-center justify-center">
@@ -857,12 +857,12 @@ export default function DashboardAnalisisPage() {
             )}
           </div>
 
-          <div className="space-y-1.5 pt-2 border-t border-slate-800">
+          <div className="space-y-1.5 pt-2 border-t border-slate-200">
             {chartStatusData.map((item, idx) => (
               <div key={idx} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></span>
-                  <span className="text-slate-300 font-medium">{item.name}</span>
+                  <span className="text-slate-700 font-medium">{item.name}</span>
                 </div>
                 <span className="font-mono font-bold text-gray-900">{item.value} renglones</span>
               </div>
@@ -872,40 +872,40 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* Tabla de Inteligencia Competitiva */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl space-y-4 p-4">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm space-y-4 p-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <Tag className="w-4 h-4 text-indigo-400" />
+              <Tag className="w-4 h-4 text-indigo-700" />
               Kardex de Renglones e Inteligencia Competitiva ({selectedMonth})
             </h3>
-            <p className="text-[11px] text-slate-400">Búsqueda y filtrado por ganador, producto o cliente institucional</p>
+            <p className="text-[11px] text-slate-700">Búsqueda y filtrado por ganador, producto o cliente institucional</p>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Filter buttons */}
-            <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px]">
+            <div className="flex items-center bg-white p-1 rounded-xl border border-slate-200 text-[11px]">
               <button
                 onClick={() => setSelectedFilterStatus('todos')}
-                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'todos' ? 'bg-indigo-600 text-gray-900 font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'todos' ? 'bg-indigo-600 text-gray-900 font-bold' : 'text-slate-700 hover:text-slate-800'}`}
               >
                 Todos
               </button>
               <button
                 onClick={() => setSelectedFilterStatus('adjudicada')}
-                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'adjudicada' ? 'bg-emerald-600 text-gray-900 font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'adjudicada' ? 'bg-emerald-600 text-gray-900 font-bold' : 'text-slate-700 hover:text-slate-800'}`}
               >
                 Adjudicadas
               </button>
               <button
                 onClick={() => setSelectedFilterStatus('perdida')}
-                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'perdida' ? 'bg-rose-600 text-gray-900 font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'perdida' ? 'bg-rose-600 text-gray-900 font-bold' : 'text-slate-700 hover:text-slate-800'}`}
               >
                 Perdidas
               </button>
               <button
                 onClick={() => setSelectedFilterStatus('desierta')}
-                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'desierta' ? 'bg-amber-600 text-gray-900 font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                className={`px-2.5 py-1 rounded-lg transition ${selectedFilterStatus === 'desierta' ? 'bg-amber-600 text-gray-900 font-bold' : 'text-slate-700 hover:text-slate-800'}`}
               >
                 Desiertas
               </button>
@@ -919,7 +919,7 @@ export default function DashboardAnalisisPage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Buscar..."
-                className="w-full pl-9 pr-3 py-1.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+                className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
               />
             </div>
           </div>
@@ -927,7 +927,7 @@ export default function DashboardAnalisisPage() {
 
         <div className="overflow-x-auto max-h-[450px]">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-slate-800 text-slate-400 font-semibold">
+            <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-200 text-slate-700 font-semibold">
               <tr>
                 <th className="p-3">Mes</th>
                 <th className="p-3">Empresa</th>
@@ -942,11 +942,11 @@ export default function DashboardAnalisisPage() {
                 <th className="p-3">Adjudicatario / Competidor</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-300">
+            <tbody className="divide-y divide-slate-800 text-slate-700">
               {loading ? (
                 <tr>
                   <td colSpan={11} className="p-8 text-center text-slate-500">
-                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-indigo-400" />
+                    <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-indigo-700" />
                     Cargando datos de análisis competitivo...
                   </td>
                 </tr>
@@ -959,21 +959,21 @@ export default function DashboardAnalisisPage() {
               ) : (
                 filteredRows.map((row, idx) => (
                   <tr key={idx} className="hover:bg-gray-100 transition">
-                    <td className="p-3 font-bold text-indigo-300 font-mono text-[11px]">
+                    <td className="p-3 font-bold text-indigo-700 font-mono text-[11px]">
                       {row.mes}
                     </td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         row.empresa === 'LABYMED' 
-                          ? 'bg-blue-500/20 text-blue-400 border border-gray-200' 
+                          ? 'bg-blue-500/20 text-blue-700 border border-gray-200' 
                           : (row.empresa === 'LAB&MED' 
-                              ? 'bg-purple-500/20 text-purple-400 border border-gray-200' 
-                              : 'bg-amber-500/20 text-amber-400 border border-gray-200')
+                              ? 'bg-purple-500/20 text-purple-700 border border-gray-200' 
+                              : 'bg-amber-500/20 text-amber-700 border border-gray-200')
                       }`}>
                         {row.empresa}
                       </span>
                     </td>
-                    <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">
+                    <td className="p-3 font-mono text-[11px] text-slate-700 font-bold">
                       {row.licitacion}
                     </td>
                     <td className="p-3 font-medium max-w-xs truncate">
@@ -982,40 +982,40 @@ export default function DashboardAnalisisPage() {
                     <td className="p-3 font-bold text-gray-900 max-w-xs truncate">
                       {row.producto}
                     </td>
-                    <td className="p-3 font-semibold text-slate-400">
+                    <td className="p-3 font-semibold text-slate-700">
                       {row.marca}
                     </td>
                     <td className="p-3 text-right font-mono">
                       {row.cantidad.toLocaleString()}
                     </td>
-                    <td className="p-3 text-right font-mono text-emerald-400 font-semibold">
+                    <td className="p-3 text-right font-mono text-emerald-700 font-semibold">
                       ${row.precioLabymed.toFixed(2)}
                     </td>
-                    <td className="p-3 text-right font-mono text-rose-300 font-semibold">
+                    <td className="p-3 text-right font-mono text-rose-700 font-semibold">
                       {row.precioComp > 0 ? `$${row.precioComp.toFixed(2)}` : '-'}
                     </td>
                     <td className="p-3 text-center">
                       {row.status === 'ADJUDICADA' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-gray-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
                           🟢 ADJUDICADA
                         </span>
                       ) : row.status === 'DESIERTA' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-gray-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 border border-gray-200">
                           🟡 DESIERTA
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-gray-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-gray-200">
                           🔴 PERDIDA
                         </span>
                       )}
                     </td>
                     <td className="p-3 font-bold">
                       {row.status === 'ADJUDICADA' ? (
-                        <span className="text-emerald-400">LABYMED</span>
+                        <span className="text-emerald-700">LABYMED</span>
                       ) : row.status === 'DESIERTA' ? (
-                        <span className="text-amber-300 font-normal">Sin Adjudicatario</span>
+                        <span className="text-amber-700 font-normal">Sin Adjudicatario</span>
                       ) : (
-                        <span className="text-rose-400">{row.winner}</span>
+                        <span className="text-rose-700">{row.winner}</span>
                       )}
                     </td>
                   </tr>
@@ -1027,51 +1027,51 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* ─── SLIDE: ANÁLISIS DE PÉRDIDAS ─── */}
-      <div className="bg-slate-950 border border-gray-200 rounded-2xl p-6 space-y-6 shadow-md">
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-6 shadow-sm">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-rose-400 uppercase tracking-widest mb-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-rose-700 uppercase tracking-widest mb-1">
               <XCircle className="w-4 h-4" />
               Slide de Pérdidas • {selectedMonth} {selectedYear !== 'TODOS' ? selectedYear : ''} {selectedEmpresa !== 'TODOS' ? `• ${selectedEmpresa}` : ''}
             </div>
             <h2 className="text-xl font-black text-gray-900">Análisis Completo de Licitaciones Perdidas</h2>
-            <p className="text-[11px] text-slate-400 mt-0.5">Todos los renglones donde la competencia obtuvo la adjudicación</p>
+            <p className="text-[11px] text-slate-700 mt-0.5">Todos los renglones donde la competencia obtuvo la adjudicación</p>
           </div>
         </div>
 
         {/* KPIs de Pérdidas */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-rose-950/40 border border-gray-200 rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-rose-300 uppercase mb-1">Total Perdido ($)</p>
-            <p className="text-2xl font-black text-rose-400 font-mono">
+          <div className="bg-rose-50 border border-gray-200 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-rose-700 uppercase mb-1">Total Perdido ($)</p>
+            <p className="text-2xl font-black text-rose-700 font-mono">
               ${perdidasData.totalMonto.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
-            <p className="text-[10px] text-rose-300 mt-1">{perdidasData.rows.length} renglones perdidos</p>
+            <p className="text-[10px] text-rose-700 mt-1">{perdidasData.rows.length} renglones perdidos</p>
           </div>
-          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Competidores Distintos</p>
+          <div className="bg-white border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-700 uppercase mb-1">Competidores Distintos</p>
             <p className="text-2xl font-black text-gray-900 font-mono">{perdidasData.byCompetidor.length}</p>
-            <p className="text-[10px] text-slate-400 mt-1">empresas que ganaron</p>
+            <p className="text-[10px] text-slate-700 mt-1">empresas que ganaron</p>
           </div>
-          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Principal Competidor</p>
-            <p className="text-sm font-black text-amber-400 leading-tight">{perdidasData.byCompetidor[0]?.nameFull || '-'}</p>
-            <p className="text-[10px] text-slate-400 mt-1">
+          <div className="bg-white border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-700 uppercase mb-1">Principal Competidor</p>
+            <p className="text-sm font-black text-amber-700 leading-tight">{perdidasData.byCompetidor[0]?.nameFull || '-'}</p>
+            <p className="text-[10px] text-slate-700 mt-1">
               ${(perdidasData.byCompetidor[0]?.monto || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </p>
           </div>
-          <div className="bg-slate-900/60 border border-slate-700 rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-slate-400 uppercase mb-1">Cliente con Mayor Pérdida</p>
-            <p className="text-sm font-black text-cyan-400 leading-tight">{perdidasData.topCliente}</p>
-            <p className="text-[10px] text-slate-400 mt-1">mayor monto no capturado</p>
+          <div className="bg-white border border-slate-700 rounded-2xl p-4">
+            <p className="text-[11px] font-bold text-slate-700 uppercase mb-1">Cliente con Mayor Pérdida</p>
+            <p className="text-sm font-black text-cyan-700 leading-tight">{perdidasData.topCliente}</p>
+            <p className="text-[10px] text-slate-700 mt-1">mayor monto no capturado</p>
           </div>
         </div>
 
         {/* Gráfica: Monto Perdido por Competidor */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4">
           <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-            <BarChart3 className="w-4 h-4 text-rose-400" />
+            <BarChart3 className="w-4 h-4 text-rose-700" />
             Monto Perdido por Competidor ($USD)
           </h3>
           <div className="h-64 w-full">
@@ -1100,7 +1100,7 @@ export default function DashboardAnalisisPage() {
         {/* Tabla Detallada de Pérdidas */}
         <div className="overflow-x-auto max-h-[420px]">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-gray-200 text-slate-400 font-semibold">
+            <thead className="sticky top-0 bg-white backdrop-blur border-b border-gray-200 text-slate-700 font-semibold">
               <tr>
                 <th className="p-3">Mes</th>
                 <th className="p-3">Empresa</th>
@@ -1114,7 +1114,7 @@ export default function DashboardAnalisisPage() {
                 <th className="p-3">Competidor Ganador</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+            <tbody className="divide-y divide-slate-800/60 text-slate-700">
               {perdidasData.rows.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="p-8 text-center text-slate-500">
@@ -1124,22 +1124,22 @@ export default function DashboardAnalisisPage() {
               ) : (
                 perdidasData.rows.map((row, idx) => (
                   <tr key={idx} className="hover:bg-gray-100 transition">
-                    <td className="p-3 font-bold text-rose-300 font-mono text-[11px]">{row.mes}</td>
+                    <td className="p-3 font-bold text-rose-700 font-mono text-[11px]">{row.mes}</td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        row.empresa === 'LABYMED' ? 'bg-blue-500/20 text-blue-400 border border-gray-200'
-                        : row.empresa === 'LAB&MED' ? 'bg-purple-500/20 text-purple-400 border border-gray-200'
-                        : 'bg-amber-500/20 text-amber-400 border border-gray-200'
+                        row.empresa === 'LABYMED' ? 'bg-blue-500/20 text-blue-700 border border-gray-200'
+                        : row.empresa === 'LAB&MED' ? 'bg-purple-500/20 text-purple-700 border border-gray-200'
+                        : 'bg-amber-500/20 text-amber-700 border border-gray-200'
                       }`}>{row.empresa}</span>
                     </td>
-                    <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">{row.licitacion}</td>
+                    <td className="p-3 font-mono text-[11px] text-slate-700 font-bold">{row.licitacion}</td>
                     <td className="p-3 font-medium max-w-[160px] truncate" title={row.cliente}>{row.cliente}</td>
                     <td className="p-3 font-bold text-gray-900 max-w-[180px] truncate" title={row.producto}>{row.producto}</td>
-                    <td className="p-3 text-slate-400">{row.marca}</td>
+                    <td className="p-3 text-slate-700">{row.marca}</td>
                     <td className="p-3 text-right font-mono">{row.cantidad.toLocaleString()}</td>
-                    <td className="p-3 text-right font-mono text-slate-300">${row.precioLabymed.toFixed(4)}</td>
-                    <td className="p-3 text-right font-mono text-rose-400 font-bold">${row.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td className="p-3 font-bold text-amber-300">{row.winner !== 'N/A' ? row.winner : '-'}</td>
+                    <td className="p-3 text-right font-mono text-slate-700">${row.precioLabymed.toFixed(4)}</td>
+                    <td className="p-3 text-right font-mono text-rose-700 font-bold">${row.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-3 font-bold text-amber-700">{row.winner !== 'N/A' ? row.winner : '-'}</td>
                   </tr>
                 ))
               )}

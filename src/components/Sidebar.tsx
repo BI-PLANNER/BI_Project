@@ -144,7 +144,7 @@ export default function Sidebar() {
       }`}
     >
       {/* Logo Hub */}
-      <div className="flex items-center px-3.5 h-16 border-b border-white/[0.08] bg-slate-950/60 backdrop-blur-xl">
+      <div className="flex items-center px-3.5 h-16 border-b border-gray-200/[0.08] bg-white backdrop-blur-xl">
         <LabMedLogo size={collapsed ? 38 : 40} showText={!collapsed} glowing={true} />
       </div>
 
@@ -160,11 +160,11 @@ export default function Sidebar() {
               title={collapsed ? item.label : undefined}
             >
               <div className="flex items-center gap-3">
-                <item.icon className="w-5 h-5 flex-shrink-0 text-indigo-400" />
+                <item.icon className="w-5 h-5 flex-shrink-0 text-indigo-700" />
                 {!collapsed && <span className="font-semibold text-xs">{item.label}</span>}
               </div>
               {!collapsed && (item as any).badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-gray-200'}`}>
+                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-700 border-gray-200'}`}>
                   {(item as any).badge}
                 </span>
               )}
@@ -180,15 +180,15 @@ export default function Sidebar() {
 
       {/* Active User RACI Profile */}
       {!collapsed ? (
-        <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-1.5">
+        <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-slate-200 space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-gray-500">Usuario Activo</span>
             <span className={`badge ${
               userProfile.isLuisOrellana
-                ? 'bg-teal-500/20 text-teal-300 border border-gray-200'
+                ? 'bg-teal-500/20 text-teal-700 border border-gray-200'
                 : userProfile.isGerenteGeneral
-                ? 'bg-amber-500/20 text-amber-300 border border-gray-200'
-                : 'bg-indigo-500/20 text-indigo-300'
+                ? 'bg-amber-500/20 text-amber-700 border border-gray-200'
+                : 'bg-indigo-500/20 text-indigo-700'
             } text-[9px] px-1.5 font-mono`}>
               {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
             </span>
@@ -209,10 +209,10 @@ export default function Sidebar() {
               </p>
               <p className={`text-[10px] ${
                 userProfile.isLuisOrellana
-                  ? 'text-teal-300'
+                  ? 'text-teal-700'
                   : userProfile.isGerenteGeneral
-                  ? 'text-amber-300'
-                  : 'text-indigo-300'
+                  ? 'text-amber-700'
+                  : 'text-indigo-700'
               } font-semibold truncate`}>
                 {userProfile.departamento}
               </p>
@@ -225,7 +225,7 @@ export default function Sidebar() {
       <div className="px-3 pb-4 space-y-2">
         <button
           onClick={handleLogout}
-          className="sidebar-link w-full text-left hover:!text-red-400 hover:!bg-red-500/8"
+          className="sidebar-link w-full text-left hover:!text-red-700 hover:!bg-red-500/8"
           title={collapsed ? 'Cerrar sesión' : undefined}
         >
           <LogOut className="w-5 h-5 flex-shrink-0" />

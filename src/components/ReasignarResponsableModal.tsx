@@ -202,13 +202,13 @@ export default function ReasignarResponsableModal({
   const selectedMemberInfo = TEAM_MEMBERS.find(m => m.nombre === (isCustomResponsable ? responsableCustom : responsable))
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto animate-fade-in">
-      <div className="glass-card w-full max-w-2xl p-6 rounded-3xl border border-gray-200 shadow-md space-y-5 my-8 max-h-[92vh] overflow-y-auto bg-white border border-gray-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 backdrop-blur-md p-4 overflow-y-auto animate-fade-in">
+      <div className="glass-card w-full max-w-2xl p-6 rounded-3xl border border-gray-200 shadow-sm space-y-5 my-8 max-h-[92vh] overflow-y-auto bg-white border border-gray-200">
         
         {/* Modal Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-gray-200 shadow-sm">
+            <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-700 border border-gray-200 shadow-sm">
               <ArrowRightLeft className="w-6 h-6" />
             </div>
             <div>
@@ -216,36 +216,36 @@ export default function ReasignarResponsableModal({
                 <h3 className="text-lg font-black text-gray-900 tracking-tight">
                   Editar y Reasignar Responsabilidad
                 </h3>
-                <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs">
+                <span className="badge bg-indigo-500/20 text-indigo-700 font-mono font-bold text-xs">
                   Hito #{item.item_num || item.id}
                 </span>
               </div>
               <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
                 <span className="text-gray-600 font-bold">{item.cliente}</span>
                 <span>•</span>
-                <span className="font-mono text-yellow-300">{item.numero_contrato}</span>
+                <span className="font-mono text-yellow-700">{item.numero_contrato}</span>
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-white/10 text-gray-500 hover:text-gray-900 transition cursor-pointer"
+            className="p-2 rounded-xl hover:bg-slate-100 text-gray-500 hover:text-gray-900 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {savedSuccess && (
-          <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-gray-200 text-emerald-300 text-xs font-bold flex items-center gap-2 animate-scale-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-gray-200 text-emerald-700 text-xs font-bold flex items-center gap-2 animate-scale-in">
+            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
             <span>¡Cambios guardados y responsabilidad reasignada con éxito! Actualizando tablero...</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="p-3.5 rounded-2xl bg-red-500/20 border border-gray-200 text-red-300 text-xs font-bold flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-red-500/20 border border-gray-200 text-red-700 text-xs font-bold flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-700 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -253,10 +253,10 @@ export default function ReasignarResponsableModal({
         <form onSubmit={handleSave} className="space-y-4 text-xs">
 
           {/* 1. SELECCIÓN DE RESPONSABLE */}
-          <div className="p-4 rounded-2xl bg-slate-950/80 border border-gray-200 space-y-3">
-            <label className="text-xs font-black text-indigo-300 uppercase tracking-wider flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-white border border-gray-200 space-y-3">
+            <label className="text-xs font-black text-indigo-700 uppercase tracking-wider flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <UserCheck className="w-4 h-4 text-indigo-400" />
+                <UserCheck className="w-4 h-4 text-indigo-700" />
                 Asignar / Reasignar a Persona del Equipo:
               </span>
               <span className="text-[10px] text-gray-500 font-normal">Escoge de la lista oficial</span>
@@ -266,7 +266,7 @@ export default function ReasignarResponsableModal({
               <select
                 value={isCustomResponsable ? 'CUSTOM' : responsable}
                 onChange={(e) => handleResponsableSelect(e.target.value)}
-                className="w-full bg-slate-900 text-gray-900 font-bold text-xs rounded-xl p-3 border border-white/15 focus:border-indigo-500 outline-none cursor-pointer"
+                className="w-full bg-white text-gray-900 font-bold text-xs rounded-xl p-3 border border-gray-200 focus:border-indigo-500 outline-none cursor-pointer"
               >
                 {TEAM_MEMBERS.map((m) => (
                   <option key={m.nombre} value={m.nombre}>
@@ -282,18 +282,18 @@ export default function ReasignarResponsableModal({
                   placeholder="Escribe el nombre completo del responsable..."
                   value={responsableCustom}
                   onChange={(e) => setResponsableCustom(e.target.value)}
-                  className="w-full bg-slate-900 text-gray-900 font-bold text-xs rounded-xl p-3 border border-gray-200 focus:border-indigo-400 outline-none"
+                  className="w-full bg-white text-gray-900 font-bold text-xs rounded-xl p-3 border border-gray-200 focus:border-indigo-400 outline-none"
                   autoFocus
                 />
               ) : (
-                <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5 flex items-center justify-between">
+                <div className="p-2.5 rounded-xl bg-white border border-gray-200 flex items-center justify-between">
                   <div className="truncate">
                     <span className="text-[10px] text-gray-500 block">Rol / Especialidad:</span>
-                    <span className="text-indigo-200 font-bold text-xs truncate block">
+                    <span className="text-indigo-800 font-bold text-xs truncate block">
                       {selectedMemberInfo?.rol || 'Responsable Asignado'}
                     </span>
                   </div>
-                  <span className="badge bg-indigo-500/20 text-indigo-300 text-[10px] font-mono shrink-0 ml-2">
+                  <span className="badge bg-indigo-500/20 text-indigo-700 text-[10px] font-mono shrink-0 ml-2">
                     {selectedMemberInfo?.email}
                   </span>
                 </div>
@@ -305,13 +305,13 @@ export default function ReasignarResponsableModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5 text-cyan-400" />
+                <Building2 className="w-3.5 h-3.5 text-cyan-700" />
                 Área Operativa Responsable:
               </label>
               <select
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                className="w-full bg-slate-950 text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-white/10 focus:border-cyan-500 outline-none cursor-pointer"
+                className="w-full bg-white text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-slate-200 focus:border-cyan-500 outline-none cursor-pointer"
               >
                 {AREAS_LIST.map((a) => (
                   <option key={a} value={a}>📁 {a}</option>
@@ -321,13 +321,13 @@ export default function ReasignarResponsableModal({
 
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <Tag className="w-3.5 h-3.5 text-purple-400" />
+                <Tag className="w-3.5 h-3.5 text-purple-700" />
                 Tipo de Pendiente:
               </label>
               <select
                 value={tipoPendiente}
                 onChange={(e) => setTipoPendiente(e.target.value)}
-                className="w-full bg-slate-950 text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-white/10 focus:border-purple-500 outline-none cursor-pointer"
+                className="w-full bg-white text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-slate-200 focus:border-purple-500 outline-none cursor-pointer"
               >
                 <option value="CONTRATO">📄 Obligación de Contrato (CONTRATO)</option>
                 <option value="VISITA - LUIS">🛠️ Adecuación Técnica (VISITA - LUIS)</option>
@@ -339,21 +339,21 @@ export default function ReasignarResponsableModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                <Calendar className="w-3.5 h-3.5 text-emerald-700" />
                 Fecha Límite / Cumplimiento:
               </label>
               <input
                 type="date"
                 value={fechaCumplimiento}
                 onChange={(e) => setFechaCumplimiento(e.target.value)}
-                className="w-full bg-slate-950 text-emerald-400 font-mono font-bold text-xs rounded-xl p-2.5 border border-white/10 focus:border-emerald-500 outline-none cursor-pointer"
+                className="w-full bg-white text-emerald-700 font-mono font-bold text-xs rounded-xl p-2.5 border border-slate-200 focus:border-emerald-500 outline-none cursor-pointer"
                 required
               />
             </div>
 
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
                 Estado del Semáforo:
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -362,8 +362,8 @@ export default function ReasignarResponsableModal({
                   onClick={() => setEstatus('Rojo')}
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Rojo'
-                      ? 'bg-red-500/30 border-red-500 text-red-200 ring-2 ring-red-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-500 hover:bg-gray-100'
+                      ? 'bg-red-500/30 border-red-500 text-red-800 ring-2 ring-red-500/50'
+                      : 'bg-white border-slate-200 text-gray-500 hover:bg-gray-100'
                   }`}
                 >
                   🔴 Rojo (Crítico)
@@ -373,8 +373,8 @@ export default function ReasignarResponsableModal({
                   onClick={() => setEstatus('Anaranjado')}
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Anaranjado'
-                      ? 'bg-amber-500/30 border-amber-500 text-amber-200 ring-2 ring-amber-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-500 hover:bg-gray-100'
+                      ? 'bg-amber-500/30 border-amber-500 text-amber-800 ring-2 ring-amber-500/50'
+                      : 'bg-white border-slate-200 text-gray-500 hover:bg-gray-100'
                   }`}
                 >
                   🟠 Naranja
@@ -384,8 +384,8 @@ export default function ReasignarResponsableModal({
                   onClick={() => setEstatus('Verde')}
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Verde'
-                      ? 'bg-emerald-500/30 border-emerald-500 text-emerald-200 ring-2 ring-emerald-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-500 hover:bg-gray-100'
+                      ? 'bg-emerald-500/30 border-emerald-500 text-emerald-800 ring-2 ring-emerald-500/50'
+                      : 'bg-white border-slate-200 text-gray-500 hover:bg-gray-100'
                   }`}
                 >
                   🟢 Verde (En Plazo)
@@ -398,7 +398,7 @@ export default function ReasignarResponsableModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-pink-400" />
+                <MapPin className="w-3.5 h-3.5 text-pink-700" />
                 Ubicación Hospitalaria / Área Interna:
               </label>
               <input
@@ -407,7 +407,7 @@ export default function ReasignarResponsableModal({
                 placeholder="Ej. LABORATORIO, QUÍMICA CLÍNICA..."
                 value={ubicacion}
                 onChange={(e) => setUbicacion(e.target.value.toUpperCase())}
-                className="w-full bg-slate-950 text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-white/10 focus:border-pink-500 outline-none"
+                className="w-full bg-white text-gray-900 font-bold text-xs rounded-xl p-2.5 border border-slate-200 focus:border-pink-500 outline-none"
               />
               <datalist id="ubicaciones-list">
                 {UBICACIONES_PRESET.map((u) => (
@@ -418,7 +418,7 @@ export default function ReasignarResponsableModal({
 
             <div>
               <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-                <FileText className="w-3.5 h-3.5 text-yellow-400" />
+                <FileText className="w-3.5 h-3.5 text-yellow-700" />
                 Situación / Tarea Principal:
               </label>
               <input
@@ -426,7 +426,7 @@ export default function ReasignarResponsableModal({
                 placeholder="Descripción de la tarea u obligación..."
                 value={situacion}
                 onChange={(e) => setSituacion(e.target.value)}
-                className="w-full bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2.5 border border-white/10 focus:border-yellow-500 outline-none"
+                className="w-full bg-white text-gray-900 font-semibold text-xs rounded-xl p-2.5 border border-slate-200 focus:border-yellow-500 outline-none"
                 required
               />
             </div>
@@ -435,7 +435,7 @@ export default function ReasignarResponsableModal({
           {/* 5. COMENTARIO / BITÁCORA DEL PLANNER */}
           <div>
             <label className="text-[10px] font-bold text-gray-500 uppercase mb-1.5 block flex items-center gap-1">
-              <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+              <MessageSquare className="w-3.5 h-3.5 text-indigo-700" />
               Comentario de Seguimiento / Notas del Planner:
             </label>
             <textarea
@@ -443,14 +443,14 @@ export default function ReasignarResponsableModal({
               placeholder="Detalla acuerdos, seguimiento o razón de la reasignación..."
               value={comentario}
               onChange={(e) => setComentario(e.target.value)}
-              className="w-full bg-slate-950 text-gray-700 text-xs rounded-xl p-3 border border-white/10 focus:border-indigo-500 outline-none resize-none"
+              className="w-full bg-white text-gray-700 text-xs rounded-xl p-3 border border-slate-200 focus:border-indigo-500 outline-none resize-none"
             />
           </div>
 
           {/* 6. TOGGLE NOTIFICACIÓN POR CORREO */}
-          <div className="p-3 rounded-2xl bg-indigo-950/40 border border-gray-200 flex items-center justify-between">
+          <div className="p-3 rounded-2xl bg-indigo-50 border border-gray-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-indigo-400" />
+              <Bell className="w-4 h-4 text-indigo-700" />
               <div>
                 <span className="text-gray-900 font-bold text-xs block">
                   Notificación Automática
@@ -469,11 +469,11 @@ export default function ReasignarResponsableModal({
           </div>
 
           {/* BOTONES DE ACCIÓN */}
-          <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-2.5">
+          <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 text-gray-600 font-bold text-xs hover:bg-slate-700 transition cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 text-gray-600 font-bold text-xs hover:bg-slate-700 transition cursor-pointer"
               disabled={saving}
             >
               Cancelar
@@ -486,7 +486,7 @@ export default function ReasignarResponsableModal({
             >
               {saving ? (
                 <>
-                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-3.5 h-3.5 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
                   <span>Guardando...</span>
                 </>
               ) : (

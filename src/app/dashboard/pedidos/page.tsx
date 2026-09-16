@@ -151,9 +151,9 @@ export default function EntregasYPedidosPage() {
         { motivo: 'Dirección o Acceso Restringido', cantidad: 1, pct: 8 }
       ],
       macro_zonas: [
-        { zona: 'Zona Central', pedidos: 218, pct: 68.1, color: 'from-cyan-500 to-blue-600', badge: 'bg-cyan-500/20 text-cyan-300 border-gray-200' },
-        { zona: 'Zona Occidental', pedidos: 64, pct: 20.0, color: 'from-emerald-500 to-teal-600', badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200' },
-        { zona: 'Zona Oriental', pedidos: 38, pct: 11.9, color: 'from-amber-500 to-orange-600', badge: 'bg-amber-500/20 text-amber-300 border-gray-200' }
+        { zona: 'Zona Central', pedidos: 218, pct: 68.1, color: 'from-cyan-500 to-blue-600', badge: 'bg-cyan-500/20 text-cyan-700 border-gray-200' },
+        { zona: 'Zona Occidental', pedidos: 64, pct: 20.0, color: 'from-emerald-500 to-teal-600', badge: 'bg-emerald-500/20 text-emerald-700 border-gray-200' },
+        { zona: 'Zona Oriental', pedidos: 38, pct: 11.9, color: 'from-amber-500 to-orange-600', badge: 'bg-amber-500/20 text-amber-700 border-gray-200' }
       ],
       hospitales_top: [
         { hospital: 'HOSPITAL NACIONAL ROSALES', pedidos: 42, rutas: 14, ratio: 3.0, urgentes: 8, pod_pct: 95 },
@@ -263,16 +263,16 @@ export default function EntregasYPedidosPage() {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
       {/* Cabecera Principal */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white border border-gray-200 p-6 rounded-3xl border border-white/10 shadow-md">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white border border-gray-200 p-6 rounded-3xl border border-slate-200 shadow-sm">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1.5">
-            <Truck className="w-4 h-4 text-cyan-400 animate-pulse" />
+          <div className="flex items-center gap-2 text-xs font-bold text-cyan-700 uppercase tracking-widest mb-1.5">
+            <Truck className="w-4 h-4 text-cyan-700 animate-pulse" />
             <span>Módulo de Logística • Google Sheets `DBlabymed` $\rightarrow$ Supabase</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2.5">
             <span>Envíos, Mensajería & Optimización de Rutas</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl">
+          <p className="text-xs sm:text-sm text-slate-700 mt-1 max-w-3xl">
             Monitoreo en vivo de productividad de motoristas, efectividad de entrega hospitalaria, semáforo de urgencias y densidad de macro-rutas.
           </p>
         </div>
@@ -281,9 +281,9 @@ export default function EntregasYPedidosPage() {
           <button
             onClick={handleSyncSheets}
             disabled={syncing}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600/20 hover:bg-gray-100 text-cyan-300 border border-gray-200 text-xs font-bold transition shadow-sm cursor-pointer active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600/20 hover:bg-gray-100 text-cyan-700 border border-gray-200 text-xs font-bold transition shadow-sm cursor-pointer active:scale-95 disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin text-cyan-400' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin text-cyan-700' : ''}`} />
             <span>{syncing ? 'Sincronizando n8n...' : 'Sincronizar Google Sheets'}</span>
           </button>
 
@@ -312,8 +312,8 @@ export default function EntregasYPedidosPage() {
       {notification && (
         <div className={`p-4 rounded-2xl flex items-center justify-between text-xs font-medium border animate-fade-in ${
           notification.type === 'success'
-            ? 'bg-emerald-500/15 text-emerald-200 border-gray-200'
-            : 'bg-rose-500/15 text-rose-200 border-gray-200'
+            ? 'bg-emerald-500/15 text-emerald-800 border-gray-200'
+            : 'bg-rose-500/15 text-rose-800 border-gray-200'
         }`}>
           <div className="flex items-center gap-2.5">
             <CheckCircle className="w-4 h-4 flex-shrink-0" />
@@ -326,74 +326,74 @@ export default function EntregasYPedidosPage() {
       {/* TARJETAS DE KPIs ESTRATÉGICOS (Fórmulas Matemáticas COUNT, SUM, AVG, %) */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Total Pedidos */}
-        <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Envíos</span>
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400"><Package className="w-4 h-4" /></div>
+            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Total Envíos</span>
+            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-700"><Package className="w-4 h-4" /></div>
           </div>
           <div className="mt-2">
             <div className="text-2xl font-black text-gray-900 font-mono">{logisticsData.kpis.total_pedidos}</div>
-            <p className="text-[10px] text-slate-400 mt-0.5">COUNT(PedidoID) en DBlabymed</p>
+            <p className="text-[10px] text-slate-700 mt-0.5">COUNT(PedidoID) en DBlabymed</p>
           </div>
         </div>
 
         {/* Tasa de Efectividad */}
-        <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Efectividad Motoristas</span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400"><TrendingUp className="w-4 h-4" /></div>
+            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Efectividad Motoristas</span>
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-700"><TrendingUp className="w-4 h-4" /></div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-emerald-400 font-mono">{logisticsData.kpis.tasa_efectividad_global}%</div>
-            <p className="text-[10px] text-slate-400 mt-0.5">Entregados OK en 1er intento</p>
+            <div className="text-2xl font-black text-emerald-700 font-mono">{logisticsData.kpis.tasa_efectividad_global}%</div>
+            <p className="text-[10px] text-slate-700 mt-0.5">Entregados OK en 1er intento</p>
           </div>
         </div>
 
         {/* Urgencias */}
-        <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Urgencias Hospital</span>
-            <div className="p-2 rounded-xl bg-rose-500/10 text-rose-400"><Zap className="w-4 h-4" /></div>
+            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Urgencias Hospital</span>
+            <div className="p-2 rounded-xl bg-rose-500/10 text-rose-700"><Zap className="w-4 h-4" /></div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-rose-400 font-mono">{logisticsData.kpis.total_urgentes} <span className="text-xs text-slate-400 font-normal">({logisticsData.kpis.pct_urgentes}%)</span></div>
-            <p className="text-[10px] text-slate-400 mt-0.5">Prioridad &lt; 24h despachada</p>
+            <div className="text-2xl font-black text-rose-700 font-mono">{logisticsData.kpis.total_urgentes} <span className="text-xs text-slate-700 font-normal">({logisticsData.kpis.pct_urgentes}%)</span></div>
+            <p className="text-[10px] text-slate-700 mt-0.5">Prioridad &lt; 24h despachada</p>
           </div>
         </div>
 
         {/* Consolidación de Carga */}
-        <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Índice Consolidación</span>
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400"><Compass className="w-4 h-4" /></div>
+            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Índice Consolidación</span>
+            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-700"><Compass className="w-4 h-4" /></div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-purple-300 font-mono">{logisticsData.kpis.indice_consolidacion_carga}x</div>
-            <p className="text-[10px] text-slate-400 mt-0.5">Pedidos / Parada hospitalaria</p>
+            <div className="text-2xl font-black text-purple-700 font-mono">{logisticsData.kpis.indice_consolidacion_carga}x</div>
+            <p className="text-[10px] text-slate-700 mt-0.5">Pedidos / Parada hospitalaria</p>
           </div>
         </div>
 
         {/* Control Documental POD */}
-        <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition col-span-2 lg:col-span-1">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group hover:border-gray-200 transition col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">POD Sello Digital</span>
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400"><FileCheck className="w-4 h-4" /></div>
+            <span className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">POD Sello Digital</span>
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-700"><FileCheck className="w-4 h-4" /></div>
           </div>
           <div className="mt-2">
-            <div className="text-2xl font-black text-blue-300 font-mono">{logisticsData.kpis.total_con_comprobante_pdf} <span className="text-xs text-slate-400 font-normal">({Math.round((logisticsData.kpis.total_con_comprobante_pdf / logisticsData.kpis.total_pedidos) * 100)}%)</span></div>
-            <p className="text-[10px] text-slate-400 mt-0.5">Comprobante PDF firmado</p>
+            <div className="text-2xl font-black text-blue-700 font-mono">{logisticsData.kpis.total_con_comprobante_pdf} <span className="text-xs text-slate-700 font-normal">({Math.round((logisticsData.kpis.total_con_comprobante_pdf / logisticsData.kpis.total_pedidos) * 100)}%)</span></div>
+            <p className="text-[10px] text-slate-700 mt-0.5">Comprobante PDF firmado</p>
           </div>
         </div>
       </div>
 
       {/* Pestañas de Navegación del Módulo */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('analytics')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'analytics'
-              ? 'bg-cyan-500/20 text-cyan-300 border border-gray-200 shadow-sm'
-              : 'text-slate-400 hover:text-gray-900 hover:bg-white/5'
+              ? 'bg-cyan-500/20 text-cyan-700 border border-gray-200 shadow-sm'
+              : 'text-slate-700 hover:text-gray-900 hover:bg-slate-50'
           }`}
         >
           <BarChart3 className="w-3.5 h-3.5" />
@@ -404,8 +404,8 @@ export default function EntregasYPedidosPage() {
           onClick={() => setActiveTab('live_table')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'live_table'
-              ? 'bg-cyan-500/20 text-cyan-300 border border-gray-200 shadow-sm'
-              : 'text-slate-400 hover:text-gray-900 hover:bg-white/5'
+              ? 'bg-cyan-500/20 text-cyan-700 border border-gray-200 shadow-sm'
+              : 'text-slate-700 hover:text-gray-900 hover:bg-slate-50'
           }`}
         >
           <Truck className="w-3.5 h-3.5" />
@@ -416,8 +416,8 @@ export default function EntregasYPedidosPage() {
           onClick={() => setActiveTab('programacion')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'programacion'
-              ? 'bg-cyan-500/20 text-cyan-300 border border-gray-200 shadow-sm'
-              : 'text-slate-400 hover:text-gray-900 hover:bg-white/5'
+              ? 'bg-cyan-500/20 text-cyan-700 border border-gray-200 shadow-sm'
+              : 'text-slate-700 hover:text-gray-900 hover:bg-slate-50'
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
@@ -433,52 +433,52 @@ export default function EntregasYPedidosPage() {
           {/* Fila 1: Productividad de Motoristas vs Matriz de Incidencias */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Ranking y Productividad por Motorista */}
-            <div className="lg:col-span-2 bg-slate-900/80 border border-white/10 rounded-3xl p-6 shadow-xl space-y-4">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <Users className="w-5 h-5 text-cyan-400" />
+                  <Users className="w-5 h-5 text-cyan-700" />
                   <div>
                     <h3 className="text-base font-bold text-gray-900">Productividad & Rendimiento de Motoristas</h3>
-                    <p className="text-xs text-slate-400">Total asignados, entregas exitosas y tasa de efectividad en primer intento</p>
+                    <p className="text-xs text-slate-700">Total asignados, entregas exitosas y tasa de efectividad en primer intento</p>
                   </div>
                 </div>
-                <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-gray-200">
+                <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-700 border border-gray-200">
                   4 Motoristas Activos
                 </span>
               </div>
 
               <div className="space-y-3.5 pt-2">
                 {logisticsData.motoristas.map(m => (
-                  <div key={m.motorista_id} className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 space-y-2.5">
+                  <div key={m.motorista_id} className="p-4 rounded-2xl bg-white border border-gray-200 space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded-md border border-gray-200">
+                        <span className="font-mono font-bold text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-md border border-gray-200">
                           {m.motorista_id}
                         </span>
                         <span className="font-bold text-gray-900">{m.nombre}</span>
-                        <span className="text-[10px] text-slate-400">({m.zona})</span>
+                        <span className="text-[10px] text-slate-700">({m.zona})</span>
                       </div>
                       <div className="flex items-center gap-3 font-mono">
-                        <span className="text-slate-400">Asignados: <strong className="text-gray-900">{m.total_asignados}</strong></span>
-                        <span className="text-emerald-400">OK: <strong>{m.entregados_ok}</strong></span>
-                        <span className="text-amber-400 font-bold">{m.efectividad_pct}% Éxito</span>
+                        <span className="text-slate-700">Asignados: <strong className="text-gray-900">{m.total_asignados}</strong></span>
+                        <span className="text-emerald-700">OK: <strong>{m.entregados_ok}</strong></span>
+                        <span className="text-amber-700 font-bold">{m.efectividad_pct}% Éxito</span>
                       </div>
                     </div>
 
                     {/* Barra de Progreso de Efectividad */}
-                    <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex">
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
                       <div
                         className="bg-white border border-gray-200 h-full rounded-full transition-all duration-500"
                         style={{ width: `${m.efectividad_pct}%` }}
                       />
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-                      <span className="flex items-center gap-1 text-rose-300">
-                        <Zap className="w-3 h-3 text-rose-400" />
+                    <div className="flex items-center justify-between text-[11px] text-slate-700 pt-0.5">
+                      <span className="flex items-center gap-1 text-rose-700">
+                        <Zap className="w-3 h-3 text-rose-700" />
                         {m.urgentes_atendidos} Urgencias despachadas
                       </span>
-                      <span>En ruta: <strong className="text-cyan-300">{m.en_ruta}</strong> | Incidencias: <strong className="text-rose-400">{m.incidencias}</strong></span>
+                      <span>En ruta: <strong className="text-cyan-700">{m.en_ruta}</strong> | Incidencias: <strong className="text-rose-700">{m.incidencias}</strong></span>
                     </div>
                   </div>
                 ))}
@@ -486,24 +486,24 @@ export default function EntregasYPedidosPage() {
             </div>
 
             {/* Matriz de Incidencias en Ruta */}
-            <div className="bg-slate-900/80 border border-white/10 rounded-3xl p-6 shadow-xl space-y-4 flex flex-col justify-between">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4 flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2.5 border-b border-white/10 pb-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-400" />
+                <div className="flex items-center gap-2.5 border-b border-slate-200 pb-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-700" />
                   <div>
                     <h3 className="text-base font-bold text-gray-900">Matriz de Incidencias en Ruta</h3>
-                    <p className="text-xs text-slate-400">Desglose de motivos de no entrega</p>
+                    <p className="text-xs text-slate-700">Desglose de motivos de no entrega</p>
                   </div>
                 </div>
 
                 <div className="space-y-3 pt-4">
                   {logisticsData.incidencias_motivos.map((inc, i) => (
-                    <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5 space-y-1.5">
+                    <div key={i} className="p-3.5 rounded-2xl bg-white border border-gray-200 space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-medium">{inc.motivo}</span>
-                        <span className="font-mono font-bold text-amber-400">{inc.cantidad} casos ({inc.pct}%)</span>
+                        <span className="text-slate-700 font-medium">{inc.motivo}</span>
+                        <span className="font-mono font-bold text-amber-700">{inc.cantidad} casos ({inc.pct}%)</span>
                       </div>
-                      <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                      <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                         <div
                           className="bg-white border border-gray-200 h-full rounded-full"
                           style={{ width: `${inc.pct}%` }}
@@ -514,8 +514,8 @@ export default function EntregasYPedidosPage() {
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-cyan-950/30 border border-gray-200 text-xs text-cyan-200 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+              <div className="p-3.5 rounded-2xl bg-cyan-50 border border-gray-200 text-xs text-cyan-800 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-cyan-700 flex-shrink-0" />
                 <span>Protocolo activo: Las incidencias de laboratorio cerrado se reprograman automáticamente para la primera ruta matutina.</span>
               </div>
             </div>
@@ -524,27 +524,27 @@ export default function EntregasYPedidosPage() {
           {/* Fila 2: Densidad Geográfica por Macro-Zonas vs Consolidación Hospitalaria */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Macro-Zonas Logísticas */}
-            <div className="bg-slate-900/80 border border-white/10 rounded-3xl p-6 shadow-xl space-y-4">
-              <div className="flex items-center gap-2.5 border-b border-white/10 pb-3">
-                <MapPin className="w-5 h-5 text-emerald-400" />
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center gap-2.5 border-b border-slate-200 pb-3">
+                <MapPin className="w-5 h-5 text-emerald-700" />
                 <div>
                   <h3 className="text-base font-bold text-gray-900">Densidad por Macro-Zonas</h3>
-                  <p className="text-xs text-slate-400">Concentración territorial de pedidos</p>
+                  <p className="text-xs text-slate-700">Concentración territorial de pedidos</p>
                 </div>
               </div>
 
               <div className="space-y-3.5 pt-2">
                 {logisticsData.macro_zonas.map((z, i) => (
-                  <div key={i} className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 space-y-2">
+                  <div key={i} className="p-4 rounded-2xl bg-white border border-gray-200 space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className={`px-2.5 py-0.5 rounded-full font-bold border ${z.badge}`}>
                         {z.zona}
                       </span>
                       <span className="font-mono font-bold text-gray-900 text-sm">
-                        {z.pedidos} <span className="text-xs text-slate-400 font-normal">({z.pct}%)</span>
+                        {z.pedidos} <span className="text-xs text-slate-700 font-normal">({z.pct}%)</span>
                       </span>
                     </div>
-                    <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
                       <div
                         className={`bg-gradient-to-r ${z.color} h-full rounded-full`}
                         style={{ width: `${z.pct}%` }}
@@ -556,42 +556,42 @@ export default function EntregasYPedidosPage() {
             </div>
 
             {/* Consolidación de Carga por Hospital */}
-            <div className="lg:col-span-2 bg-slate-900/80 border border-white/10 rounded-3xl p-6 shadow-xl space-y-4">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <Building2 className="w-5 h-5 text-purple-400" />
+                  <Building2 className="w-5 h-5 text-purple-700" />
                   <div>
                     <h3 className="text-base font-bold text-gray-900">Consolidación de Carga Hospitalaria</h3>
-                    <p className="text-xs text-slate-400">Eficiencia de paradas: Cantidad de pedidos agrupados por cada viaje al hospital</p>
+                    <p className="text-xs text-slate-700">Eficiencia de paradas: Cantidad de pedidos agrupados por cada viaje al hospital</p>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-purple-300 bg-purple-950/50 px-3 py-1 rounded-xl border border-gray-200">
+                <span className="text-xs font-mono font-bold text-purple-700 bg-purple-50 px-3 py-1 rounded-xl border border-gray-200">
                   Ahorro en Rutas: 38%
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 {logisticsData.hospitales_top.map((h, i) => (
-                  <div key={i} className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5 flex flex-col justify-between space-y-2">
+                  <div key={i} className="p-3.5 rounded-2xl bg-white border border-gray-200 flex flex-col justify-between space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <h4 className="text-xs font-bold text-gray-900 line-clamp-1">{h.hospital}</h4>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-gray-200 font-bold whitespace-nowrap">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-700 border border-gray-200 font-bold whitespace-nowrap">
                         {h.ratio}x Ped/Viaje
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono bg-slate-900/60 p-2 rounded-xl border border-white/5">
+                    <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono bg-white p-2 rounded-xl border border-gray-200">
                       <div>
-                        <div className="text-slate-400">Pedidos</div>
+                        <div className="text-slate-700">Pedidos</div>
                         <div className="text-gray-900 font-bold text-xs">{h.pedidos}</div>
                       </div>
                       <div>
-                        <div className="text-slate-400">Viajes</div>
-                        <div className="text-cyan-300 font-bold text-xs">{h.rutas}</div>
+                        <div className="text-slate-700">Viajes</div>
+                        <div className="text-cyan-700 font-bold text-xs">{h.rutas}</div>
                       </div>
                       <div>
-                        <div className="text-slate-400">POD Sello</div>
-                        <div className="text-emerald-400 font-bold text-xs">{h.pod_pct}%</div>
+                        <div className="text-slate-700">POD Sello</div>
+                        <div className="text-emerald-700 font-bold text-xs">{h.pod_pct}%</div>
                       </div>
                     </div>
                   </div>
@@ -608,7 +608,7 @@ export default function EntregasYPedidosPage() {
       {activeTab === 'live_table' && (
         <div className="space-y-4">
           {/* Barra de Filtros y Búsqueda */}
-          <div className="bg-slate-900/80 border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="relative w-full md:max-w-md">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
@@ -616,7 +616,7 @@ export default function EntregasYPedidosPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar por hospital, pedido, motorista o municipio..."
-                className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
               />
             </div>
 
@@ -624,7 +624,7 @@ export default function EntregasYPedidosPage() {
               <select
                 value={filterEstado}
                 onChange={e => setFilterEstado(e.target.value)}
-                className="px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
               >
                 <option value="todos">Todos los Estados</option>
                 <option value="urgentes">⚡ Solo Urgencias</option>
@@ -636,7 +636,7 @@ export default function EntregasYPedidosPage() {
               <select
                 value={filterZona}
                 onChange={e => setFilterZona(e.target.value)}
-                className="px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
               >
                 <option value="todas">Todas las Zonas</option>
                 <option value="CENTRAL">Zona Central</option>
@@ -647,10 +647,10 @@ export default function EntregasYPedidosPage() {
           </div>
 
           {/* Tabla de Envíos */}
-          <div className="bg-slate-900/80 border border-white/10 rounded-3xl overflow-hidden shadow-xl">
+          <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-slate-300">
-                <thead className="bg-slate-950/80 border-b border-white/10 text-slate-400 font-mono uppercase text-[10px]">
+              <table className="w-full text-left text-xs text-slate-700">
+                <thead className="bg-white border-b border-slate-200 text-slate-700 font-mono uppercase text-[10px]">
                   <tr>
                     <th className="p-3.5">ID Pedido</th>
                     <th className="p-3.5">Hospital / Cliente</th>
@@ -664,20 +664,20 @@ export default function EntregasYPedidosPage() {
                 <tbody className="divide-y divide-white/5 font-sans">
                   {filteredPedidosLive.map((p, idx) => (
                     <tr key={idx} className="hover:bg-white/[0.02] transition">
-                      <td className="p-3.5 font-mono font-bold text-cyan-400">{p.id}</td>
+                      <td className="p-3.5 font-mono font-bold text-cyan-700">{p.id}</td>
                       <td className="p-3.5">
                         <div className="font-bold text-gray-900">{p.hospital}</div>
                         <div className="text-[10px] text-slate-500 font-mono">{p.fecha}</div>
                       </td>
                       <td className="p-3.5">
                         <span className="text-gray-900 font-medium">{p.ciudad}</span>
-                        <div className="text-[10px] text-slate-400">({p.region})</div>
+                        <div className="text-[10px] text-slate-700">({p.region})</div>
                       </td>
-                      <td className="p-3.5 font-mono text-slate-300 font-semibold">{p.motorista}</td>
+                      <td className="p-3.5 font-mono text-slate-700 font-semibold">{p.motorista}</td>
                       <td className="p-3.5 max-w-xs">
-                        <div className="truncate text-slate-300">{p.detalle}</div>
+                        <div className="truncate text-slate-700">{p.detalle}</div>
                         {p.es_urgente && (
-                          <span className="inline-flex items-center gap-1 text-[9.5px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-gray-200 font-bold mt-1">
+                          <span className="inline-flex items-center gap-1 text-[9.5px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-700 border border-gray-200 font-bold mt-1">
                             <Zap className="w-2.5 h-2.5" /> Urgencia 24h
                           </span>
                         )}
@@ -685,18 +685,18 @@ export default function EntregasYPedidosPage() {
                       <td className="p-3.5">
                         <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold font-mono border ${
                           p.estado.includes('Entregado')
-                            ? 'bg-emerald-500/20 text-emerald-300 border-gray-200'
+                            ? 'bg-emerald-500/20 text-emerald-700 border-gray-200'
                             : p.estado.includes('Incidencia')
-                            ? 'bg-rose-500/20 text-rose-300 border-gray-200'
-                            : 'bg-cyan-500/20 text-cyan-300 border-gray-200'
+                            ? 'bg-rose-500/20 text-rose-700 border-gray-200'
+                            : 'bg-cyan-500/20 text-cyan-700 border-gray-200'
                         }`}>
                           {p.estado}
                         </span>
                       </td>
                       <td className="p-3.5 text-center">
                         {p.pdf ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-gray-200 font-mono text-[10px] font-bold">
-                            <FileText className="w-3 h-3 text-blue-400" />
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-500/20 text-blue-700 border border-gray-200 font-mono text-[10px] font-bold">
+                            <FileText className="w-3 h-3 text-blue-700" />
                             PDF Sello
                           </span>
                         ) : (
@@ -720,12 +720,12 @@ export default function EntregasYPedidosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {loading ? (
               <div className="col-span-2 p-12 text-center text-slate-500">
-                <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-cyan-400" />
+                <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-cyan-700" />
                 Cargando entregas desde Supabase...
               </div>
             ) : entregas.length === 0 ? (
-              <div className="col-span-2 p-12 text-center text-slate-500 bg-slate-900/40 border border-white/10 rounded-3xl">
-                <p className="font-bold text-slate-300 text-sm">No hay entregas programadas manuales registradas en Supabase</p>
+              <div className="col-span-2 p-12 text-center text-slate-500 bg-white border border-slate-200 rounded-3xl">
+                <p className="font-bold text-slate-700 text-sm">No hay entregas programadas manuales registradas en Supabase</p>
                 <p className="text-xs text-slate-500 mt-1">Usa el botón &quot;Programar Entrega&quot; para registrar un cronograma oficial.</p>
               </div>
             ) : (
@@ -735,17 +735,17 @@ export default function EntregasYPedidosPage() {
                 return (
                   <div
                     key={ent.entrega_id}
-                    className="bg-slate-900/80 border border-white/10 rounded-2xl p-5 shadow-lg space-y-3 flex flex-col justify-between"
+                    className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-2">
-                        <span className="text-xs font-bold font-mono text-cyan-300">
+                        <span className="text-xs font-bold font-mono text-cyan-700">
                           Entrega #{ent.numero_entrega} • Programada: {ent.fecha_programada}
                         </span>
                         <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold font-mono ${
                           isCompletado
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-gray-200'
-                            : 'bg-amber-500/20 text-amber-300 border border-gray-200'
+                            ? 'bg-emerald-500/20 text-emerald-700 border border-gray-200'
+                            : 'bg-amber-500/20 text-amber-700 border border-gray-200'
                         }`}>
                           {ent.estatus?.nombre_estatus || (isCompletado ? 'COMPLETADO' : 'PROGRAMADA')}
                         </span>
@@ -755,23 +755,23 @@ export default function EntregasYPedidosPage() {
                         {ent.oferta_item?.producto_equipo?.nombre_producto_equipo || 'Reactivo / Equipo Diagnóstico'}
                       </h3>
 
-                      <div className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-xl border border-white/5 space-y-1">
+                      <div className="text-xs text-slate-700 bg-white p-3 rounded-xl border border-gray-200 space-y-1">
                         <p>🏢 Hospital: <span className="text-gray-900 font-semibold">{ent.oferta_item?.licitacion_oferta?.cliente?.nombre_cliente || 'Institución Hospitalaria'}</span></p>
-                        <p>📦 Cantidad: <span className="font-mono text-emerald-400 font-bold">{ent.cantidad_programada}</span> unidades</p>
+                        <p>📦 Cantidad: <span className="font-mono text-emerald-700 font-bold">{ent.cantidad_programada}</span> unidades</p>
                         {ent.numero_acta_recepcion && (
-                          <p>📋 Acta Recepción: <span className="font-mono text-cyan-300 font-semibold">{ent.numero_acta_recepcion}</span></p>
+                          <p>📋 Acta Recepción: <span className="font-mono text-cyan-700 font-semibold">{ent.numero_acta_recepcion}</span></p>
                         )}
                         {ent.observaciones && (
-                          <p className="text-slate-400 text-[11px] pt-1">Notas: {ent.observaciones}</p>
+                          <p className="text-slate-700 text-[11px] pt-1">Notas: {ent.observaciones}</p>
                         )}
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-end">
+                    <div className="pt-2 border-t border-slate-200 flex items-center justify-end">
                       {!isCompletado && (
                         <button
                           onClick={() => handleMarcarEntregado(ent.entrega_id, ent.cantidad_programada)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-gray-100 text-emerald-300 border border-gray-200 text-xs font-bold transition cursor-pointer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-gray-100 text-emerald-700 border border-gray-200 text-xs font-bold transition cursor-pointer"
                         >
                           <CheckCircle className="w-3.5 h-3.5" />
                           <span>Registrar Acta & Completar</span>
@@ -788,21 +788,21 @@ export default function EntregasYPedidosPage() {
 
       {/* Modal para Programar Entrega */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-slate-900 border border-white/10 rounded-3xl w-full max-w-md shadow-md overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-950/40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-md animate-fade-in">
+          <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-md shadow-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
               <h3 className="text-sm font-bold text-gray-900">Programar Entrega en Supabase</h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-gray-900 cursor-pointer font-bold">✕</button>
+              <button onClick={() => setShowModal(false)} className="text-slate-700 hover:text-gray-900 cursor-pointer font-bold">✕</button>
             </div>
 
             <form onSubmit={handleCreate} className="p-5 space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Producto Ofertado *</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Producto Ofertado *</label>
                 <select
                   value={formData.oferta_item_id}
                   onChange={e => setFormData({ ...formData, oferta_item_id: e.target.value })}
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
                 >
                   <option value="">-- Seleccionar Producto --</option>
                   {ofertasItems.map(it => (
@@ -815,54 +815,54 @@ export default function EntregasYPedidosPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">No. Entrega *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">No. Entrega *</label>
                   <input
                     type="number"
                     value={formData.numero_entrega}
                     onChange={e => setFormData({ ...formData, numero_entrega: Number(e.target.value) })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Cantidad *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Cantidad *</label>
                   <input
                     type="number"
                     value={formData.cantidad_programada}
                     onChange={e => setFormData({ ...formData, cantidad_programada: Number(e.target.value) })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Fecha Programada *</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Fecha Programada *</label>
                 <input
                   type="date"
                   value={formData.fecha_programada}
                   onChange={e => setFormData({ ...formData, fecha_programada: e.target.value })}
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Observaciones / Instrucciones de Ruta</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Observaciones / Instrucciones de Ruta</label>
                 <textarea
                   value={formData.observaciones}
                   onChange={e => setFormData({ ...formData, observaciones: e.target.value })}
                   rows={2}
                   placeholder="Cadena de frío, contacto de laboratorio, urgencia..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-white/10 rounded-xl text-xs text-gray-900"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
                 />
               </div>
 
-              <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-semibold transition cursor-pointer"
                 >
                   Cancelar
                 </button>

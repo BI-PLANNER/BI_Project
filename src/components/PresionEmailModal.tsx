@@ -77,15 +77,15 @@ Planner Estratégico — COMPRASAL / LAB&MED
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 backdrop-blur-sm p-4">
       <div className="glass-card w-full max-w-xl p-6 animate-scale-in border-l-4 border-l-red-500 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-red-500/10 text-red-400">
+            <div className="p-2 rounded-xl bg-red-500/10 text-red-700">
               <Zap className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-red-400">
+              <h3 className="text-base font-bold text-red-700">
                 Enviar Correo de Presión / Alerta Automática
               </h3>
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
@@ -93,17 +93,17 @@ Planner Estratégico — COMPRASAL / LAB&MED
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/5">
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-50">
             <X className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
           </button>
         </div>
 
         {enviado ? (
           <div className="py-10 text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-700 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <p className="text-base font-semibold text-emerald-400">
+            <p className="text-base font-semibold text-emerald-700">
               ¡Correo de Presión Enviado con Éxito!
             </p>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
@@ -113,18 +113,18 @@ Planner Estratégico — COMPRASAL / LAB&MED
         ) : (
           <div className="space-y-4">
             {/* Destinatario */}
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-gray-200 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-gray-500">Destinatario Asignado:</span>
                 <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
                   {activeTask.responsableNombre} &lt;{activeTask.responsableEmail}&gt;
                 </p>
-                <span className="badge bg-violet-500/15 text-violet-400 text-[10px] mt-0.5">
+                <span className="badge bg-violet-500/15 text-violet-700 text-[10px] mt-0.5">
                   {activeTask.responsableRol}
                 </span>
               </div>
               <div className="text-right">
-                <span className="badge bg-red-500/15 text-red-400 text-xs">
+                <span className="badge bg-red-500/15 text-red-700 text-xs">
                   {activeTask.diasRestantes <= 0 ? 'VENCIDO' : `${activeTask.diasRestantes} días restantes`}
                 </span>
               </div>
@@ -144,11 +144,11 @@ Planner Estratégico — COMPRASAL / LAB&MED
                     className={`py-1.5 text-xs font-semibold rounded-lg border transition-all ${
                       urgencia === lvl
                         ? lvl === 'CRITICO'
-                          ? 'bg-red-600 border-red-500 text-gray-900 shadow-lg'
+                          ? 'bg-red-600 border-red-500 text-gray-900 shadow-sm'
                           : lvl === 'URGENTE'
-                          ? 'bg-amber-600 border-amber-500 text-gray-900 shadow-lg'
-                          : 'bg-indigo-600 border-indigo-500 text-gray-900 shadow-lg'
-                        : 'bg-white/5 border-white/10 text-gray-500 hover:text-gray-900'
+                          ? 'bg-amber-600 border-amber-500 text-gray-900 shadow-sm'
+                          : 'bg-indigo-600 border-indigo-500 text-gray-900 shadow-sm'
+                        : 'bg-slate-50 border-slate-200 text-gray-500 hover:text-gray-900'
                     }`}
                   >
                     {lvl}
@@ -166,7 +166,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
                 type="text"
                 readOnly
                 value={asunto}
-                className="input-field text-xs font-mono text-amber-300"
+                className="input-field text-xs font-mono text-amber-700"
               />
             </div>
 
@@ -177,7 +177,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
               <textarea
                 readOnly
                 value={cuerpo}
-                className="input-field font-mono text-xs h-36 resize-none bg-black/40 text-gray-600 leading-relaxed"
+                className="input-field font-mono text-xs h-36 resize-none bg-slate-50 text-gray-600 leading-relaxed"
               />
             </div>
 
@@ -196,7 +196,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
                 className="btn-primary !bg-red-600 hover:!bg-red-500 flex-1 text-xs flex items-center justify-center gap-2 shadow-sm"
               >
                 {enviando ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
                     <Send className="w-3.5 h-3.5" />
