@@ -7,10 +7,14 @@ const supabase = createClient(
 );
 
 async function test() {
-  const { data, error } = await supabase.from('incidencias_seguimiento').select('*').limit(5);
-  console.log('Error:', error);
-  console.log('Data count:', data ? data.length : 0);
-  console.log('Data:', data);
+  const { data: d1, error: e1 } = await supabase.from('incidencias_seguimiento').select('incidencia_id');
+  console.log('incidencias_seguimiento:', d1 ? d1.length : e1);
+
+  const { data: d2, error: e2 } = await supabase.from('sync_excel_licitaciones').select('*');
+  console.log('sync_excel_licitaciones:', d2 ? d2.length : e2);
+
+  const { data: d3, error: e3 } = await supabase.from('licitaciones_ofertas').select('*');
+  console.log('licitaciones_ofertas:', d3 ? d3.length : e3);
 }
 
 test();
