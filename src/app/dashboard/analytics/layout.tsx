@@ -9,9 +9,8 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
 
   const tabs = [
-    { name: 'Dashboard Gerencia', href: '/dashboard/analytics/gerencia', icon: PieChart, color: 'text-indigo-400', activeBg: 'bg-indigo-500/20' },
-    { name: 'Análisis de Precios', href: '/dashboard/analytics/precios', icon: BarChart3, color: 'text-emerald-400', activeBg: 'bg-emerald-500/20' },
-    { name: 'Reportes BI', href: '/dashboard/analytics/reportes', icon: FileText, color: 'text-teal-400', activeBg: 'bg-teal-500/20' },
+    { name: 'Dashboard Analítica', href: '/dashboard/analytics/gerencia', icon: PieChart, color: 'text-indigo-400', activeBg: 'bg-indigo-500/20' },
+    { name: 'Analítica', href: '/dashboard/analytics/precios', icon: BarChart3, color: 'text-emerald-400', activeBg: 'bg-emerald-500/20' },
     { name: 'Cumplimiento', href: '/dashboard/analytics/cumplimiento', icon: CheckCircle, color: 'text-blue-400', activeBg: 'bg-blue-500/20' }
   ]
 
