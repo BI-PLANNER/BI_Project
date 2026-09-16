@@ -5,10 +5,10 @@ export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (user?.email?.toLowerCase().includes('aaltunaher') || user?.email?.toLowerCase().includes('gerencia')) {
-    redirect('/dashboard/obligaciones')
+  if (user?.email?.includes('aaltunaher') || user?.email?.includes('antonio')) {
+    redirect('/dashboard/analytics/gerencia')
   }
 
-  redirect('/dashboard/stock')
+  // Redirigir a Analytics Stock por defecto
+  redirect('/dashboard/analytics/stock')
 }
-

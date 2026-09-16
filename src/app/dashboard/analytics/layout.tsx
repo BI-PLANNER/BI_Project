@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { PieChart, BarChart3, FileText, CheckCircle } from 'lucide-react'
+import { PieChart, BarChart3, FileText, CheckCircle, Boxes } from 'lucide-react'
 
 export default function AnalyticsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -11,6 +11,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
   const tabs = [
     { name: 'Dashboard Analítica', href: '/dashboard/analytics/gerencia', icon: PieChart, color: 'text-indigo-400', activeBg: 'bg-indigo-500/20' },
     { name: 'Analítica', href: '/dashboard/analytics/precios', icon: BarChart3, color: 'text-emerald-400', activeBg: 'bg-emerald-500/20' },
+    { name: 'Stock & Inventario', href: '/dashboard/analytics/stock', icon: Boxes, color: 'text-rose-400', activeBg: 'bg-rose-500/20' },
     { name: 'Cumplimiento', href: '/dashboard/analytics/cumplimiento', icon: CheckCircle, color: 'text-blue-400', activeBg: 'bg-blue-500/20' }
   ]
 

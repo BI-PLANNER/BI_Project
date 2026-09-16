@@ -113,8 +113,7 @@ export default function Sidebar() {
 
   // Secciones permitidas para Luis Orellana
   const LUIS_ALLOWED_HREFS = [
-    '/dashboard/analytics',
-    '/dashboard/stock'
+    '/dashboard/analytics'
   ]
 
   // Navigation items (full list)
@@ -129,14 +128,7 @@ export default function Sidebar() {
       badge: 'Hub Unificado',
       badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
     }] : []),
-    { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
-    {
-      href: '/dashboard/stock',
-      label: 'Stock & Inventario BI',
-      icon: Boxes,
-      badge: 'Alertas 114 Críticas',
-      badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold'
-    }
+    { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database }
   ]
 
   // Filtrar para Luis Orellana: solo sus secciones permitidas
