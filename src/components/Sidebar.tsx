@@ -111,8 +111,16 @@ export default function Sidebar() {
     router.refresh()
   }
 
-  // Navigation items
-  const navItems = [
+  // Secciones permitidas para Luis Orellana
+  const LUIS_ALLOWED_HREFS = [
+    '/dashboard/analisis',
+    '/dashboard/stock',
+    '/dashboard/reporte',
+    '/dashboard/cumplimiento'
+  ]
+
+  // Navigation items (full list)
+  const allNavItems = [
     { href: '/dashboard/contratos', label: 'Contratos & RACI', icon: FileText },
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
@@ -120,7 +128,7 @@ export default function Sidebar() {
       href: '/dashboard/reporte',
       label: 'Reporte de Actividades Realizadas',
       icon: BookOpen,
-      badge: userProfile.isLuisOrellana ? 'Jefatura' : 'BI Lenny',
+      badge: userProfile.isLuisOrellana ? 'BI Lenny' : 'BI Lenny',
       badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
     }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
@@ -146,6 +154,11 @@ export default function Sidebar() {
       badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold'
     }
   ]
+
+  // Filtrar para Luis Orellana: solo sus secciones permitidas
+  const navItems = userProfile.isLuisOrellana
+    ? allNavItems.filter(item => LUIS_ALLOWED_HREFS.includes(item.href))
+    : allNavItems
 
 
   const initials = `${userProfile.nombre.charAt(0)}${userProfile.apellido.charAt(0) || userProfile.nombre.charAt(1) || 'U'}`.toUpperCase()
