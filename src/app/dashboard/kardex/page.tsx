@@ -209,7 +209,7 @@ export default function KardexIncidenciasPage() {
             <ShieldAlert className="w-4 h-4" />
             <span>Mesa de Ayuda • Seguimiento de Contingencias</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
             Kardex de Incidencias Operativas
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -220,14 +220,14 @@ export default function KardexIncidenciasPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={loadData}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-[#333] transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-gray-200 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Actualizar</span>
           </button>
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Nueva Incidencia</span>
@@ -244,7 +244,7 @@ export default function KardexIncidenciasPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar por cliente, responsable o situación..."
-            className="w-full pl-9 pr-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition"
+            className="w-full pl-9 pr-3 py-2 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-rose-500 transition"
           />
         </div>
 
@@ -293,7 +293,7 @@ export default function KardexIncidenciasPage() {
             return (
               <div
                 key={inc.incidencia_id}
-                className="bg-slate-900/80 border border-[#333] hover:border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 transition flex flex-col justify-between"
+                className="bg-slate-900/80 border border-gray-200 hover:border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 transition flex flex-col justify-between"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -302,20 +302,20 @@ export default function KardexIncidenciasPage() {
                     </span>
                     <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold font-mono ${
                       sem.color === 'Rojo'
-                        ? 'bg-rose-500/20 text-rose-300 border border-[#333]'
+                        ? 'bg-rose-500/20 text-rose-300 border border-gray-200'
                         : sem.color === 'Anaranjado'
-                        ? 'bg-amber-500/20 text-amber-300 border border-[#333]'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-[#333]'
+                        ? 'bg-amber-500/20 text-amber-300 border border-gray-200'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-gray-200'
                     }`}>
                       {sem.label}
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-white">
+                  <h3 className="text-sm font-bold text-gray-900">
                     {inc.situacion?.nombre_situacion || 'Situación no clasificada'}
                   </h3>
 
-                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 rounded-xl border border-[#333]">
+                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 rounded-xl border border-gray-200">
                     {inc.comentario || 'Sin descripción detallada.'}
                   </p>
 
@@ -339,7 +339,7 @@ export default function KardexIncidenciasPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#333] flex items-center justify-between">
+                <div className="pt-3 border-t border-gray-200 flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleOpenEdit(inc)}
@@ -350,7 +350,7 @@ export default function KardexIncidenciasPage() {
                     </button>
                     <button
                       onClick={() => handleDelete(inc.incidencia_id)}
-                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-[#222] text-slate-300 hover:text-rose-400 text-xs transition"
+                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-gray-100 text-slate-300 hover:text-rose-400 text-xs transition"
                       title="Eliminar"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -359,7 +359,7 @@ export default function KardexIncidenciasPage() {
 
                   <button
                     onClick={() => handlePressure(inc)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-[#222] text-rose-300 border border-[#333] text-xs font-bold transition active:scale-95"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-gray-100 text-rose-300 border border-gray-200 text-xs font-bold transition active:scale-95"
                   >
                     <Mail className="w-3.5 h-3.5" />
                     <span>Presionar</span>
@@ -374,12 +374,12 @@ export default function KardexIncidenciasPage() {
       {/* Modal Form */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-[#333] rounded-2xl w-full max-w-lg shadow-md overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-900 border border-gray-200 rounded-2xl w-full max-w-lg shadow-md overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-gray-900">
                 {editingId ? `Editar Incidencia #${editingId}` : 'Nueva Incidencia Operativa'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-gray-900">✕</button>
             </div>
 
             <form onSubmit={handleSave} className="p-5 overflow-y-auto space-y-3.5 flex-1">
@@ -389,7 +389,7 @@ export default function KardexIncidenciasPage() {
                   value={formData.cliente_id}
                   onChange={e => setFormData({ ...formData, cliente_id: e.target.value })}
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                 >
                   <option value="">-- Seleccionar Cliente --</option>
                   {clientes.map(c => (
@@ -403,7 +403,7 @@ export default function KardexIncidenciasPage() {
                 <select
                   value={formData.contrato_id}
                   onChange={e => setFormData({ ...formData, contrato_id: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                 >
                   <option value="">-- Vinculación a Contrato --</option>
                   {contratos.map(co => (
@@ -418,7 +418,7 @@ export default function KardexIncidenciasPage() {
                   value={formData.situacion_id}
                   onChange={e => setFormData({ ...formData, situacion_id: e.target.value })}
                   required
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                 >
                   <option value="">-- Seleccionar Situación --</option>
                   {situaciones.map(s => (
@@ -433,7 +433,7 @@ export default function KardexIncidenciasPage() {
                   <select
                     value={formData.persona_id}
                     onChange={e => setFormData({ ...formData, persona_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                   >
                     <option value="">-- Técnico Asignado --</option>
                     {personas.map(p => (
@@ -447,7 +447,7 @@ export default function KardexIncidenciasPage() {
                   <select
                     value={formData.ubicacion_id}
                     onChange={e => setFormData({ ...formData, ubicacion_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                   >
                     <option value="">-- Laboratorio/Sala --</option>
                     {ubicaciones.map(u => (
@@ -464,7 +464,7 @@ export default function KardexIncidenciasPage() {
                     type="date"
                     value={formData.fecha_registro}
                     onChange={e => setFormData({ ...formData, fecha_registro: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                   />
                 </div>
 
@@ -474,7 +474,7 @@ export default function KardexIncidenciasPage() {
                     type="date"
                     value={formData.fecha_cumplimiento}
                     onChange={e => setFormData({ ...formData, fecha_cumplimiento: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                   />
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function KardexIncidenciasPage() {
                 <select
                   value={formData.estatus_id}
                   onChange={e => setFormData({ ...formData, estatus_id: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900"
                 >
                   {estatusList.map(es => (
                     <option key={es.estatus_id} value={es.estatus_id}>{es.nombre_estatus}</option>
@@ -499,7 +499,7 @@ export default function KardexIncidenciasPage() {
                   onChange={e => setFormData({ ...formData, comentario: e.target.value })}
                   rows={3}
                   placeholder="Detalles de la falla, observaciones técnicas o acuerdos..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500"
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500"
                 />
               </div>
 
@@ -513,7 +513,7 @@ export default function KardexIncidenciasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition"
+                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition"
                 >
                   {editingId ? 'Guardar Cambios' : 'Registrar Incidencia'}
                 </button>

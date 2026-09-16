@@ -437,21 +437,21 @@ export default function DashboardObligacionesPage() {
     <div className="space-y-6 pb-12">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed top-5 right-5 z-50 animate-bounce bg-emerald-600 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-md flex items-center gap-2 border border-[#333]">
+        <div className="fixed top-5 right-5 z-50 animate-bounce bg-emerald-600 text-gray-900 font-bold text-xs px-4 py-3 rounded-2xl shadow-md flex items-center gap-2 border border-gray-200">
           <CheckCircle2 className="w-4 h-4" />
           <span>{successToast}</span>
         </div>
       )}
 
       {/* 1. Header Principal con Indicador de Seguridad & Acceso Exclusivo */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-[#111] border border-[#333] relative overflow-hidden">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-white border border-gray-200 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-              <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-[#333]">
+              <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-gray-200">
                 <Sparkles className="w-3 h-3 text-indigo-400" />
                 DASHBOARD ESTRATÉGICO
               </span>
@@ -467,35 +467,35 @@ export default function DashboardObligacionesPage() {
                       setMainView('reporte')
                     }
                   }}
-                  className="px-4 py-2 rounded-2xl bg-[#111] border border-[#333] hover:bg-[#222] text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-sm border border-teal-300"
+                  className="px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-sm border border-teal-300"
                   title="Ir a la sección de Reporte de Actividades Realizadas"
                 >
-                  <BookOpen className="w-4 h-4 text-slate-950" />
+                  <BookOpen className="w-4 h-4 text-gray-900" />
                   <span>👉 📋 Ir a Reporte de Actividades Realizadas</span>
                 </button>
               )}
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
               <PieIcon className="w-8 h-8 text-amber-400 animate-pulse" />
               Dashboard de Obligaciones — Gerencia General
             </h1>
-            <p className="text-xs text-gray-400 mt-1 max-w-2xl">
+            <p className="text-xs text-gray-500 mt-1 max-w-2xl">
               Panel directivo de alto nivel exclusivo para la <strong className="text-amber-300">Gerencia General (José Lenny Gómez)</strong>. Monitoreo estratégico de licitaciones, semáforo de cumplimiento y auditoría de los 26 hitos con análisis de gráficas de pastel.
             </p>
           </div>
 
           {/* Tarjeta de Control de Usuario Asignado */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-950/80 p-3 rounded-2xl border border-[#333] shrink-0 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-950/80 p-3 rounded-2xl border border-gray-200 shrink-0 shadow-xl">
             <div className="flex items-center gap-2.5 pr-2">
-              <div className="w-9 h-9 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow">
+              <div className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-900 shadow">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-[10px] text-amber-300 uppercase font-bold block">
                   Perfil Directivo Autorizado:
                 </span>
-                <span className="text-xs font-mono font-bold text-white block truncate max-w-[210px]">
+                <span className="text-xs font-mono font-bold text-gray-900 block truncate max-w-[210px]">
                   Gerente General ({assignedUserEmail})
                 </span>
               </div>
@@ -506,7 +506,7 @@ export default function DashboardObligacionesPage() {
                 setTempUserEmail(assignedUserEmail)
                 setIsConfiguringUser(!isConfiguringUser)
               }}
-              className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 border border-white/10 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-700 border border-white/10 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
               title="Configurar usuario exclusivo"
             >
               <KeyRound className="w-3.5 h-3.5 text-amber-400" />
@@ -518,9 +518,9 @@ export default function DashboardObligacionesPage() {
         {/* Formulario desplegable para configurar el usuario asignado */}
         {isConfiguringUser && (
           <div className="mt-4 pt-4 border-t border-white/10 animate-fade-in">
-            <div className="bg-slate-950/80 p-4 rounded-2xl border border-[#333] flex flex-col md:flex-row items-stretch md:items-center gap-3">
+            <div className="bg-slate-950/80 p-4 rounded-2xl border border-gray-200 flex flex-col md:flex-row items-stretch md:items-center gap-3">
               <div className="flex-1">
-                <label className="text-[11px] font-bold text-gray-300 block mb-1">
+                <label className="text-[11px] font-bold text-gray-600 block mb-1">
                   Ingrese el correo o identificador del usuario que tendrá acceso exclusivo:
                 </label>
                 <input
@@ -528,7 +528,7 @@ export default function DashboardObligacionesPage() {
                   value={tempUserEmail}
                   onChange={(e) => setTempUserEmail(e.target.value)}
                   placeholder="ej. gerencia@lm-sv.com o jose.lenny@labandmed.com"
-                  className="w-full bg-slate-900 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white font-mono outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-900 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-gray-900 font-mono outline-none focus:border-indigo-500"
                 />
               </div>
               <div className="flex items-center gap-2 pt-2 md:pt-4">
@@ -540,7 +540,7 @@ export default function DashboardObligacionesPage() {
                 </button>
                 <button
                   onClick={() => setIsConfiguringUser(false)}
-                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white text-xs font-bold cursor-pointer"
+                  className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-500 hover:text-gray-900 text-xs font-bold cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -553,14 +553,14 @@ export default function DashboardObligacionesPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 mt-6 pt-5 border-t border-white/10">
           {/* Switcher Gráfica Pastel vs Anillo */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-bold">Estilo de Gráficas:</span>
+            <span className="text-xs text-gray-500 font-bold">Estilo de Gráficas:</span>
             <div className="flex rounded-xl bg-white/5 p-1 border border-white/10 text-xs font-bold">
               <button
                 onClick={() => setChartType('pie')}
                 className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer flex items-center gap-1.5 ${
                   chartType === 'pie'
-                    ? 'bg-[#111] border border-[#333] text-white shadow'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-white border border-gray-200 text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <PieIcon className="w-3.5 h-3.5" />
@@ -570,8 +570,8 @@ export default function DashboardObligacionesPage() {
                 onClick={() => setChartType('donut')}
                 className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer ${
                   chartType === 'donut'
-                    ? 'bg-[#111] border border-[#333] text-white shadow'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-white border border-gray-200 text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <span>Anillo</span>
@@ -590,16 +590,16 @@ export default function DashboardObligacionesPage() {
                   setMainView('reporte')
                 }
               }}
-              className="px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-slate-950 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Ver la sección de Reporte de Actividades Realizadas"
             >
-              <BookOpen className="w-4 h-4 text-slate-950" />
+              <BookOpen className="w-4 h-4 text-gray-900" />
               <span>📋 Ir a Reporte de Actividades Realizadas</span>
             </button>
 
             <button
               onClick={() => setIsNotificacionesModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-[#111] border border-[#333] hover:from-amber-500/30 hover:to-orange-500/30 border border-[#333] text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-white border border-gray-200 hover:from-amber-500/30 hover:to-orange-500/30 border border-gray-200 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Flujo automatizado de correos de cumplimiento a encargados"
             >
               <Zap className="w-4 h-4 text-amber-400" />
@@ -608,7 +608,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={handleCopyText}
-              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-700 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Copiar texto formateado para correo o WhatsApp"
             >
               {copied ? (
@@ -626,7 +626,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={handleExportCSV}
-              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-[#222] border border-[#333] text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-gray-100 border border-gray-200 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Descargar archivo Excel / CSV"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -644,7 +644,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={loadIncidencias}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition cursor-pointer"
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-500 hover:text-gray-900 transition cursor-pointer"
               title="Recargar datos de Supabase"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
@@ -655,24 +655,24 @@ export default function DashboardObligacionesPage() {
         {/* Scorecards de Rendimiento */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-white/10">
           <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5">
-            <span className="text-[10px] text-gray-400 uppercase font-bold block">Total Obligaciones:</span>
-            <span className="text-2xl font-black text-white font-mono">{total}</span>
+            <span className="text-[10px] text-gray-500 uppercase font-bold block">Total Obligaciones:</span>
+            <span className="text-2xl font-black text-gray-900 font-mono">{total}</span>
             <span className="text-[10px] text-indigo-300 block mt-0.5">100% Asignadas y Auditadas</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-emerald-400 uppercase font-bold block">🟢 En Plazo (Verde):</span>
             <span className="text-2xl font-black text-emerald-300 font-mono">{totalVerde}</span>
             <span className="text-[10px] text-emerald-400/80 block mt-0.5">{pctVerde}% de efectividad</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Críticos / Urgentes:</span>
             <span className="text-2xl font-black text-red-400 font-mono">{totalRojo}</span>
             <span className="text-[10px] text-red-400/80 block mt-0.5">Atención prioritaria</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-amber-400 uppercase font-bold block">🟠 Advertencia:</span>
             <span className="text-2xl font-black text-amber-400 font-mono">{totalNaranja}</span>
             <span className="text-[10px] text-amber-400/80 block mt-0.5">En trámite / cotización</span>
@@ -682,18 +682,18 @@ export default function DashboardObligacionesPage() {
 
       {/* 2. Bloque de Validación de Acceso de Usuario */}
       {!hasAccess ? (
-        <div className="glass-card p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] text-center space-y-4 shadow-md">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-[#333] mx-auto flex items-center justify-center text-amber-400 shadow-xl">
+        <div className="glass-card p-8 rounded-3xl border border-gray-200 bg-white border border-gray-200 text-center space-y-4 shadow-md">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-gray-200 mx-auto flex items-center justify-center text-amber-400 shadow-xl">
             <Lock className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-white">Módulo Reservado Exclusivamente para Gerencia General</h2>
-          <p className="text-xs text-gray-300 max-w-lg mx-auto leading-relaxed">
+          <h2 className="text-xl font-black text-gray-900">Módulo Reservado Exclusivamente para Gerencia General</h2>
+          <p className="text-xs text-gray-600 max-w-lg mx-auto leading-relaxed">
             Este dashboard analítico de obligaciones y licitaciones contiene información directiva confidencial y está habilitado exclusivamente para el <strong className="text-amber-300">Gerente General</strong> ({assignedUserEmail}).
           </p>
           <div className="pt-2">
             <button
               onClick={() => setAuthorizedOverride(true)}
-              className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-[#222] text-amber-300 text-xs font-bold border border-[#333] transition cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-gray-100 text-amber-300 text-xs font-bold border border-gray-200 transition cursor-pointer"
             >
               Validar Acceso de Gerente General
             </button>
@@ -705,19 +705,19 @@ export default function DashboardObligacionesPage() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm">
+                <div className="w-8 h-8 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-900 shadow-sm">
                   <PieIcon className="w-4 h-4" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-black text-white tracking-tight">
+                  <h2 className="text-lg font-black text-gray-900 tracking-tight">
                     Análisis Visual con Gráficas de Pastel
                   </h2>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     Haga clic en cualquier porción del pastel o en la leyenda para filtrar automáticamente la tabla de abajo.
                   </p>
                 </div>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-[#333] shrink-0">
+              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-gray-200 shrink-0">
                 {chartType === 'pie' ? '🥧 Modo Pastel Amplio con %' : '🍩 Modo Anillo Amplio'} • 26 Obligaciones
               </span>
             </div>
@@ -813,7 +813,7 @@ export default function DashboardObligacionesPage() {
           {/* 4. Barra de Filtros y Búsqueda */}
           <div className="glass-card p-4 rounded-2xl border border-white/10 shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/80">
             <div className="flex flex-wrap items-center gap-2.5">
-              <div className="flex items-center gap-1.5 font-bold text-gray-300 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-gray-600 text-xs">
                 <Filter className="w-4 h-4 text-indigo-400" />
                 <span>Filtrar:</span>
               </div>
@@ -822,7 +822,7 @@ export default function DashboardObligacionesPage() {
               <select
                 value={filterArea}
                 onChange={(e) => setFilterArea(e.target.value)}
-                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+                className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
               >
                 <option value="todos">Todas las Áreas ({total})</option>
                 {areas.map(a => (
@@ -834,7 +834,7 @@ export default function DashboardObligacionesPage() {
               <select
                 value={filterCliente}
                 onChange={(e) => setFilterCliente(e.target.value)}
-                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+                className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
               >
                 <option value="todos">Todos los Clientes</option>
                 {clientes.map(c => (
@@ -846,7 +846,7 @@ export default function DashboardObligacionesPage() {
               <select
                 value={filterSemaforo}
                 onChange={(e) => setFilterSemaforo(e.target.value)}
-                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+                className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
               >
                 <option value="todos">Todos los Semáforos</option>
                 <option value="verde">🟢 En Plazo (Verde) — {totalVerde}</option>
@@ -858,7 +858,7 @@ export default function DashboardObligacionesPage() {
               <select
                 value={filterTipo}
                 onChange={(e) => setFilterTipo(e.target.value)}
-                className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+                className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
               >
                 <option value="todos">Todos los Tipos</option>
                 <option value="CONTRATO">📄 CONTRATO ({countContrato})</option>
@@ -868,13 +868,13 @@ export default function DashboardObligacionesPage() {
 
             {/* Búsqueda */}
             <div className="relative min-w-[240px]">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por responsable, contrato, equipo..."
-                className="w-full bg-slate-950 text-white pl-8 pr-3 py-1.5 rounded-xl border border-white/10 outline-none text-xs focus:border-indigo-500"
+                className="w-full bg-slate-950 text-gray-900 pl-8 pr-3 py-1.5 rounded-xl border border-white/10 outline-none text-xs focus:border-indigo-500"
               />
             </div>
           </div>
@@ -883,16 +883,16 @@ export default function DashboardObligacionesPage() {
           <div className="glass-card rounded-3xl border border-white/10 shadow-md overflow-hidden bg-slate-900/90">
             <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-black text-white flex items-center gap-2">
+                <h3 className="text-sm font-black text-gray-900 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-indigo-400" />
                   Matriz Detallada de Obligaciones ({filtered.length} de {total} registros)
                 </h3>
-                <p className="text-[11px] text-gray-400">
+                <p className="text-[11px] text-gray-500">
                   Haga clic en «Reasignar» en cualquier fila para delegar la responsabilidad a otra persona o actualizar datos.
                 </p>
               </div>
 
-              <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-[#333]">
+              <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-gray-200">
                 100% Sincronizado
               </span>
             </div>
@@ -900,7 +900,7 @@ export default function DashboardObligacionesPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-950/80 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
+                  <tr className="bg-slate-950/80 text-gray-500 uppercase text-[10px] font-mono border-b border-white/10">
                     <th className="py-3 px-3 w-12 text-center">N°</th>
                     <th className="py-3 px-3">Cliente / Institución</th>
                     <th className="py-3 px-3">Contrato / Tipo</th>
@@ -913,7 +913,7 @@ export default function DashboardObligacionesPage() {
                     <th className="py-3 px-3 text-right">Acción</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-gray-200">
+                <tbody className="divide-y divide-white/5 text-gray-700">
                   {filtered.length === 0 ? (
                     <tr>
                       <td colSpan={10} className="py-8 text-center text-gray-500 text-xs">
@@ -936,28 +936,28 @@ export default function DashboardObligacionesPage() {
                           </td>
 
                           <td className="py-3 px-3">
-                            <span className="font-bold text-white block truncate max-w-[170px]" title={item.cliente}>
+                            <span className="font-bold text-gray-900 block truncate max-w-[170px]" title={item.cliente}>
                               {item.cliente}
                             </span>
                           </td>
 
                           <td className="py-3 px-3">
-                            <span className="font-mono text-[11px] text-gray-300 block">{item.numero_contrato}</span>
+                            <span className="font-mono text-[11px] text-gray-600 block">{item.numero_contrato}</span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold mt-0.5 inline-block ${
                               item.tipo_pendiente === 'CONTRATO'
-                                ? 'bg-blue-500/20 text-blue-300 border border-[#333]'
-                                : 'bg-purple-500/20 text-purple-300 border border-[#333]'
+                                ? 'bg-blue-500/20 text-blue-300 border border-gray-200'
+                                : 'bg-purple-500/20 text-purple-300 border border-gray-200'
                             }`}>
                               {item.tipo_pendiente}
                             </span>
                           </td>
 
                           <td className="py-3 px-4 max-w-sm">
-                            <p className="font-semibold text-gray-100 text-xs leading-relaxed">
+                            <p className="font-semibold text-gray-800 text-xs leading-relaxed">
                               {item.situacion}
                             </p>
                             {item.comentario && (
-                              <p className="text-[11px] text-gray-400 italic mt-1 bg-slate-950/40 p-1.5 rounded-lg border border-white/5">
+                              <p className="text-[11px] text-gray-500 italic mt-1 bg-slate-950/40 p-1.5 rounded-lg border border-white/5">
                                 💬 {item.comentario}
                               </p>
                             )}
@@ -978,26 +978,26 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3">
                             <div className="flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-[#333] flex items-center justify-center text-[9px] font-bold text-indigo-300 shrink-0">
+                              <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-gray-200 flex items-center justify-center text-[9px] font-bold text-indigo-300 shrink-0">
                                 {item.responsable.charAt(0)}
                               </div>
                               <div className="truncate max-w-[130px]">
-                                <span className="font-bold text-white text-xs block truncate" title={item.responsable}>
+                                <span className="font-bold text-gray-900 text-xs block truncate" title={item.responsable}>
                                   {item.responsable}
                                 </span>
-                                <span className="text-[9px] text-gray-400 block truncate" title={item.responsableEmail}>
+                                <span className="text-[9px] text-gray-500 block truncate" title={item.responsableEmail}>
                                   {item.responsableEmail}
                                 </span>
                               </div>
                             </div>
                           </td>
 
-                          <td className="py-3 px-3 text-gray-300 text-[11px]">
+                          <td className="py-3 px-3 text-gray-600 text-[11px]">
                             {item.ubicacion || 'General'}
                           </td>
 
                           <td className="py-3 px-3 text-center font-mono font-bold text-xs">
-                            <span className={item.fecha_cumplimiento.startsWith('2029') ? 'text-cyan-300' : 'text-gray-200'}>
+                            <span className={item.fecha_cumplimiento.startsWith('2029') ? 'text-cyan-300' : 'text-gray-700'}>
                               {item.fecha_cumplimiento}
                             </span>
                           </td>
@@ -1005,10 +1005,10 @@ export default function DashboardObligacionesPage() {
                           <td className="py-3 px-3 text-center">
                             <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                               isRojo
-                                ? 'bg-red-500/25 text-red-300 border border-[#333]'
+                                ? 'bg-red-500/25 text-red-300 border border-gray-200'
                                 : isNaranja
-                                ? 'bg-amber-500/25 text-amber-300 border border-[#333]'
-                                : 'bg-emerald-500/25 text-emerald-300 border border-[#333]'
+                                ? 'bg-amber-500/25 text-amber-300 border border-gray-200'
+                                : 'bg-emerald-500/25 text-emerald-300 border border-gray-200'
                             }`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${
                                 isRojo ? 'bg-red-400 animate-pulse' : isNaranja ? 'bg-amber-400' : 'bg-emerald-400'
@@ -1020,7 +1020,7 @@ export default function DashboardObligacionesPage() {
                           <td className="py-3 px-3 text-right">
                             <button
                               onClick={() => handleOpenEdit(item)}
-                              className="px-2.5 py-1 rounded-xl bg-indigo-500/20 hover:bg-[#222] text-indigo-300 border border-[#333] text-[11px] font-bold transition cursor-pointer"
+                              className="px-2.5 py-1 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-300 border border-gray-200 text-[11px] font-bold transition cursor-pointer"
                               title="Reasignar responsable o editar"
                             >
                               Reasignar
@@ -1038,27 +1038,27 @@ export default function DashboardObligacionesPage() {
           {/* ━━━━ SECCIÓN: REPORTE DE CUMPLIMIENTO DE RESPONSABILIDADES — PLANNER BI ━━━━ */}
           <div className="space-y-5 mt-2">
             {/* Header de la sección */}
-            <div className="glass-card p-5 rounded-3xl border border-[#333] bg-[#111] border border-[#333] relative overflow-hidden shadow-md">
+            <div className="glass-card p-5 rounded-3xl border border-gray-200 bg-white border border-gray-200 relative overflow-hidden shadow-md">
               <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-amber-500/8 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-gray-900 shadow-sm shrink-0">
                     <ClipboardList className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] border border-[#333] flex items-center gap-1">
+                      <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] border border-gray-200 flex items-center gap-1">
                         <Shield className="w-3 h-3" />
                         ACCESO EXCLUSIVO GERENCIA GENERAL
                       </span>
                     </div>
-                    <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+                    <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-2">
                       <BarChart3 className="w-5 h-5 text-indigo-400" />
                       Reporte de Cumplimiento de Responsabilidades
                     </h2>
-                    <p className="text-xs text-gray-400 mt-0.5 max-w-2xl">
+                    <p className="text-xs text-gray-500 mt-0.5 max-w-2xl">
                       Análisis individual del desempeño de cada responsable en la ejecución de las obligaciones del Planner BI.
                       Incluye tasa de cumplimiento, tareas críticas pendientes y ranking de rendimiento.
                     </p>
@@ -1066,10 +1066,10 @@ export default function DashboardObligacionesPage() {
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right">
-                    <span className="text-[10px] text-gray-400 block uppercase font-bold">Responsables auditados</span>
-                    <span className="text-3xl font-black text-white font-mono">{reporteCumplimiento.length}</span>
+                    <span className="text-[10px] text-gray-500 block uppercase font-bold">Responsables auditados</span>
+                    <span className="text-3xl font-black text-gray-900 font-mono">{reporteCumplimiento.length}</span>
                   </div>
-                  <div className="w-12 h-12 rounded-2xl bg-[#111] border border-[#333] border border-[#333] flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-white border border-gray-200 border border-gray-200 flex items-center justify-center">
                     <Users className="w-6 h-6 text-indigo-300" />
                   </div>
                 </div>
@@ -1077,39 +1077,39 @@ export default function DashboardObligacionesPage() {
 
               {/* KPI strip general del reporte */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-white/10 relative z-10">
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-gray-200">
                   <span className="text-[10px] text-emerald-400 uppercase font-bold block">🏆 Mejor Rendimiento</span>
-                  <span className="text-sm font-black text-white block truncate mt-0.5">
+                  <span className="text-sm font-black text-gray-900 block truncate mt-0.5">
                     {reporteCumplimiento[0]?.nombre?.split(' ')[0] || '—'}
                   </span>
                   <span className="text-xs font-mono text-emerald-300">
                     {reporteCumplimiento[0]?.pctCumplimiento ?? 0}% cumplimiento
                   </span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-gray-200">
                   <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Mayor Carga Crítica</span>
-                  <span className="text-sm font-black text-white block truncate mt-0.5">
+                  <span className="text-sm font-black text-gray-900 block truncate mt-0.5">
                     {(reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.nombre?.split(' ')[0]) || '—'}
                   </span>
                   <span className="text-xs font-mono text-red-300">
                     {reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.criticos ?? 0} tarea(s) crítica(s)
                   </span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-gray-200">
                   <span className="text-[10px] text-indigo-400 uppercase font-bold block">📊 Promedio General</span>
                   <span className="text-2xl font-black text-indigo-300 font-mono mt-0.5 block">
                     {reporteCumplimiento.length > 0
                       ? Math.round(reporteCumplimiento.reduce((acc, r) => acc + r.pctCumplimiento, 0) / reporteCumplimiento.length)
                       : 0}%
                   </span>
-                  <span className="text-[10px] text-gray-400">Tasa de cumplimiento del equipo</span>
+                  <span className="text-[10px] text-gray-500">Tasa de cumplimiento del equipo</span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-gray-200">
                   <span className="text-[10px] text-amber-400 uppercase font-bold block">⚠️ Con Pendientes Críticos</span>
                   <span className="text-2xl font-black text-amber-300 font-mono mt-0.5 block">
                     {reporteCumplimiento.filter(r => r.criticos > 0).length}
                   </span>
-                  <span className="text-[10px] text-gray-400">Responsables con tareas en rojo</span>
+                  <span className="text-[10px] text-gray-500">Responsables con tareas en rojo</span>
                 </div>
               </div>
             </div>
@@ -1122,20 +1122,20 @@ export default function DashboardObligacionesPage() {
                 const pct = resp.pctCumplimiento
 
                 const cardBorder = esCritico
-                  ? 'border-[#333] bg-red-950/10'
+                  ? 'border-gray-200 bg-red-950/10'
                   : esTop
-                  ? 'border-[#333] bg-emerald-950/10'
+                  ? 'border-gray-200 bg-emerald-950/10'
                   : pct >= 70
-                  ? 'border-[#333]'
-                  : 'border-[#333] bg-amber-950/10'
+                  ? 'border-gray-200'
+                  : 'border-gray-200 bg-amber-950/10'
 
                 const barColor = esCritico
-                  ? 'bg-[#111] border border-[#333]'
+                  ? 'bg-white border border-gray-200'
                   : pct >= 80
-                  ? 'bg-[#111] border border-[#333]'
+                  ? 'bg-white border border-gray-200'
                   : pct >= 50
-                  ? 'bg-[#111] border border-[#333]'
-                  : 'bg-[#111] border border-[#333]'
+                  ? 'bg-white border border-gray-200'
+                  : 'bg-white border border-gray-200'
 
                 const badgeLabel = esTop
                   ? '🏆 Top Rendimiento'
@@ -1146,12 +1146,12 @@ export default function DashboardObligacionesPage() {
                   : '⚠️ Monitorear'
 
                 const badgeStyle = esTop
-                  ? 'bg-emerald-500/20 text-emerald-300 border-[#333]'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-gray-200'
                   : esCritico
-                  ? 'bg-red-500/20 text-red-300 border-[#333]'
+                  ? 'bg-red-500/20 text-red-300 border-gray-200'
                   : pct >= 70
-                  ? 'bg-indigo-500/20 text-indigo-300 border-[#333]'
-                  : 'bg-amber-500/20 text-amber-300 border-[#333]'
+                  ? 'bg-indigo-500/20 text-indigo-300 border-gray-200'
+                  : 'bg-amber-500/20 text-amber-300 border-gray-200'
 
                 const AREA_COL: Record<string, string> = {
                   'APLICACIONES': '#06B6D4', 'PM': '#8B5CF6', 'LOGISTICA': '#3B82F6',
@@ -1172,13 +1172,13 @@ export default function DashboardObligacionesPage() {
                     {/* Header persona */}
                     <div className="flex items-center gap-3 mb-4">
                       <div
-                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-black text-white shadow-lg shrink-0"
+                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-black text-gray-900 shadow-lg shrink-0"
                         style={{ background: `linear-gradient(135deg, ${AREA_COL[resp.area] || '#6366F1'}99, ${AREA_COL[resp.area] || '#8B5CF6'})` }}
                       >
                         #{idx + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-black text-white text-sm truncate">{resp.nombre}</p>
+                        <p className="font-black text-gray-900 text-sm truncate">{resp.nombre}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <span
                             className="text-[9px] font-bold px-1.5 py-0.5 rounded font-mono border"
@@ -1200,7 +1200,7 @@ export default function DashboardObligacionesPage() {
                     {/* Barra de progreso de cumplimiento */}
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] text-gray-400 font-bold uppercase">Tasa de Cumplimiento</span>
+                        <span className="text-[10px] text-gray-500 font-bold uppercase">Tasa de Cumplimiento</span>
                         <span className="text-lg font-black font-mono" style={{ color: AREA_COL[resp.area] || '#A5B4FC' }}>
                           {pct}%
                         </span>
@@ -1216,18 +1216,18 @@ export default function DashboardObligacionesPage() {
                     {/* Mini stats grid */}
                     <div className="grid grid-cols-4 gap-1.5 mb-3">
                       <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-white/5">
-                        <span className="text-lg font-black text-white font-mono block">{resp.total}</span>
-                        <span className="text-[9px] text-gray-400 uppercase font-bold">Total</span>
+                        <span className="text-lg font-black text-gray-900 font-mono block">{resp.total}</span>
+                        <span className="text-[9px] text-gray-500 uppercase font-bold">Total</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-gray-200">
                         <span className="text-lg font-black text-emerald-300 font-mono block">{resp.completados + resp.enPlazo}</span>
                         <span className="text-[9px] text-emerald-400 uppercase font-bold">En Plazo</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-gray-200">
                         <span className="text-lg font-black text-amber-300 font-mono block">{resp.advertencia}</span>
                         <span className="text-[9px] text-amber-400 uppercase font-bold">Aviso</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-gray-200">
                         <span className="text-lg font-black text-red-300 font-mono block">{resp.criticos}</span>
                         <span className="text-[9px] text-red-400 uppercase font-bold">Críticos</span>
                       </div>
@@ -1239,7 +1239,7 @@ export default function DashboardObligacionesPage() {
                         <span className="text-[9px] text-gray-500 uppercase font-bold block mb-1.5">Responsabilidades asignadas:</span>
                         <ul className="space-y-0.5">
                           {resp.tareas.slice(0, 3).map((t, ti) => (
-                            <li key={ti} className="text-[10px] text-gray-300 flex items-start gap-1.5">
+                            <li key={ti} className="text-[10px] text-gray-600 flex items-start gap-1.5">
                               <span className="mt-0.5 w-1 h-1 rounded-full bg-indigo-400 shrink-0" />
                               <span className="truncate" title={t}>{t}</span>
                             </li>
@@ -1259,15 +1259,15 @@ export default function DashboardObligacionesPage() {
             <div className="glass-card rounded-3xl border border-white/10 shadow-md overflow-hidden bg-slate-900/90">
               <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow">
+                  <div className="w-7 h-7 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-900 shadow">
                     <Award className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-white">Ranking de Cumplimiento por Responsable</h3>
-                    <p className="text-[10px] text-gray-400">Ordenado por tasa de cumplimiento — Generado automáticamente desde los 26 pendientes del Planner BI</p>
+                    <h3 className="text-sm font-black text-gray-900">Ranking de Cumplimiento por Responsable</h3>
+                    <p className="text-[10px] text-gray-500">Ordenado por tasa de cumplimiento — Generado automáticamente desde los 26 pendientes del Planner BI</p>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-[#333] shrink-0">
+                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-gray-200 shrink-0">
                   🔐 Solo Gerente General
                 </span>
               </div>
@@ -1275,7 +1275,7 @@ export default function DashboardObligacionesPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-950/80 text-gray-400 uppercase text-[10px] font-mono border-b border-white/10">
+                    <tr className="bg-slate-950/80 text-gray-500 uppercase text-[10px] font-mono border-b border-white/10">
                       <th className="py-3 px-3 w-12 text-center">Rank</th>
                       <th className="py-3 px-3">Responsable</th>
                       <th className="py-3 px-3">Área</th>
@@ -1287,7 +1287,7 @@ export default function DashboardObligacionesPage() {
                       <th className="py-3 px-3 text-center">Estado</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 text-gray-200">
+                  <tbody className="divide-y divide-white/5 text-gray-700">
                     {reporteCumplimiento.map((resp, idx) => {
                       const pct = resp.pctCumplimiento
                       const AREA_COL: Record<string, string> = {
@@ -1306,14 +1306,14 @@ export default function DashboardObligacionesPage() {
                           <td className="py-3 px-3">
                             <div className="flex items-center gap-2">
                               <div
-                                className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
+                                className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-gray-900 shrink-0"
                                 style={{ background: `${AREA_COL[resp.area] || '#6366F1'}40`, border: `1px solid ${AREA_COL[resp.area] || '#6366F1'}50` }}
                               >
                                 {resp.nombre.charAt(0)}
                               </div>
                               <div>
-                                <span className="font-black text-white text-xs block">{resp.nombre}</span>
-                                <span className="text-[10px] text-gray-400">{resp.email || 'Sin email'}</span>
+                                <span className="font-black text-gray-900 text-xs block">{resp.nombre}</span>
+                                <span className="text-[10px] text-gray-500">{resp.email || 'Sin email'}</span>
                               </div>
                             </div>
                           </td>
@@ -1331,7 +1331,7 @@ export default function DashboardObligacionesPage() {
                             </span>
                           </td>
 
-                          <td className="py-3 px-3 text-center font-mono font-black text-white">{resp.total}</td>
+                          <td className="py-3 px-3 text-center font-mono font-black text-gray-900">{resp.total}</td>
 
                           <td className="py-3 px-3 text-center">
                             <span className="font-bold text-emerald-300 font-mono">{resp.completados + resp.enPlazo}</span>
@@ -1339,7 +1339,7 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.criticos > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full bg-red-500/25 text-red-300 border border-[#333] font-bold font-mono">
+                              <span className="px-2 py-0.5 rounded-full bg-red-500/25 text-red-300 border border-gray-200 font-bold font-mono">
                                 {resp.criticos}
                               </span>
                             ) : (
@@ -1349,7 +1349,7 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.advertencia > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-[#333] font-bold font-mono">
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-gray-200 font-bold font-mono">
                                 {resp.advertencia}
                               </span>
                             ) : (
@@ -1379,11 +1379,11 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.criticos === 0 && pct >= 80 ? (
-                              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-[#333] text-[10px] font-bold">✅ Óptimo</span>
+                              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-gray-200 text-[10px] font-bold">✅ Óptimo</span>
                             ) : resp.criticos > 1 ? (
-                              <span className="px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-[#333] text-[10px] font-bold">🚨 Atención</span>
+                              <span className="px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-gray-200 text-[10px] font-bold">🚨 Atención</span>
                             ) : (
-                              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-[#333] text-[10px] font-bold">⚠️ Monitorear</span>
+                              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-gray-200 text-[10px] font-bold">⚠️ Monitorear</span>
                             )}
                           </td>
                         </tr>
@@ -1398,13 +1398,13 @@ export default function DashboardObligacionesPage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <Star className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-[10px] text-gray-400 font-bold">NOTA EJECUTIVA: </span>
-                    <span className="text-[10px] text-gray-300">
+                    <span className="text-[10px] text-gray-500 font-bold">NOTA EJECUTIVA: </span>
+                    <span className="text-[10px] text-gray-600">
                       Este reporte se genera automáticamente desde los {total} hitos activos del Planner BI.
                       La tasa de cumplimiento considera tareas En Plazo y Completadas vs. el total asignado.
                     </span>
                   </div>
-                  <span className="ml-auto text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-[#333] shrink-0">
+                  <span className="ml-auto text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-gray-200 shrink-0">
                     Actualizado: {new Date().toLocaleDateString('es-SV', { dateStyle: 'short' })} — Control Planner LABANDMED
                   </span>
                 </div>
@@ -1415,29 +1415,29 @@ export default function DashboardObligacionesPage() {
 
           {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES REALIZADAS — EXCLUSIVO LUIS ORELLANA & JOSÉ LENNY ━━━━ */}
           {((currentUserEmail || '').toLowerCase().includes('orellana') || (currentUserEmail || '').toLowerCase().includes('jose.gomez') || (currentUserEmail || '').toLowerCase().includes('lenny')) && (
-            <div id="reporte-actividades-realizadas" className="glass-card p-6 md:p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] shadow-md space-y-4 mt-8">
+            <div id="reporte-actividades-realizadas" className="glass-card p-6 md:p-8 rounded-3xl border border-gray-200 bg-white border border-gray-200 shadow-md space-y-4 mt-8">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-[#333] flex items-center gap-1.5 px-3 py-1">
+                    <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-gray-200 flex items-center gap-1.5 px-3 py-1">
                       <Sparkles className="w-3.5 h-3.5 text-teal-400" /> SECCIÓN OFICIAL DE ENTREGABLES
                     </span>
-                    <span className="badge bg-amber-500/20 text-amber-300 font-mono text-xs border border-[#333] px-3 py-1">
+                    <span className="badge bg-amber-500/20 text-amber-300 font-mono text-xs border border-gray-200 px-3 py-1">
                       🔒 Exclusivo Luis Orellana & BI Lenny
                     </span>
                   </div>
-                  <h2 className="text-xl md:text-2xl font-black text-white flex items-center gap-2">
+                  <h2 className="text-xl md:text-2xl font-black text-gray-900 flex items-center gap-2">
                     <BookOpen className="w-6 h-6 text-teal-400" />
                     Reporte de Actividades & Cumplimiento BI
                   </h2>
-                  <p className="text-xs text-gray-300 max-w-3xl leading-relaxed">
+                  <p className="text-xs text-gray-600 max-w-3xl leading-relaxed">
                     Informe técnico de constancia de desarrollos, 21 tablas de base de datos, 4 APIs, scripts de Python OCR y 9 automatizaciones de <strong className="text-teal-300">Control Planner PRO</strong>.
                   </p>
                 </div>
 
                 <a
                   href="/dashboard/reporte"
-                  className="px-5 py-3 rounded-2xl bg-[#111] border border-[#333] text-slate-950 font-black text-xs flex items-center gap-2 transition hover:opacity-90 shadow-sm shrink-0 self-start md:self-auto cursor-pointer"
+                  className="px-5 py-3 rounded-2xl bg-white border border-gray-200 text-gray-900 font-black text-xs flex items-center gap-2 transition hover:opacity-90 shadow-sm shrink-0 self-start md:self-auto cursor-pointer"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Abrir Reporte Completo (11 Módulos)</span>

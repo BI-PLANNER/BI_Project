@@ -122,25 +122,25 @@ export const MASTER_CONTRATOS = [
 
 // Visual themes per client institution
 const CLIENT_THEMES: Record<string, { bg: string, border: string, text: string, badge: string, dot: string }> = {
-  'ISSS': { bg: 'bg-blue-950/40', border: 'border-[#333]', text: 'text-blue-300', badge: 'bg-blue-500/20 text-blue-300 border-[#333]', dot: 'bg-blue-400' },
-  'ISBM': { bg: 'bg-purple-950/40', border: 'border-[#333]', text: 'text-purple-300', badge: 'bg-purple-500/20 text-purple-300 border-[#333]', dot: 'bg-purple-400' },
-  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/40', border: 'border-[#333]', text: 'text-amber-300', badge: 'bg-amber-500/20 text-amber-300 border-[#333]', dot: 'bg-amber-400' },
-  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/40', border: 'border-[#333]', text: 'text-amber-300', badge: 'bg-amber-500/20 text-amber-300 border-[#333]', dot: 'bg-amber-400' },
-  'HOSPITAL MILITAR': { bg: 'bg-emerald-950/40', border: 'border-[#333]', text: 'text-emerald-300', badge: 'bg-emerald-500/20 text-emerald-300 border-[#333]', dot: 'bg-emerald-400' },
-  'HOSPITAL BLOOM': { bg: 'bg-pink-950/40', border: 'border-[#333]', text: 'text-pink-300', badge: 'bg-pink-500/20 text-pink-300 border-[#333]', dot: 'bg-pink-400' },
-  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-950/40', border: 'border-[#333]', text: 'text-cyan-300', badge: 'bg-cyan-500/20 text-cyan-300 border-[#333]', dot: 'bg-cyan-400' }
+  'ISSS': { bg: 'bg-blue-950/40', border: 'border-gray-200', text: 'text-blue-300', badge: 'bg-blue-500/20 text-blue-300 border-gray-200', dot: 'bg-blue-400' },
+  'ISBM': { bg: 'bg-purple-950/40', border: 'border-gray-200', text: 'text-purple-300', badge: 'bg-purple-500/20 text-purple-300 border-gray-200', dot: 'bg-purple-400' },
+  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/40', border: 'border-gray-200', text: 'text-amber-300', badge: 'bg-amber-500/20 text-amber-300 border-gray-200', dot: 'bg-amber-400' },
+  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/40', border: 'border-gray-200', text: 'text-amber-300', badge: 'bg-amber-500/20 text-amber-300 border-gray-200', dot: 'bg-amber-400' },
+  'HOSPITAL MILITAR': { bg: 'bg-emerald-950/40', border: 'border-gray-200', text: 'text-emerald-300', badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200', dot: 'bg-emerald-400' },
+  'HOSPITAL BLOOM': { bg: 'bg-pink-950/40', border: 'border-gray-200', text: 'text-pink-300', badge: 'bg-pink-500/20 text-pink-300 border-gray-200', dot: 'bg-pink-400' },
+  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-950/40', border: 'border-gray-200', text: 'text-cyan-300', badge: 'bg-cyan-500/20 text-cyan-300 border-gray-200', dot: 'bg-cyan-400' }
 }
 
-const DEFAULT_THEME = { bg: 'bg-slate-900/60', border: 'border-slate-800', text: 'text-indigo-300', badge: 'bg-indigo-500/20 text-indigo-300 border-[#333]', dot: 'bg-indigo-400' }
+const DEFAULT_THEME = { bg: 'bg-slate-900/60', border: 'border-slate-800', text: 'text-indigo-300', badge: 'bg-indigo-500/20 text-indigo-300 border-gray-200', dot: 'bg-indigo-400' }
 
 const AREA_BADGES: Record<string, string> = {
-  'IT': 'bg-cyan-500/20 text-cyan-300 border-[#333]',
-  'APLICACIONES': 'bg-purple-500/20 text-purple-300 border-[#333]',
-  'PM': 'bg-indigo-500/20 text-indigo-300 border-[#333]',
-  'LOGISTICA': 'bg-blue-500/20 text-blue-300 border-[#333]',
-  'LICITACIONES': 'bg-amber-500/20 text-amber-300 border-[#333]',
-  'SOPORTE': 'bg-rose-500/20 text-rose-300 border-[#333]',
-  'GI': 'bg-emerald-500/20 text-emerald-300 border-[#333]'
+  'IT': 'bg-cyan-500/20 text-cyan-300 border-gray-200',
+  'APLICACIONES': 'bg-purple-500/20 text-purple-300 border-gray-200',
+  'PM': 'bg-indigo-500/20 text-indigo-300 border-gray-200',
+  'LOGISTICA': 'bg-blue-500/20 text-blue-300 border-gray-200',
+  'LICITACIONES': 'bg-amber-500/20 text-amber-300 border-gray-200',
+  'SOPORTE': 'bg-rose-500/20 text-rose-300 border-gray-200',
+  'GI': 'bg-emerald-500/20 text-emerald-300 border-gray-200'
 }
 
 export const DEFAULT_PERSONAS = [
@@ -303,16 +303,16 @@ export default function ContratosPage() {
   const getSemaforoInfo = (fechaStr?: string | null, estatusNombre?: string | null) => {
     const est = (estatusNombre || '').toLowerCase()
     if (est === 'completado') {
-      return { color: 'completado', label: 'Completado', badge: 'bg-emerald-500/20 text-emerald-300 border-[#333]', dot: 'bg-emerald-400' }
+      return { color: 'completado', label: 'Completado', badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200', dot: 'bg-emerald-400' }
     }
     if (est === 'rojo' || est === 'crítico' || est === 'urgente') {
-      return { color: 'rojo', label: 'Crítico / Vencido', badge: 'bg-rose-500/20 text-rose-300 border-[#333] font-bold', dot: 'bg-rose-400 animate-pulse' }
+      return { color: 'rojo', label: 'Crítico / Vencido', badge: 'bg-rose-500/20 text-rose-300 border-gray-200 font-bold', dot: 'bg-rose-400 animate-pulse' }
     }
     if (est === 'anaranjado' || est === 'naranja' || est === 'próximo') {
-      return { color: 'naranja', label: 'Próximo', badge: 'bg-amber-500/20 text-amber-300 border-[#333] font-bold', dot: 'bg-amber-400' }
+      return { color: 'naranja', label: 'Próximo', badge: 'bg-amber-500/20 text-amber-300 border-gray-200 font-bold', dot: 'bg-amber-400' }
     }
     if (est === 'verde' || est === 'en plazo') {
-      return { color: 'verde', label: 'En Plazo', badge: 'bg-emerald-500/20 text-emerald-300 border-[#333] font-bold', dot: 'bg-emerald-400' }
+      return { color: 'verde', label: 'En Plazo', badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200 font-bold', dot: 'bg-emerald-400' }
     }
 
     if (!fechaStr) {
@@ -325,11 +325,11 @@ export default function ContratosPage() {
     const diff = Math.ceil((target.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
 
     if (diff <= 2) {
-      return { color: 'rojo', label: diff < 0 ? `Vencido (${Math.abs(diff)}d)` : diff === 0 ? 'Vence hoy' : 'Urgente (1d)', badge: 'bg-rose-500/20 text-rose-300 border-[#333] font-bold', dot: 'bg-rose-400 animate-pulse' }
+      return { color: 'rojo', label: diff < 0 ? `Vencido (${Math.abs(diff)}d)` : diff === 0 ? 'Vence hoy' : 'Urgente (1d)', badge: 'bg-rose-500/20 text-rose-300 border-gray-200 font-bold', dot: 'bg-rose-400 animate-pulse' }
     } else if (diff <= 7) {
-      return { color: 'naranja', label: `Próximo (${diff}d)`, badge: 'bg-amber-500/20 text-amber-300 border-[#333] font-bold', dot: 'bg-amber-400' }
+      return { color: 'naranja', label: `Próximo (${diff}d)`, badge: 'bg-amber-500/20 text-amber-300 border-gray-200 font-bold', dot: 'bg-amber-400' }
     }
-    return { color: 'verde', label: `En Plazo (${diff}d)`, badge: 'bg-emerald-500/20 text-emerald-300 border-[#333] font-bold', dot: 'bg-emerald-400' }
+    return { color: 'verde', label: `En Plazo (${diff}d)`, badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200 font-bold', dot: 'bg-emerald-400' }
   }
 
   // Aggregate contracts with their linked client, company, and obligations
@@ -762,7 +762,7 @@ export default function ContratosPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 bg-emerald-950/95 border border-[#333] rounded-2xl text-emerald-200 text-xs font-semibold shadow-md backdrop-blur-md animate-slide-up">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 bg-emerald-950/95 border border-gray-200 rounded-2xl text-emerald-200 text-xs font-semibold shadow-md backdrop-blur-md animate-slide-up">
           <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span>{successToast}</span>
         </div>
@@ -775,7 +775,7 @@ export default function ContratosPage() {
             <FolderKanban className="w-4 h-4 text-indigo-400" />
             <span>Gestión Contractual • Modelo Relacional 3FN</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2">
             Contratos, Numerales & RACI
           </h1>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
@@ -787,13 +787,13 @@ export default function ContratosPage() {
           <button
             onClick={loadData}
             title="Refrescar datos"
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition active:scale-95"
+            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-gray-900 transition active:scale-95"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
           </button>
           <button
             onClick={handleOpenCreateContract}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Nuevo Contrato</span>
@@ -803,18 +803,18 @@ export default function ContratosPage() {
 
       {/* KPI Cards Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Contratos</span>
             <FileText className="w-4 h-4 text-indigo-400" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-white font-mono">{totalContratosCount}</span>
+            <span className="text-2xl font-black text-gray-900 font-mono">{totalContratosCount}</span>
             <span className="text-[10px] text-slate-400 font-medium">Activos</span>
           </div>
         </div>
 
-        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div className="bg-slate-900/80 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Obligaciones</span>
             <Layers className="w-4 h-4 text-cyan-400" />
@@ -825,7 +825,7 @@ export default function ContratosPage() {
           </div>
         </div>
 
-        <div className="bg-rose-950/20 border border-[#333] rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div className="bg-rose-950/20 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-rose-300 uppercase tracking-wider">Críticos / Vencidos</span>
             <ShieldAlert className="w-4 h-4 text-rose-400 animate-pulse" />
@@ -836,7 +836,7 @@ export default function ContratosPage() {
           </div>
         </div>
 
-        <div className="bg-amber-950/20 border border-[#333] rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div className="bg-amber-950/20 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">Próximos</span>
             <Clock className="w-4 h-4 text-amber-400" />
@@ -847,7 +847,7 @@ export default function ContratosPage() {
           </div>
         </div>
 
-        <div className="bg-emerald-950/20 border border-[#333] rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+        <div className="bg-emerald-950/20 border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider">En Plazo</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -869,12 +869,12 @@ export default function ContratosPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Buscar por número de contrato, nombre, institución, obligación técnica o responsable..."
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-gray-900 text-xs"
               >
                 ✕
               </button>
@@ -921,7 +921,7 @@ export default function ContratosPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-[#333] font-mono">
+        <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-gray-200 font-mono">
           <span>Mostrando {filteredContratos.length} de {contractsWithObligations.length} contratos</span>
           <span>{filteredContratos.reduce((a, c) => a + c.stats.total, 0)} obligaciones totales</span>
         </div>
@@ -944,13 +944,13 @@ export default function ContratosPage() {
             return (
               <div
                 key={c.contrato_id}
-                className={`bg-slate-900/90 border ${isExpanded ? 'border-[#333]' : 'border-slate-800'} rounded-2xl overflow-hidden shadow-xl transition duration-200`}
+                className={`bg-slate-900/90 border ${isExpanded ? 'border-gray-200' : 'border-slate-800'} rounded-2xl overflow-hidden shadow-xl transition duration-200`}
               >
                 {/* Contract Summary Bar */}
-                <div className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-[#111] border border-[#333]">
+                <div className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white border border-gray-200">
                   <div className="space-y-2 min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-base md:text-lg font-black text-amber-300 font-mono tracking-tight bg-amber-400/10 px-2.5 py-0.5 rounded-lg border border-[#333]">
+                      <span className="text-base md:text-lg font-black text-amber-300 font-mono tracking-tight bg-amber-400/10 px-2.5 py-0.5 rounded-lg border border-gray-200">
                         {c.numero_contrato}
                       </span>
 
@@ -963,7 +963,7 @@ export default function ContratosPage() {
                       </span>
 
                       {c.monto_total > 0 && (
-                        <span className="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-[#333]">
+                        <span className="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-gray-200">
                           ${Number(c.monto_total).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </span>
                       )}
@@ -990,7 +990,7 @@ export default function ContratosPage() {
                   <div className="flex flex-wrap items-center gap-2 shrink-0">
                     {/* Obligation Counter Badges */}
                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-mono">
-                      <span className="text-white font-bold">{c.stats.total} Numerales:</span>
+                      <span className="text-gray-900 font-bold">{c.stats.total} Numerales:</span>
                       {c.stats.rojo > 0 && (
                         <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-bold text-[10px]">
                           {c.stats.rojo} Rojo
@@ -1010,7 +1010,7 @@ export default function ContratosPage() {
 
                     <button
                       onClick={() => handleOpenAddNumeral(c.contrato_id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-[#222] text-indigo-300 border border-[#333] text-xs font-bold transition active:scale-95"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-gray-100 text-indigo-300 border border-gray-200 text-xs font-bold transition active:scale-95"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Agregar Numeral</span>
@@ -1019,7 +1019,7 @@ export default function ContratosPage() {
                     <button
                       onClick={() => handleOpenEditContract(c)}
                       title="Editar Contrato"
-                      className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+                      className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-gray-900 transition"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
@@ -1035,7 +1035,7 @@ export default function ContratosPage() {
                     <button
                       onClick={() => handleDeleteContract(c.contrato_id, c.numero_contrato)}
                       title="Eliminar Contrato"
-                      className="p-2 rounded-xl bg-slate-800 hover:bg-[#222] text-slate-400 hover:text-rose-400 transition"
+                      className="p-2 rounded-xl bg-slate-800 hover:bg-gray-100 text-slate-400 hover:text-rose-400 transition"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -1044,7 +1044,7 @@ export default function ContratosPage() {
 
                 {/* Expanded Numerals Table (Desglose de Obligaciones & RACI) */}
                 {isExpanded && (
-                  <div className="border-t border-[#333] bg-slate-950/70 p-4 space-y-3 animate-fade-in">
+                  <div className="border-t border-gray-200 bg-slate-950/70 p-4 space-y-3 animate-fade-in">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
                         <FileSpreadsheet className="w-4 h-4 text-indigo-400" />
@@ -1057,7 +1057,7 @@ export default function ContratosPage() {
                         Este contrato aún no tiene numerales registrados. Haz clic en &quot;Agregar Numeral&quot; para crear el primero.
                       </div>
                     ) : (
-                      <div className="overflow-x-auto rounded-xl border border-[#333]">
+                      <div className="overflow-x-auto rounded-xl border border-gray-200">
                         <table className="w-full text-left text-xs">
                           <thead>
                             <tr className="border-b border-slate-800 bg-slate-900/80 text-slate-400 font-semibold">
@@ -1076,7 +1076,7 @@ export default function ContratosPage() {
                               const areaBadge = AREA_BADGES[ob.area_nombre] || 'bg-slate-800 text-slate-300 border-slate-700'
 
                               return (
-                                <tr key={ob.id || idx} className="hover:bg-[#222] transition group">
+                                <tr key={ob.id || idx} className="hover:bg-gray-100 transition group">
                                   {/* Item Num */}
                                   <td className="py-3 px-3 font-mono font-bold text-indigo-300">
                                     {idx + 1}
@@ -1084,7 +1084,7 @@ export default function ContratosPage() {
 
                                   {/* Situacion & Comentario */}
                                   <td className="py-3 px-3 max-w-md">
-                                    <div className="font-bold text-white leading-snug">
+                                    <div className="font-bold text-gray-900 leading-snug">
                                       {ob.situacion}
                                     </div>
                                     {ob.comentario && (
@@ -1170,14 +1170,14 @@ export default function ContratosPage() {
           onClick={(e) => { if (e.target === e.currentTarget) setShowContractModal(false) }}
           className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-6 sm:pt-10 md:pt-14 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
         >
-          <div className="bg-slate-900 border border-[#333] rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
+          <div className="bg-slate-900 border border-gray-200 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-[#333]">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-gray-200">
                   <FolderKanban className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">
+                  <h3 className="text-sm font-bold text-gray-900">
                     {editingContract ? 'Editar Contrato Institucional' : 'Nuevo Contrato Institucional'}
                   </h3>
                   <p className="text-[11px] text-slate-400">
@@ -1188,7 +1188,7 @@ export default function ContratosPage() {
               <button
                 type="button"
                 onClick={() => setShowContractModal(false)}
-                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-gray-900 flex items-center justify-center transition"
               >
                 ✕
               </button>
@@ -1204,7 +1204,7 @@ export default function ContratosPage() {
                     onChange={e => setContractForm({ ...contractForm, numero_contrato: e.target.value })}
                     required
                     placeholder="ej: SM-022/2024, CT No 16/2026"
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
                 <div>
@@ -1215,7 +1215,7 @@ export default function ContratosPage() {
                     value={contractForm.monto_total}
                     onChange={e => setContractForm({ ...contractForm, monto_total: e.target.value })}
                     placeholder="0.00"
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
               </div>
@@ -1227,7 +1227,7 @@ export default function ContratosPage() {
                   value={contractForm.nombre_contrato}
                   onChange={e => setContractForm({ ...contractForm, nombre_contrato: e.target.value })}
                   placeholder="ej: Suministro de reactivos, comodato de equipo y soporte técnico"
-                  className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
+                  className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
@@ -1238,7 +1238,7 @@ export default function ContratosPage() {
                     value={contractForm.cliente_id}
                     onChange={e => setContractForm({ ...contractForm, cliente_id: e.target.value })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500"
                   >
                     {(clientes.length > 0 ? clientes : DEFAULT_CLIENTES).map(cl => (
                       <option key={cl.cliente_id} value={cl.cliente_id}>{cl.nombre_cliente}</option>
@@ -1252,7 +1252,7 @@ export default function ContratosPage() {
                     value={contractForm.empresa_id}
                     onChange={e => setContractForm({ ...contractForm, empresa_id: e.target.value })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500"
                   >
                     {(empresas.length > 0 ? empresas : DEFAULT_EMPRESAS).map(em => (
                       <option key={em.empresa_id} value={em.empresa_id}>{em.nombre_empresa}</option>
@@ -1263,7 +1263,7 @@ export default function ContratosPage() {
 
               {/* Si seleccionó nueva institución */}
               {contractForm.cliente_id === 'nuevo' && (
-                <div className="p-3 bg-indigo-950/30 border border-[#333] rounded-xl space-y-1.5 animate-fade-in">
+                <div className="p-3 bg-indigo-950/30 border border-gray-200 rounded-xl space-y-1.5 animate-fade-in">
                   <label className="block text-xs font-bold text-indigo-300">
                     🏢 Nombre de la Nueva Institución / Hospital
                   </label>
@@ -1273,7 +1273,7 @@ export default function ContratosPage() {
                     onChange={e => setContractForm({ ...contractForm, nuevo_cliente_nombre: e.target.value })}
                     placeholder="ej: HOSPITAL NACIONAL SAN RAFAEL, MINSAL..."
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-bold uppercase"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-bold uppercase"
                   />
                 </div>
               )}
@@ -1285,7 +1285,7 @@ export default function ContratosPage() {
                     type="date"
                     value={contractForm.fecha_inicio}
                     onChange={e => setContractForm({ ...contractForm, fecha_inicio: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
                 <div>
@@ -1294,7 +1294,7 @@ export default function ContratosPage() {
                     type="date"
                     value={contractForm.fecha_fin}
                     onChange={e => setContractForm({ ...contractForm, fecha_fin: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 font-mono shadow-inner"
                   />
                 </div>
               </div>
@@ -1311,7 +1311,7 @@ export default function ContratosPage() {
                     <select
                       value={contractForm.fianza_cumplimiento_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_cumplimiento_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white"
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-gray-900"
                     >
                       <option value="Entregada">Entregada</option>
                       <option value="En Trámite">En Trámite</option>
@@ -1331,7 +1331,7 @@ export default function ContratosPage() {
                     <select
                       value={contractForm.fianza_buena_inversion_estado}
                       onChange={e => setContractForm({ ...contractForm, fianza_buena_inversion_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white"
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-gray-900"
                     >
                       <option value="Pendiente">Pendiente</option>
                       <option value="Entregada">Entregada</option>
@@ -1359,7 +1359,7 @@ export default function ContratosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95"
+                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
                 >
                   {editingContract ? 'Actualizar Contrato' : 'Guardar Contrato'}
                 </button>
@@ -1375,15 +1375,15 @@ export default function ContratosPage() {
           onClick={(e) => { if (e.target === e.currentTarget) setShowNumeralModal(false) }}
           className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-6 sm:pt-10 md:pt-14 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-fade-in"
         >
-          <div className="bg-slate-900 border border-[#333] rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
+          <div className="bg-slate-900 border border-gray-200 rounded-3xl w-full max-w-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[88vh] relative z-10 my-0 mb-10">
             {/* Modal Header */}
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-[#333]">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-gray-200">
                   <FileSpreadsheet className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">
+                  <h3 className="text-sm font-bold text-gray-900">
                     {editingNumeral ? 'Editar Numeral / Obligación Contractual' : 'Agregar Numeral Contractual & RACI'}
                   </h3>
                   <p className="text-[11px] text-slate-400">
@@ -1394,7 +1394,7 @@ export default function ContratosPage() {
               <button
                 type="button"
                 onClick={() => setShowNumeralModal(false)}
-                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition"
+                className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-gray-900 flex items-center justify-center transition"
               >
                 ✕
               </button>
@@ -1405,14 +1405,14 @@ export default function ContratosPage() {
               const contract = contractsWithObligations.find(c => c.contrato_id === selectedContratoForNumeral) || contratos.find(c => c.contrato_id === selectedContratoForNumeral)
               if (!contract) return null
               return (
-                <div className="px-5 py-2.5 bg-indigo-950/40 border-b border-[#333] flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="px-5 py-2.5 bg-indigo-950/40 border-b border-gray-200 flex flex-wrap items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-[#333]">
+                    <span className="font-mono font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-gray-200">
                       {contract.numero_contrato}
                     </span>
-                    <span className="font-bold text-white line-clamp-1">{contract.nombre_contrato}</span>
+                    <span className="font-bold text-gray-900 line-clamp-1">{contract.nombre_contrato}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-cyan-300 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-[#333]">
+                  <span className="text-[10px] font-mono font-bold text-cyan-300 px-2 py-0.5 rounded-full bg-cyan-500/10 border border-gray-200">
                     {contract.cliente_nombre || contract.cliente?.nombre_cliente || 'INSTITUCIONAL'}
                   </span>
                 </div>
@@ -1441,7 +1441,7 @@ export default function ContratosPage() {
                       key={sug}
                       type="button"
                       onClick={() => setNumeralForm({ ...numeralForm, situacion: sug })}
-                      className="text-[10px] px-2 py-0.5 rounded-lg bg-slate-950 hover:bg-[#222] text-slate-400 hover:text-indigo-300 border border-white/[0.06] hover:border-[#333] transition"
+                      className="text-[10px] px-2 py-0.5 rounded-lg bg-slate-950 hover:bg-gray-100 text-slate-400 hover:text-indigo-300 border border-white/[0.06] hover:border-gray-200 transition"
                     >
                       + {sug}
                     </button>
@@ -1454,7 +1454,7 @@ export default function ContratosPage() {
                   onChange={e => setNumeralForm({ ...numeralForm, situacion: e.target.value })}
                   placeholder="ej: GARANTIA DE FABRICA AUTENTICADO..."
                   required
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
@@ -1471,8 +1471,8 @@ export default function ContratosPage() {
                       onClick={() => setNumeralForm({ ...numeralForm, area_nombre: a })}
                       className={`py-1.5 px-1 rounded-xl text-[11px] font-bold border transition text-center ${
                         numeralForm.area_nombre === a
-                          ? 'bg-indigo-600 text-white border-indigo-400 shadow-sm'
-                          : 'bg-slate-950 text-slate-400 border-white/[0.06] hover:text-white hover:bg-slate-850'
+                          ? 'bg-indigo-600 text-gray-900 border-indigo-400 shadow-sm'
+                          : 'bg-slate-950 text-slate-400 border-white/[0.06] hover:text-gray-900 hover:bg-slate-850'
                       }`}
                     >
                       {a}
@@ -1502,7 +1502,7 @@ export default function ContratosPage() {
                       })
                     }}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500"
                   >
                     {(personas.length > 0 ? personas : DEFAULT_PERSONAS).map(p => (
                       <option key={p.persona_id} value={p.persona_id}>
@@ -1521,7 +1521,7 @@ export default function ContratosPage() {
                     value={numeralForm.responsable_email}
                     onChange={e => setNumeralForm({ ...numeralForm, responsable_email: e.target.value })}
                     placeholder="correo@lm-sv.com"
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
                   />
                 </div>
               </div>
@@ -1537,7 +1537,7 @@ export default function ContratosPage() {
                     value={numeralForm.fecha_cumplimiento}
                     onChange={e => setNumeralForm({ ...numeralForm, fecha_cumplimiento: e.target.value })}
                     required
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-mono"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 font-mono"
                   />
                 </div>
 
@@ -1548,7 +1548,7 @@ export default function ContratosPage() {
                   <select
                     value={numeralForm.estatus_id}
                     onChange={e => setNumeralForm({ ...numeralForm, estatus_id: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-[#333] rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 font-bold"
+                    className="w-full px-3 py-2 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 font-bold"
                   >
                     <option value="12">🔴 Rojo (Crítico / Vencido)</option>
                     <option value="11">🟠 Anaranjado (Próximo a Vencer)</option>
@@ -1568,7 +1568,7 @@ export default function ContratosPage() {
                   onChange={e => setNumeralForm({ ...numeralForm, comentario: e.target.value })}
                   rows={3}
                   placeholder="Ej: Solicitado a fábrica, pendiente de entrega de las garantías autenticadas..."
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-[#333] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
+                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-gray-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
                 />
               </div>
 
@@ -1583,7 +1583,7 @@ export default function ContratosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95 flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95 flex items-center gap-2"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>{editingNumeral ? 'Actualizar Numeral' : 'Guardar Numeral en Contrato'}</span>

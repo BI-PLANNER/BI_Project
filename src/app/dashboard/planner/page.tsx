@@ -489,16 +489,16 @@ const DAY_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábad
 
 // Temas y Paletas Visuales por Cliente
 const CONTRATO_THEMES: Record<string, { bg: string, border: string, text: string, badge: string, dot: string }> = {
-  'ISSS': { bg: 'bg-blue-950/70', border: 'border-[#333]', text: 'text-blue-200', badge: 'bg-blue-500/20 text-blue-300 border-[#333]', dot: 'bg-blue-400' },
-  'ISBM': { bg: 'bg-purple-950/70', border: 'border-[#333]', text: 'text-purple-200', badge: 'bg-purple-500/20 text-purple-300 border-[#333]', dot: 'bg-purple-400' },
-  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/70', border: 'border-[#333]', text: 'text-amber-200', badge: 'bg-amber-500/20 text-amber-300 border-[#333]', dot: 'bg-amber-400' },
-  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/70', border: 'border-[#333]', text: 'text-amber-200', badge: 'bg-amber-500/20 text-amber-300 border-[#333]', dot: 'bg-amber-400' },
-  'HOSPITAL MILITAR': { bg: 'bg-emerald-950/70', border: 'border-[#333]', text: 'text-emerald-200', badge: 'bg-emerald-500/20 text-emerald-300 border-[#333]', dot: 'bg-emerald-400' },
-  'HOSPITAL BLOOM': { bg: 'bg-pink-950/70', border: 'border-[#333]', text: 'text-pink-200', badge: 'bg-pink-500/20 text-pink-300 border-[#333]', dot: 'bg-pink-400' },
-  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-950/70', border: 'border-[#333]', text: 'text-cyan-200', badge: 'bg-cyan-500/20 text-cyan-300 border-[#333]', dot: 'bg-cyan-400' }
+  'ISSS': { bg: 'bg-blue-950/70', border: 'border-gray-200', text: 'text-blue-200', badge: 'bg-blue-500/20 text-blue-300 border-gray-200', dot: 'bg-blue-400' },
+  'ISBM': { bg: 'bg-purple-950/70', border: 'border-gray-200', text: 'text-purple-200', badge: 'bg-purple-500/20 text-purple-300 border-gray-200', dot: 'bg-purple-400' },
+  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/70', border: 'border-gray-200', text: 'text-amber-200', badge: 'bg-amber-500/20 text-amber-300 border-gray-200', dot: 'bg-amber-400' },
+  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-950/70', border: 'border-gray-200', text: 'text-amber-200', badge: 'bg-amber-500/20 text-amber-300 border-gray-200', dot: 'bg-amber-400' },
+  'HOSPITAL MILITAR': { bg: 'bg-emerald-950/70', border: 'border-gray-200', text: 'text-emerald-200', badge: 'bg-emerald-500/20 text-emerald-300 border-gray-200', dot: 'bg-emerald-400' },
+  'HOSPITAL BLOOM': { bg: 'bg-pink-950/70', border: 'border-gray-200', text: 'text-pink-200', badge: 'bg-pink-500/20 text-pink-300 border-gray-200', dot: 'bg-pink-400' },
+  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-950/70', border: 'border-gray-200', text: 'text-cyan-200', badge: 'bg-cyan-500/20 text-cyan-300 border-gray-200', dot: 'bg-cyan-400' }
 }
 
-const DEFAULT_THEME = { bg: 'bg-slate-900/80', border: 'border-[#333]', text: 'text-indigo-200', badge: 'bg-indigo-500/20 text-indigo-300 border-[#333]', dot: 'bg-indigo-400' }
+const DEFAULT_THEME = { bg: 'bg-slate-900/80', border: 'border-gray-200', text: 'text-indigo-200', badge: 'bg-indigo-500/20 text-indigo-300 border-gray-200', dot: 'bg-indigo-400' }
 
 export default function PlannerCalendarPage() {
   const supabase = createClient()
@@ -630,7 +630,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'completado',
         label: 'Completado',
-        badgeClass: 'bg-emerald-500/20 text-emerald-300 border border-[#333]',
+        badgeClass: 'bg-emerald-500/20 text-emerald-300 border border-gray-200',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -639,7 +639,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'rojo',
         label: 'Crítico / Vencido',
-        badgeClass: 'bg-red-500/25 text-red-300 border border-[#333] font-bold',
+        badgeClass: 'bg-red-500/25 text-red-300 border border-gray-200 font-bold',
         dotClass: 'bg-red-400 animate-pulse'
       }
     }
@@ -648,7 +648,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'naranja',
         label: 'Próximo',
-        badgeClass: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold',
+        badgeClass: 'bg-amber-500/25 text-amber-300 border border-gray-200 font-bold',
         dotClass: 'bg-amber-400'
       }
     }
@@ -657,7 +657,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'verde',
         label: 'En Plazo',
-        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold',
+        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-gray-200 font-bold',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -666,7 +666,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'gris',
         label: 'Sin fecha',
-        badgeClass: 'bg-white/5 text-gray-400 border border-white/10',
+        badgeClass: 'bg-white/5 text-gray-500 border border-white/10',
         dotClass: 'bg-gray-400'
       }
     }
@@ -680,21 +680,21 @@ export default function PlannerCalendarPage() {
       return {
         color: 'rojo',
         label: diff < 0 ? `Vencido (${Math.abs(diff)}d)` : diff === 0 ? 'Vence hoy' : '1 día (<2d)',
-        badgeClass: 'bg-red-500/25 text-red-300 border border-[#333] font-bold',
+        badgeClass: 'bg-red-500/25 text-red-300 border border-gray-200 font-bold',
         dotClass: 'bg-red-400 animate-pulse'
       }
     } else if (diff <= 6) {
       return {
         color: 'naranja',
         label: `${diff} días`,
-        badgeClass: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold',
+        badgeClass: 'bg-amber-500/25 text-amber-300 border border-gray-200 font-bold',
         dotClass: 'bg-amber-400'
       }
     } else {
       return {
         color: 'verde',
         label: `${diff} días`,
-        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold',
+        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-gray-200 font-bold',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -805,15 +805,15 @@ export default function PlannerCalendarPage() {
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-[#111] border border-[#333] text-indigo-400 border border-[#333] shadow-sm">
+            <div className="p-3 rounded-2xl bg-white border border-gray-200 text-indigo-400 border border-gray-200 shadow-sm">
               <CalendarDays className="w-7 h-7" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-white flex items-center gap-2">
+              <h1 className="text-2xl font-black text-gray-900 flex items-center gap-2">
                 Panel del Planner — Control de Licitaciones por Área & Responsable
                 <span className="badge bg-indigo-500/20 text-indigo-300 text-xs font-mono font-bold">FASE 2</span>
               </h1>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500">
                 Seguimiento operativo de obligaciones de Licitaciones asignadas a Aplicaciones, PM, Logística, IT, Soporte y GI.
               </p>
             </div>
@@ -827,7 +827,7 @@ export default function PlannerCalendarPage() {
             <button
               onClick={() => setCurrentDate(new Date(2026, 7, 1))}
               className={`px-3 py-1.5 rounded-xl font-bold transition cursor-pointer ${
-                month === 7 && year === 2026 ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-gray-400 hover:text-white'
+                month === 7 && year === 2026 ? 'bg-amber-500 text-gray-900 shadow-md' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
               📅 Agosto 2026
@@ -836,8 +836,8 @@ export default function PlannerCalendarPage() {
               onClick={() => setCurrentDate(new Date(2026, 8, 1))}
               className={`px-3 py-1.5 rounded-xl font-bold text-xs transition border cursor-pointer ${
                 month === 8 && year === 2026
-                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
-                  : 'bg-white/5 text-gray-300 border-white/10 hover:bg-white/10'
+                  ? 'bg-indigo-600 text-gray-900 border-indigo-400 shadow-md shadow-indigo-600/30'
+                  : 'bg-white/5 text-gray-600 border-white/10 hover:bg-white/10'
               }`}
             >
               📅 Septiembre 2026
@@ -846,7 +846,7 @@ export default function PlannerCalendarPage() {
             {/* Botón de Acceso Directo al Reporte Detallado con Gráficas de Pastel */}
             <button
               onClick={() => setActiveTab('REPORTE')}
-              className="px-3.5 py-1.5 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white font-black border border-[#333] text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ml-1 animate-pulse hover:animate-none"
+              className="px-3.5 py-1.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 font-black border border-gray-200 text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ml-1 animate-pulse hover:animate-none"
               title="Abrir Informe Ejecutivo con Gráficas de Pastel y Reporte Completo"
             >
               <PieIcon className="w-3.5 h-3.5 text-emerald-200" />
@@ -855,10 +855,10 @@ export default function PlannerCalendarPage() {
           </div>
 
           {/* Month / Year Controller */}
-          <div className="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-[#333] shadow-xl">
+          <div className="flex items-center gap-1 bg-slate-900/90 p-1.5 rounded-2xl border border-gray-200 shadow-xl">
             <button
               onClick={() => setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
-              className="p-1.5 rounded-xl bg-white/5 hover:bg-indigo-600 text-gray-300 hover:text-white transition cursor-pointer"
+              className="p-1.5 rounded-xl bg-white/5 hover:bg-indigo-600 text-gray-600 hover:text-gray-900 transition cursor-pointer"
               title="Mes anterior"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -867,7 +867,7 @@ export default function PlannerCalendarPage() {
             <select
               value={month}
               onChange={(e) => setCurrentDate(new Date(year, parseInt(e.target.value, 10), 1))}
-              className="bg-slate-950 text-white font-bold text-xs rounded-xl px-2.5 py-1.5 border border-white/10 outline-none cursor-pointer"
+              className="bg-slate-950 text-gray-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-white/10 outline-none cursor-pointer"
             >
               {MONTH_NAMES.map((m, idx) => (
                 <option key={m} value={idx}>{m}</option>
@@ -886,7 +886,7 @@ export default function PlannerCalendarPage() {
 
             <button
               onClick={() => setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
-              className="p-1.5 rounded-xl bg-white/5 hover:bg-indigo-600 text-gray-300 hover:text-white transition cursor-pointer"
+              className="p-1.5 rounded-xl bg-white/5 hover:bg-indigo-600 text-gray-600 hover:text-gray-900 transition cursor-pointer"
               title="Mes siguiente"
             >
               <ChevronRight className="w-4 h-4" />
@@ -899,8 +899,8 @@ export default function PlannerCalendarPage() {
               onClick={() => setActiveTab('CALENDARIO')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'CALENDARIO'
-                  ? 'bg-[#111] border border-[#333] text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white border border-gray-200 text-gray-900 shadow-lg'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
             >
               <CalendarIcon className="w-3.5 h-3.5" />
@@ -910,8 +910,8 @@ export default function PlannerCalendarPage() {
               onClick={() => setActiveTab('MATRIZ_PLAZOS')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'MATRIZ_PLAZOS'
-                  ? 'bg-[#111] border border-[#333] text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white border border-gray-200 text-gray-900 shadow-lg'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
             >
               <ListFilter className="w-3.5 h-3.5" />
@@ -921,8 +921,8 @@ export default function PlannerCalendarPage() {
               onClick={() => setActiveTab('REPORTE')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'REPORTE'
-                  ? 'bg-[#111] border border-[#333] text-white shadow-sm'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-900'
               }`}
             >
               <PieIcon className="w-3.5 h-3.5 text-emerald-400" />
@@ -939,7 +939,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'rojo'
               ? 'bg-red-500/20 border-red-500 ring-2 ring-red-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -949,7 +949,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-red-400 font-mono">{countRojo}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">Urgentes / Vencidos</p>
+          <p className="text-[10px] text-gray-500 mt-1">Urgentes / Vencidos</p>
         </button>
 
         <button
@@ -957,7 +957,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'naranja'
               ? 'bg-amber-500/20 border-amber-500 ring-2 ring-amber-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -967,7 +967,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-amber-400 font-mono">{countNaranja}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">En trámite / cotización</p>
+          <p className="text-[10px] text-gray-500 mt-1">En trámite / cotización</p>
         </button>
 
         <button
@@ -975,7 +975,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'verde'
               ? 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -985,7 +985,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-emerald-400 font-mono">{countVerde}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">En tiempo programado</p>
+          <p className="text-[10px] text-gray-500 mt-1">En tiempo programado</p>
         </button>
 
         <button
@@ -993,7 +993,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'APLICACIONES'
               ? 'bg-cyan-500/20 border-cyan-500 ring-2 ring-cyan-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1003,7 +1003,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-cyan-200 font-mono">{countAplicaciones}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">Edgar Figuero</p>
+          <p className="text-[10px] text-gray-500 mt-1">Edgar Figuero</p>
         </button>
 
         <button
@@ -1011,7 +1011,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'PM'
               ? 'bg-violet-500/20 border-violet-500 ring-2 ring-violet-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1021,7 +1021,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-violet-200 font-mono">{countPM}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">Juan Jose / Julio C.</p>
+          <p className="text-[10px] text-gray-500 mt-1">Juan Jose / Julio C.</p>
         </button>
 
         <button
@@ -1029,7 +1029,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'LOGISTICA'
               ? 'bg-blue-500/20 border-blue-500 ring-2 ring-blue-500/50'
-              : 'border-[#333] hover:bg-[#222]'
+              : 'border-gray-200 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1039,7 +1039,7 @@ export default function PlannerCalendarPage() {
             </span>
             <span className="text-lg font-black text-blue-200 font-mono">{countLogistica}</span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">Diego P. / Juan J.</p>
+          <p className="text-[10px] text-gray-500 mt-1">Diego P. / Juan J.</p>
         </button>
       </div>
 
@@ -1048,13 +1048,13 @@ export default function PlannerCalendarPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-indigo-400" />
-            <span className="font-bold text-white uppercase tracking-wider text-[11px]">
+            <span className="font-bold text-gray-900 uppercase tracking-wider text-[11px]">
               Slicers & Filtros por Área y Responsable:
             </span>
           </div>
 
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Buscar por área, situación, responsable, cliente..."
@@ -1069,11 +1069,11 @@ export default function PlannerCalendarPage() {
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5 pt-1">
           {/* Slicer Área */}
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Área Operativa:</label>
+            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">Área Operativa:</label>
             <select
               value={selectedArea}
               onChange={(e) => setSelectedArea(e.target.value)}
-              className="w-full bg-slate-950 text-white text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-slate-950 text-gray-900 text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todas las Áreas</option>
               {uniqueAreas.map(a => (
@@ -1084,11 +1084,11 @@ export default function PlannerCalendarPage() {
 
           {/* Slicer Responsable */}
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Responsable Asignado:</label>
+            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">Responsable Asignado:</label>
             <select
               value={selectedResponsable}
               onChange={(e) => setSelectedResponsable(e.target.value)}
-              className="w-full bg-slate-950 text-white text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-slate-950 text-gray-900 text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Responsables</option>
               {uniqueResponsables.map(r => (
@@ -1099,11 +1099,11 @@ export default function PlannerCalendarPage() {
 
           {/* Slicer Cliente */}
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Institución / Cliente:</label>
+            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">Institución / Cliente:</label>
             <select
               value={selectedContrato}
               onChange={(e) => setSelectedContrato(e.target.value)}
-              className="w-full bg-slate-950 text-white text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-slate-950 text-gray-900 text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todas las Instituciones</option>
               {uniqueClientes.map(c => (
@@ -1114,11 +1114,11 @@ export default function PlannerCalendarPage() {
 
           {/* Slicer Tipo de Pendiente */}
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Tipo de Pendiente:</label>
+            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">Tipo de Pendiente:</label>
             <select
               value={selectedTipoPendiente}
               onChange={(e) => setSelectedTipoPendiente(e.target.value)}
-              className="w-full bg-slate-950 text-white text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-slate-950 text-gray-900 text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Tipos</option>
               <option value="CONTRATO">📄 CONTRATO</option>
@@ -1128,11 +1128,11 @@ export default function PlannerCalendarPage() {
 
           {/* Slicer Semáforo */}
           <div>
-            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Estado / Semáforo:</label>
+            <label className="text-[10px] font-bold text-gray-500 uppercase mb-1 block">Estado / Semáforo:</label>
             <select
               value={selectedSemaforo}
               onChange={(e) => setSelectedSemaforo(e.target.value)}
-              className="w-full bg-slate-950 text-white text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-slate-950 text-gray-900 text-xs rounded-xl p-2 border border-white/10 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Semáforos</option>
               <option value="rojo">🔴 Críticos ({countRojo})</option>
@@ -1145,7 +1145,7 @@ export default function PlannerCalendarPage() {
         {/* Active Filter Badges */}
         {(selectedArea !== 'todos' || selectedContrato !== 'todos' || selectedTipoPendiente !== 'todos' || selectedResponsable !== 'todos' || selectedSemaforo !== 'todos' || searchQuery) && (
           <div className="flex items-center gap-2 pt-2 border-t border-white/5 flex-wrap">
-            <span className="text-[10px] text-gray-400 font-bold">Filtros Activos:</span>
+            <span className="text-[10px] text-gray-500 font-bold">Filtros Activos:</span>
             {selectedArea !== 'todos' && (
               <span className="badge bg-cyan-500/20 text-cyan-300 text-[10px] flex items-center gap-1">
                 Área: {selectedArea}
@@ -1197,9 +1197,9 @@ export default function PlannerCalendarPage() {
       {activeTab === 'CALENDARIO' && (
         <div className="glass-card rounded-2xl border border-white/10 overflow-hidden shadow-md">
           {/* Day of Week Headers */}
-          <div className="grid grid-cols-7 bg-slate-900/90 border-b border-white/10 text-center py-2.5 text-xs font-bold text-gray-300">
+          <div className="grid grid-cols-7 bg-slate-900/90 border-b border-white/10 text-center py-2.5 text-xs font-bold text-gray-600">
             {DAY_NAMES.map((d) => (
-              <div key={d} className="uppercase tracking-wider text-[11px] text-gray-400">
+              <div key={d} className="uppercase tracking-wider text-[11px] text-gray-500">
                 {d}
               </div>
             ))}
@@ -1223,14 +1223,14 @@ export default function PlannerCalendarPage() {
                   <div className="flex items-center justify-between mb-1.5">
                     <span className={`text-xs font-bold font-mono rounded-lg w-6 h-6 flex items-center justify-center ${
                       isToday
-                        ? 'bg-indigo-500 text-white shadow-md ring-2 ring-white/20'
-                        : day.isCurrentMonth ? 'text-gray-300' : 'text-gray-600'
+                        ? 'bg-indigo-500 text-gray-900 shadow-md ring-2 ring-white/20'
+                        : day.isCurrentMonth ? 'text-gray-600' : 'text-gray-600'
                     }`}>
                       {day.dayNumber}
                     </span>
 
                     {hasEvents && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-[#333]">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-gray-200">
                         {day.events.length} {day.events.length === 1 ? 'pendiente' : 'pendientes'}
                       </span>
                     )}
@@ -1254,7 +1254,7 @@ export default function PlannerCalendarPage() {
                         >
                           <div className="flex items-center gap-1.5 truncate">
                             <span className={`w-2 h-2 rounded-full flex-shrink-0 ${sem.dotClass}`} />
-                            <span className="badge bg-white/10 text-white font-mono text-[8px] px-1 py-0 font-bold">
+                            <span className="badge bg-white/10 text-gray-900 font-mono text-[8px] px-1 py-0 font-bold">
                               {ev.area}
                             </span>
                             <span className="truncate font-semibold">{ev.situacion}</span>
@@ -1285,8 +1285,8 @@ export default function PlannerCalendarPage() {
         <div className="glass-card rounded-2xl border border-white/10 overflow-hidden shadow-md animate-fade-in">
           <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-900/90">
             <div>
-              <h3 className="text-base font-black text-white">Matriz Oficial de Pendientes de Licitaciones</h3>
-              <p className="text-xs text-gray-400">Total mostrados: {filteredEvents.length} de {incidencias.length} registros clasificados por Área y Responsable</p>
+              <h3 className="text-base font-black text-gray-900">Matriz Oficial de Pendientes de Licitaciones</h3>
+              <p className="text-xs text-gray-500">Total mostrados: {filteredEvents.length} de {incidencias.length} registros clasificados por Área y Responsable</p>
             </div>
             <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs">
               Control Planner 3FN
@@ -1295,7 +1295,7 @@ export default function PlannerCalendarPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-950 border-b border-white/10 text-gray-400 uppercase text-[10px] font-bold">
+              <thead className="bg-slate-950 border-b border-white/10 text-gray-500 uppercase text-[10px] font-bold">
                 <tr>
                   <th className="p-3 w-10 text-center">N°</th>
                   <th className="p-3">CLIENTE</th>
@@ -1318,36 +1318,36 @@ export default function PlannerCalendarPage() {
 
                   return (
                     <tr key={row.id} className="hover:bg-white/[0.03] transition-colors">
-                      <td className="p-3 text-center font-mono font-bold text-gray-400">{row.item_num || row.id}</td>
-                      <td className="p-3 font-semibold text-gray-200 whitespace-nowrap">{row.cliente}</td>
+                      <td className="p-3 text-center font-mono font-bold text-gray-500">{row.item_num || row.id}</td>
+                      <td className="p-3 font-semibold text-gray-700 whitespace-nowrap">{row.cliente}</td>
                       <td className="p-3 font-mono font-semibold text-yellow-300 whitespace-nowrap">{row.numero_contrato}</td>
                       <td className="p-3 whitespace-nowrap">
                         <span className={`badge text-[10px] font-bold ${
                           isVisita
-                            ? 'bg-purple-500/20 text-purple-300 border border-[#333]'
-                            : 'bg-blue-500/20 text-blue-300 border border-[#333]'
+                            ? 'bg-purple-500/20 text-purple-300 border border-gray-200'
+                            : 'bg-blue-500/20 text-blue-300 border border-gray-200'
                         }`}>
                           {row.tipo_pendiente}
                         </span>
                       </td>
-                      <td className="p-3 font-semibold text-gray-100 max-w-xs">{row.situacion}</td>
+                      <td className="p-3 font-semibold text-gray-800 max-w-xs">{row.situacion}</td>
                       <td className="p-3 whitespace-nowrap">
                         <span className={`badge text-[10px] font-bold ${
-                          row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-[#333]' :
-                          row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-[#333]' :
-                          row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-[#333]' :
-                          row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-[#333]' :
-                          row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-[#333]' :
-                          row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-[#333]' :
-                          'bg-purple-500/20 text-purple-300 border border-[#333]'
+                          row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-gray-200' :
+                          row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-gray-200' :
+                          row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-gray-200' :
+                          row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-gray-200' :
+                          row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-gray-200' :
+                          row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-gray-200' :
+                          'bg-purple-500/20 text-purple-300 border border-gray-200'
                         }`}>
                           {row.area}
                         </span>
                       </td>
-                      <td className="p-3 font-bold text-white whitespace-nowrap">{row.responsable}</td>
-                      <td className="p-3 font-mono text-gray-300 whitespace-nowrap text-[11px]">{row.ubicacion || '-'}</td>
+                      <td className="p-3 font-bold text-gray-900 whitespace-nowrap">{row.responsable}</td>
+                      <td className="p-3 font-mono text-gray-600 whitespace-nowrap text-[11px]">{row.ubicacion || '-'}</td>
                       <td className="p-3 font-mono font-bold text-emerald-400 whitespace-nowrap">{row.fecha_cumplimiento}</td>
-                      <td className="p-3 text-gray-300 text-[11px] max-w-sm">{row.comentario || '-'}</td>
+                      <td className="p-3 text-gray-600 text-[11px] max-w-sm">{row.comentario || '-'}</td>
                       <td className="p-3 text-center whitespace-nowrap">
                         <span className={`badge text-[10px] ${sem.badgeClass}`}>
                           {row.estatus}
@@ -1357,7 +1357,7 @@ export default function PlannerCalendarPage() {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenEdit(row)}
-                            className="p-1 px-2 rounded-lg bg-indigo-500/20 hover:bg-[#222] text-indigo-300 font-bold border border-[#333] text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
+                            className="p-1 px-2 rounded-lg bg-indigo-500/20 hover:bg-gray-100 text-indigo-300 font-bold border border-gray-200 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
                             title="Editar detalles y reasignar responsable"
                           >
                             <ArrowRightLeft className="w-3 h-3" />
@@ -1365,7 +1365,7 @@ export default function PlannerCalendarPage() {
                           </button>
                           <button
                             onClick={() => handleOpenPresion(row)}
-                            className="p-1 px-2 rounded-lg bg-amber-500/20 hover:bg-[#222] text-amber-300 font-bold border border-[#333] text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
+                            className="p-1 px-2 rounded-lg bg-amber-500/20 hover:bg-gray-100 text-amber-300 font-bold border border-gray-200 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
                             title="Presionar por correo institucional"
                           >
                             <Zap className="w-3 h-3 fill-amber-400" />
@@ -1373,7 +1373,7 @@ export default function PlannerCalendarPage() {
                           </button>
                           <button
                             onClick={() => setSelectedDetail(row)}
-                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white cursor-pointer"
+                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900 cursor-pointer"
                             title="Ver detalle"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -1406,13 +1406,13 @@ export default function PlannerCalendarPage() {
             <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5 text-indigo-400" />
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-base font-bold text-gray-900">
                   Pendientes para el {selectedDayEvents.date}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedDayEvents(null)}
-                className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white"
+                className="p-1 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1424,19 +1424,19 @@ export default function PlannerCalendarPage() {
                 return (
                   <div key={ev.id} className="p-4 rounded-xl bg-slate-900/90 border border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white text-sm">{ev.situacion}</span>
+                      <span className="font-bold text-gray-900 text-sm">{ev.situacion}</span>
                       <span className={`badge text-xs ${sem.badgeClass}`}>{ev.estatus}</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                       <div><span className="text-gray-500 font-bold">Área:</span> <span className="text-cyan-300 font-bold">{ev.area}</span></div>
-                      <div><span className="text-gray-500 font-bold">Responsable:</span> <span className="text-white font-bold">{ev.responsable}</span></div>
+                      <div><span className="text-gray-500 font-bold">Responsable:</span> <span className="text-gray-900 font-bold">{ev.responsable}</span></div>
                       <div><span className="text-gray-500 font-bold">Cliente:</span> {ev.cliente}</div>
                       <div><span className="text-gray-500 font-bold">Contrato:</span> {ev.numero_contrato}</div>
                       <div><span className="text-gray-500 font-bold">Tipo:</span> {ev.tipo_pendiente}</div>
                       <div><span className="text-gray-500 font-bold">Ubicación:</span> {ev.ubicacion || '-'}</div>
                     </div>
                     {ev.comentario && (
-                      <p className="text-xs text-gray-400 bg-black/40 p-2.5 rounded-lg border border-white/5">
+                      <p className="text-xs text-gray-500 bg-black/40 p-2.5 rounded-lg border border-white/5">
                         {ev.comentario}
                       </p>
                     )}
@@ -1446,7 +1446,7 @@ export default function PlannerCalendarPage() {
                           setSelectedDayEvents(null)
                           handleOpenEdit(ev)
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-[#222] text-indigo-300 font-bold border border-[#333] text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-300 font-bold border border-gray-200 text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <ArrowRightLeft className="w-3.5 h-3.5" />
                         Reasignar / Editar
@@ -1475,13 +1475,13 @@ export default function PlannerCalendarPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="glass-card w-full max-w-lg p-6 rounded-2xl border border-white/20 animate-scale-in">
             <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
                 <Tag className="w-4 h-4 text-indigo-400" />
                 Ficha de Obligación #{selectedDetail.item_num || selectedDetail.id}
               </h3>
               <button
                 onClick={() => setSelectedDetail(null)}
-                className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white"
+                className="p-1 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1489,46 +1489,46 @@ export default function PlannerCalendarPage() {
 
             <div className="space-y-3 text-xs">
               <div className="p-3 rounded-xl bg-slate-900 border border-white/10 space-y-1.5">
-                <div className="text-gray-400 uppercase font-bold text-[10px]">Situación:</div>
-                <div className="text-sm font-bold text-white">{selectedDetail.situacion}</div>
+                <div className="text-gray-500 uppercase font-bold text-[10px]">Situación:</div>
+                <div className="text-sm font-bold text-gray-900">{selectedDetail.situacion}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Área:</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Área:</span>
                   <span className="font-bold text-cyan-300">{selectedDetail.area}</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Responsable:</span>
-                  <span className="font-bold text-white">{selectedDetail.responsable}</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Responsable:</span>
+                  <span className="font-bold text-gray-900">{selectedDetail.responsable}</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Cliente:</span>
-                  <span className="font-bold text-white">{selectedDetail.cliente}</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Cliente:</span>
+                  <span className="font-bold text-gray-900">{selectedDetail.cliente}</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Contrato:</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Contrato:</span>
                   <span className="font-mono font-bold text-yellow-300">{selectedDetail.numero_contrato}</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Tipo de Pendiente:</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Tipo de Pendiente:</span>
                   <span className="font-bold text-purple-300">{selectedDetail.tipo_pendiente}</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/5">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Ubicación:</span>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Ubicación:</span>
                   <span className="font-bold text-pink-300">{selectedDetail.ubicacion || '-'}</span>
                 </div>
               </div>
 
               <div className="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
-                <span className="text-gray-400 block text-[10px] font-bold uppercase">Fecha de Cumplimiento:</span>
+                <span className="text-gray-500 block text-[10px] font-bold uppercase">Fecha de Cumplimiento:</span>
                 <span className="font-mono font-bold text-emerald-400 text-sm">{selectedDetail.fecha_cumplimiento}</span>
               </div>
 
               {selectedDetail.comentario && (
                 <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-1">
-                  <span className="text-gray-400 block text-[10px] font-bold uppercase">Comentario del Planner:</span>
-                  <p className="text-gray-200 text-xs">{selectedDetail.comentario}</p>
+                  <span className="text-gray-500 block text-[10px] font-bold uppercase">Comentario del Planner:</span>
+                  <p className="text-gray-700 text-xs">{selectedDetail.comentario}</p>
                 </div>
               )}
             </div>
@@ -1536,7 +1536,7 @@ export default function PlannerCalendarPage() {
             <div className="pt-4 mt-4 border-t border-white/10 flex justify-end gap-2">
               <button
                 onClick={() => setSelectedDetail(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-gray-300 text-xs font-bold hover:bg-slate-700 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-slate-800 text-gray-600 text-xs font-bold hover:bg-slate-700 cursor-pointer"
               >
                 Cerrar
               </button>
@@ -1546,7 +1546,7 @@ export default function PlannerCalendarPage() {
                   setSelectedDetail(null)
                   handleOpenEdit(detail)
                 }}
-                className="px-4 py-2 rounded-xl bg-indigo-500/20 hover:bg-[#222] text-indigo-300 text-xs font-bold border border-[#333] flex items-center gap-1.5 transition cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-300 text-xs font-bold border border-gray-200 flex items-center gap-1.5 transition cursor-pointer"
               >
                 <ArrowRightLeft className="w-3.5 h-3.5" />
                 Reasignar / Editar
@@ -1594,7 +1594,7 @@ export default function PlannerCalendarPage() {
 
       {/* Toast Notification Flotante */}
       {successToast && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-emerald-950/90 border border-[#333] text-white text-xs font-bold shadow-md flex items-center gap-3 animate-slide-up backdrop-blur-md">
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-emerald-950/90 border border-gray-200 text-gray-900 text-xs font-bold shadow-md flex items-center gap-3 animate-slide-up backdrop-blur-md">
           <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
             <CheckCircle2 className="w-5 h-5" />
           </div>

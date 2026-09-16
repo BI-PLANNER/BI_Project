@@ -3,38 +3,38 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
-   Dark Minimalist Design System
+   Light Minimalist Design System
    ============================================================ */
 
 :root {
   /* Brand Colors — Minimalist Accent */
-  --brand-primary: #ffffff;
-  --brand-secondary: #e5e5e5;
-  --brand-accent: #a3a3a3;
+  --brand-primary: #000000;
+  --brand-secondary: #333333;
+  --brand-accent: #666666;
 
-  /* Dark theme base — Vercel / Linear inspired */
-  --bg-primary: #000000;
-  --bg-secondary: #0a0a0a;
-  --bg-card: #111111;
-  --bg-card-hover: #171717;
-  --bg-elevated: #1a1a1a;
+  /* Light theme base — Apple / Clean inspired */
+  --bg-primary: #f9fafb;     /* gray-50 */
+  --bg-secondary: #ffffff;   /* white */
+  --bg-card: #ffffff;
+  --bg-card-hover: #f3f4f6;  /* gray-100 */
+  --bg-elevated: #ffffff;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-default: rgba(255, 255, 255, 0.12);
-  --border-active: rgba(255, 255, 255, 0.2);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-active: rgba(0, 0, 0, 0.2);
 
-  --text-primary: #ffffff;
-  --text-secondary: #a3a3a3;
-  --text-muted: #737373;
+  --text-primary: #111827;   /* gray-900 */
+  --text-secondary: #4b5563; /* gray-600 */
+  --text-muted: #9ca3af;     /* gray-400 */
 
-  /* Semáforo - Muted colors for minimalist look */
-  --semaforo-verde: #34d399;
-  --semaforo-anaranjado: #fbbf24;
-  --semaforo-rojo: #f87171;
+  /* Semáforo - Clean colors for minimalist look */
+  --semaforo-verde: #10b981;
+  --semaforo-anaranjado: #f59e0b;
+  --semaforo-rojo: #ef4444;
 
   /* Shadows - Very subtle */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.9);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* ============================================================
@@ -42,7 +42,7 @@
    ============================================================ */
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {

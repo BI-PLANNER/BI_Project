@@ -228,9 +228,9 @@ export default function ReporteDetalladoLicitaciones({
   }
 
   const content = (
-    <div className="space-y-6 text-white">
+    <div className="space-y-6 text-gray-900">
       {/* 1. Header Ejecutivo del Reporte */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-[#111] border border-[#333] relative overflow-hidden">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-white border border-gray-200 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -243,11 +243,11 @@ export default function ReporteDetalladoLicitaciones({
                 FASE 2 — PROYECTOS & CONTRATOS
               </span>
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+            <h1 className="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2.5">
               <FileText className="w-7 h-7 text-indigo-400" />
               Reporte Detallado de Obligaciones de Licitaciones
             </h1>
-            <p className="text-xs text-gray-400 mt-1 max-w-3xl">
+            <p className="text-xs text-gray-500 mt-1 max-w-3xl">
               Auditoría y trazabilidad integral de los 26 hitos y compromisos contractuales asignados por Área y Responsable Operativo (Aplicaciones, PM, Logística, IT, Soporte, Licitaciones y GI).
             </p>
           </div>
@@ -260,8 +260,8 @@ export default function ReporteDetalladoLicitaciones({
                 onClick={() => setChartType('donut')}
                 className={`px-2.5 py-1 rounded-lg transition-all text-xs cursor-pointer ${
                   chartType === 'donut'
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-indigo-600 text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-900'
                 }`}
                 title="Vista Gráfica Tipo Anillo / Donut"
               >
@@ -271,8 +271,8 @@ export default function ReporteDetalladoLicitaciones({
                 onClick={() => setChartType('pie')}
                 className={`px-2.5 py-1 rounded-lg transition-all text-xs cursor-pointer ${
                   chartType === 'pie'
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'bg-indigo-600 text-gray-900 shadow'
+                    : 'text-gray-500 hover:text-gray-900'
                 }`}
                 title="Vista Gráfica Tipo Pastel / Pie"
               >
@@ -282,7 +282,7 @@ export default function ReporteDetalladoLicitaciones({
 
             <button
               onClick={handleCopyText}
-              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-200 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-700 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Copiar texto formateado para correo o WhatsApp"
             >
               {copied ? (
@@ -300,7 +300,7 @@ export default function ReporteDetalladoLicitaciones({
 
             <button
               onClick={handleExportCSV}
-              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-[#222] border border-[#333] text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-gray-100 border border-gray-200 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Descargar archivo Excel / CSV"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -319,7 +319,7 @@ export default function ReporteDetalladoLicitaciones({
             {!isEmbedded && onClose && (
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition cursor-pointer"
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-500 hover:text-gray-900 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -330,24 +330,24 @@ export default function ReporteDetalladoLicitaciones({
         {/* Scorecards Rápidos */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/10">
           <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-white/5">
-            <span className="text-[10px] text-gray-400 uppercase font-bold block">Total Obligaciones:</span>
-            <span className="text-2xl font-black text-white font-mono">{total}</span>
+            <span className="text-[10px] text-gray-500 uppercase font-bold block">Total Obligaciones:</span>
+            <span className="text-2xl font-black text-gray-900 font-mono">{total}</span>
             <span className="text-[10px] text-indigo-300 block mt-0.5">100% Asignadas</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-emerald-400 uppercase font-bold block">🟢 En Plazo / Verde:</span>
             <span className="text-2xl font-black text-emerald-300 font-mono">{totalVerde}</span>
             <span className="text-[10px] text-emerald-400/80 block mt-0.5">{pctVerde}% de efectividad</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Críticos / Urgentes:</span>
             <span className="text-2xl font-black text-red-400 font-mono">{totalRojo}</span>
             <span className="text-[10px] text-red-400/80 block mt-0.5">Requieren seguimiento</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-gray-200">
             <span className="text-[10px] text-amber-400 uppercase font-bold block">🟠 Advertencia:</span>
             <span className="text-2xl font-black text-amber-400 font-mono">{totalNaranja}</span>
             <span className="text-[10px] text-amber-400/80 block mt-0.5">En trámite / cotización</span>
@@ -359,19 +359,19 @@ export default function ReporteDetalladoLicitaciones({
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-900 shadow-sm">
               <PieIcon className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white tracking-tight">
+              <h2 className="text-lg font-black text-gray-900 tracking-tight">
                 Análisis Visual con Gráficas de Pastel
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500">
                 Haga clic en cualquier porción o elemento de leyenda para filtrar automáticamente la tabla de abajo.
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-[#333] shrink-0">
+          <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-gray-200 shrink-0">
             {chartType === 'pie' ? '🥧 Modo Pastel Amplio con %' : '🍩 Modo Anillo Amplio'} • 26 Obligaciones
           </span>
         </div>
@@ -463,7 +463,7 @@ export default function ReporteDetalladoLicitaciones({
       {/* 3. Filtros y Búsqueda en el Reporte */}
       <div className="glass-card p-4 rounded-2xl border border-white/10 shadow-xl flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-900/80">
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1.5 font-bold text-gray-300 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-gray-600 text-xs">
             <Filter className="w-4 h-4 text-indigo-400" />
             <span>Filtrar Matriz:</span>
           </div>
@@ -471,7 +471,7 @@ export default function ReporteDetalladoLicitaciones({
           <select
             value={filterArea}
             onChange={(e) => setFilterArea(e.target.value)}
-            className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+            className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
           >
             <option value="todos">Todas las Áreas ({total})</option>
             {areas.map(a => (
@@ -482,7 +482,7 @@ export default function ReporteDetalladoLicitaciones({
           <select
             value={filterCliente}
             onChange={(e) => setFilterCliente(e.target.value)}
-            className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+            className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
           >
             <option value="todos">Todos los Clientes</option>
             {clientes.map(c => (
@@ -493,7 +493,7 @@ export default function ReporteDetalladoLicitaciones({
           <select
             value={filterSemaforo}
             onChange={(e) => setFilterSemaforo(e.target.value)}
-            className="bg-slate-950 text-white font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
+            className="bg-slate-950 text-gray-900 font-semibold text-xs rounded-xl p-2 border border-white/10 outline-none cursor-pointer"
           >
             <option value="todos">Todos los Estados</option>
             <option value="rojo">🔴 Críticos ({totalRojo})</option>
@@ -509,7 +509,7 @@ export default function ReporteDetalladoLicitaciones({
                 setFilterSemaforo('todos')
                 setSearch('')
               }}
-              className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-gray-300 text-xs font-bold transition cursor-pointer"
+              className="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-gray-600 text-xs font-bold transition cursor-pointer"
             >
               Limpiar Filtros
             </button>
@@ -517,7 +517,7 @@ export default function ReporteDetalladoLicitaciones({
         </div>
 
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Buscar por cliente, tarea, persona..."
@@ -547,14 +547,14 @@ export default function ReporteDetalladoLicitaciones({
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-xs text-white truncate">
+                <span className="font-bold text-xs text-gray-900 truncate">
                   {areaName}
                 </span>
                 <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-[10px]">
                   {areaItems.length}
                 </span>
               </div>
-              <p className="text-[10px] text-gray-400 truncate mb-1.5">
+              <p className="text-[10px] text-gray-500 truncate mb-1.5">
                 {responsables}
               </p>
               <div className="flex items-center gap-1.5 text-[9px] font-bold pt-1.5 border-t border-white/5">
@@ -571,8 +571,8 @@ export default function ReporteDetalladoLicitaciones({
       <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-md bg-slate-900/90">
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-950/80">
           <div>
-            <h3 className="text-sm font-black text-white">Matriz Detallada de Obligaciones ({filtered.length} registros)</h3>
-            <p className="text-[11px] text-gray-400">Formato oficial con todas las dimensiones operativas, plazos y bitácora</p>
+            <h3 className="text-sm font-black text-gray-900">Matriz Detallada de Obligaciones ({filtered.length} registros)</h3>
+            <p className="text-[11px] text-gray-500">Formato oficial con todas las dimensiones operativas, plazos y bitácora</p>
           </div>
           <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-[10px]">
             COMPRASAL 3FN CONSOLIDADO
@@ -581,7 +581,7 @@ export default function ReporteDetalladoLicitaciones({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950 border-b border-white/10 text-gray-400 uppercase text-[10px] font-bold">
+            <thead className="bg-slate-950 border-b border-white/10 text-gray-500 uppercase text-[10px] font-bold">
               <tr>
                 <th className="p-3 w-10 text-center">N°</th>
                 <th className="p-3">CLIENTE</th>
@@ -604,50 +604,50 @@ export default function ReporteDetalladoLicitaciones({
 
                 return (
                   <tr key={row.id} className="hover:bg-white/[0.04] transition-colors">
-                    <td className="p-3 text-center font-mono font-bold text-gray-400">{row.item_num || idx + 1}</td>
-                    <td className="p-3 font-bold text-gray-100 whitespace-nowrap">{row.cliente}</td>
+                    <td className="p-3 text-center font-mono font-bold text-gray-500">{row.item_num || idx + 1}</td>
+                    <td className="p-3 font-bold text-gray-800 whitespace-nowrap">{row.cliente}</td>
                     <td className="p-3 font-mono font-semibold text-yellow-300 whitespace-nowrap">{row.numero_contrato}</td>
                     <td className="p-3 whitespace-nowrap">
                       <span className={`badge text-[9px] font-bold ${
                         row.tipo_pendiente === 'VISITA - LUIS'
-                          ? 'bg-purple-500/20 text-purple-300 border border-[#333]'
-                          : 'bg-blue-500/20 text-blue-300 border border-[#333]'
+                          ? 'bg-purple-500/20 text-purple-300 border border-gray-200'
+                          : 'bg-blue-500/20 text-blue-300 border border-gray-200'
                       }`}>
                         {row.tipo_pendiente}
                       </span>
                     </td>
-                    <td className="p-3 font-semibold text-gray-200 max-w-xs">{row.situacion}</td>
+                    <td className="p-3 font-semibold text-gray-700 max-w-xs">{row.situacion}</td>
                     <td className="p-3 whitespace-nowrap">
                       <span className={`badge text-[10px] font-bold ${
-                        row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-[#333]' :
-                        row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-[#333]' :
-                        row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-[#333]' :
-                        row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-[#333]' :
-                        row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-[#333]' :
-                        row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-[#333]' :
-                        'bg-purple-500/20 text-purple-300 border border-[#333]'
+                        row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-gray-200' :
+                        row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-gray-200' :
+                        row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-gray-200' :
+                        row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-gray-200' :
+                        row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-gray-200' :
+                        row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-gray-200' :
+                        'bg-purple-500/20 text-purple-300 border border-gray-200'
                       }`}>
                         {row.area}
                       </span>
                     </td>
-                    <td className="p-3 font-bold text-white whitespace-nowrap">
+                    <td className="p-3 font-bold text-gray-900 whitespace-nowrap">
                       <div>{row.responsable}</div>
                       {row.responsableEmail && (
-                        <div className="text-[10px] text-gray-400 font-mono font-normal">{row.responsableEmail}</div>
+                        <div className="text-[10px] text-gray-500 font-mono font-normal">{row.responsableEmail}</div>
                       )}
                     </td>
-                    <td className="p-3 font-mono text-gray-300 whitespace-nowrap text-[11px]">{row.ubicacion || '-'}</td>
+                    <td className="p-3 font-mono text-gray-600 whitespace-nowrap text-[11px]">{row.ubicacion || '-'}</td>
                     <td className="p-3 font-mono font-bold text-emerald-400 whitespace-nowrap">{row.fecha_cumplimiento}</td>
                     <td className="p-3 text-center whitespace-nowrap">
                       <span className={`badge text-[10px] font-bold ${
-                        isRojo ? 'bg-red-500/20 text-red-300 border border-[#333]' :
-                        isNaranja ? 'bg-amber-500/20 text-amber-300 border border-[#333]' :
-                        'bg-emerald-500/20 text-emerald-300 border border-[#333]'
+                        isRojo ? 'bg-red-500/20 text-red-300 border border-gray-200' :
+                        isNaranja ? 'bg-amber-500/20 text-amber-300 border border-gray-200' :
+                        'bg-emerald-500/20 text-emerald-300 border border-gray-200'
                       }`}>
                         {row.estatus}
                       </span>
                     </td>
-                    <td className="p-3 text-gray-300 text-[11px] max-w-sm">{row.comentario || '-'}</td>
+                    <td className="p-3 text-gray-600 text-[11px] max-w-sm">{row.comentario || '-'}</td>
                   </tr>
                 )
               })}
@@ -657,7 +657,7 @@ export default function ReporteDetalladoLicitaciones({
       </div>
 
       {/* 6. Pie de Informe */}
-      <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400">
+      <div className="p-4 rounded-2xl bg-slate-950/60 border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
         <div className="flex items-center gap-2">
           <Building2 className="w-4 h-4 text-indigo-400" />
           <span>Control Planner — Sistema Oficial de Licitaciones y Dirección Estratégica</span>

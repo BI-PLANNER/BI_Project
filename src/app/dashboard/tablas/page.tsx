@@ -555,11 +555,11 @@ export default function GestionTablasPage() {
     return (
       <div className="p-6 max-w-xl mx-auto mt-16 text-center space-y-6">
         <div className="glass-card p-10 rounded-3xl border border-white/10 shadow-md space-y-5 bg-slate-950/80">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center mx-auto border border-[#333]">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center mx-auto border border-gray-200">
             <ShieldAlert className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-bold text-white">Módulo Operativo Restringido</h2>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <h2 className="text-xl font-bold text-gray-900">Módulo Operativo Restringido</h2>
+          <p className="text-xs text-gray-500 leading-relaxed">
             Tu perfil de <strong className="text-amber-300">Gerente General</strong> está configurado con acceso exclusivo a los <strong>Dashboards Estratégicos y de Obligaciones</strong>.
           </p>
           <div className="pt-2">
@@ -585,7 +585,7 @@ export default function GestionTablasPage() {
             <Database className="w-4 h-4" />
             <span>Gestor Integral de Base de Datos • 21 Tablas 3FN</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
             Gestión y Llenado de Datos Maestros
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -596,14 +596,14 @@ export default function GestionTablasPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { loadTableData(selectedTable); loadCatalogs(); }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-[#333] transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-gray-200 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Actualizar</span>
           </button>
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Nuevo Registro en {config.label}</span>
@@ -615,8 +615,8 @@ export default function GestionTablasPage() {
       {notification && (
         <div className={`p-3 rounded-xl flex items-center justify-between text-xs font-medium border animate-fade-in ${
           notification.type === 'success'
-            ? 'bg-emerald-500/10 text-emerald-300 border-[#333]'
-            : 'bg-rose-500/10 text-rose-300 border-[#333]'
+            ? 'bg-emerald-500/10 text-emerald-300 border-gray-200'
+            : 'bg-rose-500/10 text-rose-300 border-gray-200'
         }`}>
           <div className="flex items-center gap-2">
             {notification.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <AlertCircle className="w-4 h-4 text-rose-400" />}
@@ -646,8 +646,8 @@ export default function GestionTablasPage() {
                     onClick={() => setSelectedTable(t.id)}
                     className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between transition ${
                       isSelected
-                        ? 'bg-[#111] border border-[#333] text-indigo-200 font-bold border border-[#333] shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-[#222]'
+                        ? 'bg-white border border-gray-200 text-indigo-200 font-bold border border-gray-200 shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-gray-100'
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
@@ -664,11 +664,11 @@ export default function GestionTablasPage() {
       </div>
 
       {/* Table Content & Search */}
-      <div className="bg-slate-900/80 border border-[#333] rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-slate-900/80 border border-gray-200 rounded-2xl overflow-hidden shadow-xl">
         {/* Table Header toolbar */}
         <div className="p-4 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-sm font-bold text-white flex items-center gap-2">
+            <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
               <Database className="w-4 h-4 text-indigo-400" />
               Tabla: <span className="text-indigo-300 font-mono">`{selectedTable}`</span>
             </span>
@@ -685,7 +685,7 @@ export default function GestionTablasPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder={`Buscar en ${config.label}...`}
-              className="w-full pl-9 pr-3 py-1.5 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+              className="w-full pl-9 pr-3 py-1.5 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
         </div>
@@ -728,12 +728,12 @@ export default function GestionTablasPage() {
 
                   return (
                     <Fragment key={idx}>
-                      <tr className="hover:bg-[#222] transition group">
+                      <tr className="hover:bg-gray-100 transition group">
                         <td className="p-3 font-mono text-[11px] text-slate-400 font-semibold flex items-center gap-1.5">
                           {isLicitacionesTable && (
                             <button
                               onClick={() => toggleExpandOffer(String(pkVal))}
-                              className="p-1 rounded bg-slate-800 hover:bg-[#222] text-indigo-400 transition"
+                              className="p-1 rounded bg-slate-800 hover:bg-gray-100 text-indigo-400 transition"
                               title="Desplegar Renglones Ofertados"
                             >
                               {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -748,17 +748,17 @@ export default function GestionTablasPage() {
                               {f.type === 'boolean' ? (
                                 f.key === 'es_adjudicado' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-[#333]">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
                                       🟢 Adjudicada
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-[#333]">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-gray-200">
                                       🔴 Perdida
                                     </span>
                                   )
                                 ) : f.key === 'activo' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-[#333]">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
                                       🟢 Activo
                                     </span>
                                   ) : (
@@ -768,7 +768,7 @@ export default function GestionTablasPage() {
                                   )
                                 ) : (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-[#333]">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-gray-200">
                                       🟢 Sí
                                     </span>
                                   ) : (
@@ -796,7 +796,7 @@ export default function GestionTablasPage() {
                             {isLicitacionesTable && (
                               <button
                                 onClick={() => toggleExpandOffer(String(pkVal))}
-                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-[#222] text-indigo-300 text-[11px] font-bold transition flex items-center gap-1 border border-[#333]"
+                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-gray-100 text-indigo-300 text-[11px] font-bold transition flex items-center gap-1 border border-gray-200"
                               >
                                 {isExpanded ? 'Ocultar Items' : 'Ver Renglones'}
                               </button>
@@ -804,14 +804,14 @@ export default function GestionTablasPage() {
                             <button
                               onClick={() => handleOpenEdit(row)}
                               title="Editar"
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-[#222] text-slate-300 hover:text-indigo-300 transition"
+                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-gray-100 text-slate-300 hover:text-indigo-300 transition"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDelete(pkVal)}
                               title="Eliminar"
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-[#222] text-slate-300 hover:text-rose-400 transition"
+                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-gray-100 text-slate-300 hover:text-rose-400 transition"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -821,9 +821,9 @@ export default function GestionTablasPage() {
 
                       {/* Sub-tabla Expandible de Renglones / Ítems */}
                       {isLicitacionesTable && isExpanded && (
-                        <tr className="bg-slate-950/90 border-b border-[#333]">
+                        <tr className="bg-slate-950/90 border-b border-gray-200">
                           <td colSpan={config.fields.length + 2} className="p-4 bg-slate-950/60">
-                            <div className="space-y-3 p-3 bg-slate-900/90 rounded-2xl border border-[#333] shadow-inner">
+                            <div className="space-y-3 p-3 bg-slate-900/90 rounded-2xl border border-gray-200 shadow-inner">
                               <div className="flex items-center justify-between">
                                 <h4 className="text-xs font-bold text-indigo-300 flex items-center gap-2">
                                   <Boxes className="w-4 h-4 text-indigo-400" />
@@ -885,14 +885,14 @@ export default function GestionTablasPage() {
                                         const totalOfertado = (Number(item.cantidad || 0) * Number(item.precio_unitario || 0))
 
                                         return (
-                                          <tr key={itemIdx} className="hover:bg-[#222] transition">
+                                          <tr key={itemIdx} className="hover:bg-gray-100 transition">
                                             <td className="p-2 font-mono font-bold text-slate-400">
                                               #{item.renglon_numero || itemIdx + 1}
                                             </td>
                                             <td className="p-2 font-bold text-cyan-300 max-w-xs truncate">
                                               {item.licitaciones_ofertas?.clientes?.nombre_cliente || row.nombre_oferta?.split(' ').slice(0,3).join(' ') || 'INSTITUCIONAL'}
                                             </td>
-                                            <td className="p-2 font-bold text-white max-w-xs truncate">
+                                            <td className="p-2 font-bold text-gray-900 max-w-xs truncate">
                                               {prodName}
                                             </td>
                                             <td className="p-2 font-semibold text-indigo-300">
@@ -909,15 +909,15 @@ export default function GestionTablasPage() {
                                             </td>
                                             <td className="p-2 text-center">
                                               {isAdjudicada ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-[#333]">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-gray-200">
                                                   🟢 ADJUDICADA
                                                 </span>
                                               ) : isDesierta ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-[#333]">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-gray-200">
                                                   🟡 DESIERTA
                                                 </span>
                                               ) : (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-[#333]">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-gray-200">
                                                   🔴 PERDIDA
                                                 </span>
                                               )}
@@ -959,7 +959,7 @@ export default function GestionTablasPage() {
       {/* Modal Form for Create / Edit */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-[#333] rounded-2xl w-full max-w-xl shadow-md overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-900 border border-gray-200 rounded-2xl w-full max-w-xl shadow-md overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
               <div className="flex items-center gap-2">
@@ -967,7 +967,7 @@ export default function GestionTablasPage() {
                   {editingId ? <Edit2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">
+                  <h3 className="text-sm font-bold text-gray-900">
                     {editingId ? `Editar ${config.label} (#${editingId})` : `Nuevo ${config.label}`}
                   </h3>
                   <p className="text-[11px] text-slate-400">Tabla `{selectedTable}`</p>
@@ -975,7 +975,7 @@ export default function GestionTablasPage() {
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-gray-900 hover:bg-slate-800 transition"
               >
                 ✕
               </button>
@@ -996,7 +996,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       >
                         <option value="">-- Seleccionar {f.label} --</option>
                         {(relCatalogs[f.relation || ''] || []).map(item => {
@@ -1025,7 +1025,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : f.type === 'number' ? (
                       <input
@@ -1035,7 +1035,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : (
                       <input
@@ -1044,7 +1044,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     )}
                   </div>
@@ -1063,7 +1063,7 @@ export default function GestionTablasPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition disabled:opacity-50"
                 >
                   {loading ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Crear Registro'}
                 </button>

@@ -115,7 +115,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
             {/* Destinatario */}
             <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase font-bold text-gray-400">Destinatario Asignado:</span>
+                <span className="text-[10px] uppercase font-bold text-gray-500">Destinatario Asignado:</span>
                 <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
                   {activeTask.responsableNombre} &lt;{activeTask.responsableEmail}&gt;
                 </p>
@@ -144,11 +144,11 @@ Planner Estratégico — COMPRASAL / LAB&MED
                     className={`py-1.5 text-xs font-semibold rounded-lg border transition-all ${
                       urgencia === lvl
                         ? lvl === 'CRITICO'
-                          ? 'bg-red-600 border-red-500 text-white shadow-lg'
+                          ? 'bg-red-600 border-red-500 text-gray-900 shadow-lg'
                           : lvl === 'URGENTE'
-                          ? 'bg-amber-600 border-amber-500 text-white shadow-lg'
-                          : 'bg-indigo-600 border-indigo-500 text-white shadow-lg'
-                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
+                          ? 'bg-amber-600 border-amber-500 text-gray-900 shadow-lg'
+                          : 'bg-indigo-600 border-indigo-500 text-gray-900 shadow-lg'
+                        : 'bg-white/5 border-white/10 text-gray-500 hover:text-gray-900'
                     }`}
                   >
                     {lvl}
@@ -177,7 +177,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
               <textarea
                 readOnly
                 value={cuerpo}
-                className="input-field font-mono text-xs h-36 resize-none bg-black/40 text-gray-300 leading-relaxed"
+                className="input-field font-mono text-xs h-36 resize-none bg-black/40 text-gray-600 leading-relaxed"
               />
             </div>
 

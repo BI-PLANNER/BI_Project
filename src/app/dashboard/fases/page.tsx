@@ -162,7 +162,7 @@ export default function FasesPage() {
     // Formato fechaStr: "10/8/2026", "31/8/2026", "10/9/2026"
     const parts = fechaStr.split('/')
     if (parts.length !== 3) {
-      return { color: 'gray', label: 'Sin fecha', badge: 'bg-white/5 text-gray-400' }
+      return { color: 'gray', label: 'Sin fecha', badge: 'bg-white/5 text-gray-500' }
     }
     const day = parseInt(parts[0], 10)
     const month = parseInt(parts[1], 10) - 1
@@ -180,7 +180,7 @@ export default function FasesPage() {
         color: 'rojo',
         dias: diffDays,
         label: diffDays < 0 ? `Vencido (${Math.abs(diffDays)}d)` : diffDays === 0 ? 'Vence hoy' : '1 día (<2d)',
-        badge: 'bg-red-500/25 text-red-300 border border-[#333] font-bold',
+        badge: 'bg-red-500/25 text-red-300 border border-gray-200 font-bold',
         cellBg: 'bg-red-500/10 text-red-300 font-bold'
       }
     } else if (diffDays <= 6) {
@@ -188,7 +188,7 @@ export default function FasesPage() {
         color: 'naranja',
         dias: diffDays,
         label: `${diffDays} días (<6d)`,
-        badge: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold',
+        badge: 'bg-amber-500/25 text-amber-300 border border-gray-200 font-bold',
         cellBg: 'bg-amber-500/15 text-amber-300 font-bold'
       }
     } else {
@@ -196,7 +196,7 @@ export default function FasesPage() {
         color: 'verde',
         dias: diffDays,
         label: `${diffDays} días (>6d)`,
-        badge: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold',
+        badge: 'bg-emerald-500/25 text-emerald-300 border border-gray-200 font-bold',
         cellBg: 'bg-emerald-500/15 text-emerald-300 font-bold'
       }
     }
@@ -385,8 +385,8 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('MATRIZ_RACI')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'MATRIZ_RACI'
-              ? 'bg-[#111] border border-[#333] text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
+              ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Users className="w-3.5 h-3.5 text-amber-300" />
@@ -398,7 +398,7 @@ export default function FasesPage() {
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'PENDIENTES_FASE2'
               ? 'bg-amber-400 text-black shadow-sm'
-              : 'text-gray-400 hover:text-white'
+              : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" />
@@ -410,7 +410,7 @@ export default function FasesPage() {
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'PROBLEMATICAS'
               ? 'bg-yellow-400 text-black shadow-sm'
-              : 'text-gray-400 hover:text-white'
+              : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <AlertOctagon className="w-3.5 h-3.5" />
@@ -421,8 +421,8 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('ENTREGAS_HOSPITAL')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'ENTREGAS_HOSPITAL'
-              ? 'bg-emerald-600 text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
+              ? 'bg-emerald-600 text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <Truck className="w-3.5 h-3.5" />
@@ -433,8 +433,8 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('NUMERALES_PROCESO')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'NUMERALES_PROCESO'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-gray-400 hover:text-white'
+              ? 'bg-indigo-600 text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-900'
           }`}
         >
           <CheckSquare className="w-3.5 h-3.5" />
@@ -448,18 +448,18 @@ export default function FasesPage() {
           {/* Tarjetas de Usuarios Reales y Funciones Exclusivas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Lenny Gómez (Planner) */}
-            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-[#333] transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-gray-200 transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold">⚡ PLANNER</span>
-                <span className="text-[10px] text-gray-400">LabAndMed</span>
+                <span className="text-[10px] text-gray-500">LabAndMed</span>
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Lenny Gómez</h3>
+                <h3 className="text-base font-bold text-gray-900">Lenny Gómez</h3>
                 <p className="text-xs text-amber-300 font-semibold">Planificador Estratégico & Control</p>
               </div>
-              <div className="text-xs text-gray-300 space-y-1.5 pt-2 border-t border-white/5">
-                <p className="font-bold text-gray-100">🔒 Controles Exclusivos:</p>
-                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-300">
+              <div className="text-xs text-gray-600 space-y-1.5 pt-2 border-t border-white/5">
+                <p className="font-bold text-gray-800">🔒 Controles Exclusivos:</p>
+                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-600">
                   <li>Planificación Inversa & Fechas Máximas</li>
                   <li>Semaforización de Cumplimiento</li>
                   <li>Disparador de Presión por Correo</li>
@@ -469,18 +469,18 @@ export default function FasesPage() {
             </div>
 
             {/* Roberto Batres (Planner) */}
-            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-[#333] transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-gray-200 transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold">⚡ PLANNER</span>
-                <span className="text-[10px] text-gray-400">LabAndMed</span>
+                <span className="text-[10px] text-gray-500">LabAndMed</span>
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Roberto Batres</h3>
+                <h3 className="text-base font-bold text-gray-900">Roberto Batres</h3>
                 <p className="text-xs text-amber-300 font-semibold">Planificación Operativa & Supervisión</p>
               </div>
-              <div className="text-xs text-gray-300 space-y-1.5 pt-2 border-t border-white/5">
-                <p className="font-bold text-gray-100">🔒 Controles Exclusivos:</p>
-                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-300">
+              <div className="text-xs text-gray-600 space-y-1.5 pt-2 border-t border-white/5">
+                <p className="font-bold text-gray-800">🔒 Controles Exclusivos:</p>
+                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-600">
                   <li>Generación de Tickets y Plazos</li>
                   <li>Auditoría de Entregas Escalonadas</li>
                   <li>Validación de Avances Completed</li>
@@ -490,18 +490,18 @@ export default function FasesPage() {
             </div>
 
             {/* Luis Orellana (Gerente) */}
-            <div className="glass-card p-5 border-l-4 border-l-indigo-500 border-white/10 hover:border-[#333] transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-indigo-500 border-white/10 hover:border-gray-200 transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-[10px] font-bold">👑 GERENCIA</span>
-                <span className="text-[10px] text-gray-400">Dirección</span>
+                <span className="text-[10px] text-gray-500">Dirección</span>
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Luis Orellana</h3>
+                <h3 className="text-base font-bold text-gray-900">Luis Orellana</h3>
                 <p className="text-xs text-indigo-300 font-semibold">Gerente General</p>
               </div>
-              <div className="text-xs text-gray-300 space-y-1.5 pt-2 border-t border-white/5">
-                <p className="font-bold text-gray-100">🔒 Controles Exclusivos:</p>
-                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-300">
+              <div className="text-xs text-gray-600 space-y-1.5 pt-2 border-t border-white/5">
+                <p className="font-bold text-gray-800">🔒 Controles Exclusivos:</p>
+                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-600">
                   <li>Aprobación Final de Presupuestos</li>
                   <li>Desbloqueo de Proyectos en Riesgo</li>
                   <li>Autorización de Excepciones Legales</li>
@@ -511,18 +511,18 @@ export default function FasesPage() {
             </div>
 
             {/* Juan José Fuentes Rodríguez (PM) */}
-            <div className="glass-card p-5 border-l-4 border-l-emerald-500 border-white/10 hover:border-[#333] transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-emerald-500 border-white/10 hover:border-gray-200 transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">🎯 PROJECT MANAGER</span>
-                <span className="text-[10px] text-gray-400">Operaciones</span>
+                <span className="text-[10px] text-gray-500">Operaciones</span>
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Juan José Fuentes R.</h3>
+                <h3 className="text-base font-bold text-gray-900">Juan José Fuentes R.</h3>
                 <p className="text-xs text-emerald-300 font-semibold">Project Manager (PM)</p>
               </div>
-              <div className="text-xs text-gray-300 space-y-1.5 pt-2 border-t border-white/5">
-                <p className="font-bold text-gray-100">🔒 Controles Exclusivos:</p>
-                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-300">
+              <div className="text-xs text-gray-600 space-y-1.5 pt-2 border-t border-white/5">
+                <p className="font-bold text-gray-800">🔒 Controles Exclusivos:</p>
+                <ul className="list-disc list-inside space-y-1 text-[11px] text-gray-600">
                   <li>Alta de Numerales (+ Agregar Proceso)</li>
                   <li>Redacción de Descripción Solicitada</li>
                   <li>Asignación de Especialistas de Campo</li>
@@ -533,31 +533,31 @@ export default function FasesPage() {
           </div>
 
           {/* Matriz RACI Oficial de LabAndMed */}
-          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
-            <div className="p-4 bg-[#111] border border-[#333] border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-card overflow-hidden border border-gray-200 shadow-md">
+            <div className="p-4 bg-white border border-gray-200 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-400" />
                   Matriz RACI de Cumplimiento Contractual
                 </h2>
-                <p className="text-xs text-gray-300">
+                <p className="text-xs text-gray-600">
                   Definición estricta de Roles: <span className="text-red-400 font-bold">R</span> (Responsable Ejecutor), <span className="text-amber-300 font-bold">A</span> (Accountable/Aprobador Único), <span className="text-blue-300 font-bold">C</span> (Consultado Técnico), <span className="text-emerald-300 font-bold">I</span> (Informado).
                 </p>
               </div>
 
               {/* Leyenda RACI */}
               <div className="flex items-center gap-2 text-xs">
-                <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-bold border border-[#333]">R = Responsible</span>
-                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-[#333]">A = Accountable</span>
-                <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-[#333]">C = Consulted</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-[#333]">I = Informed</span>
+                <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-bold border border-gray-200">R = Responsible</span>
+                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-gray-200">A = Accountable</span>
+                <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-gray-200">C = Consulted</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-gray-200">I = Informed</span>
               </div>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-950 text-gray-200 uppercase tracking-wider font-extrabold border-b border-white/10">
+                  <tr className="bg-slate-950 text-gray-700 uppercase tracking-wider font-extrabold border-b border-white/10">
                     <th className="py-3 px-4 w-12 text-center">#</th>
                     <th className="py-3 px-4 min-w-[240px]">Etapa / Control Contractual</th>
                     <th className="py-3 px-3 text-center bg-indigo-950/60 text-indigo-200 border-l border-white/10">
@@ -570,19 +570,19 @@ export default function FasesPage() {
                       🎯 PM<br/><span className="text-[10px] font-normal text-emerald-300">Juan José Fuentes</span>
                     </th>
                     <th className="py-3 px-3 text-center border-l border-white/10">
-                      🛠️ Soporte Téc.<br/><span className="text-[10px] font-normal text-gray-400">Moisés H.</span>
+                      🛠️ Soporte Téc.<br/><span className="text-[10px] font-normal text-gray-500">Moisés H.</span>
                     </th>
                     <th className="py-3 px-3 text-center border-l border-white/10">
-                      🧪 Aplicaciones<br/><span className="text-[10px] font-normal text-gray-400">Edgar / Andrea</span>
+                      🧪 Aplicaciones<br/><span className="text-[10px] font-normal text-gray-500">Edgar / Andrea</span>
                     </th>
                     <th className="py-3 px-3 text-center border-l border-white/10">
-                      💻 IT / Red LIS<br/><span className="text-[10px] font-normal text-gray-400">Ricardo V.</span>
+                      💻 IT / Red LIS<br/><span className="text-[10px] font-normal text-gray-500">Ricardo V.</span>
                     </th>
                     <th className="py-3 px-3 text-center border-l border-white/10">
-                      📦 Logística<br/><span className="text-[10px] font-normal text-gray-400">Juan Carlos P.</span>
+                      📦 Logística<br/><span className="text-[10px] font-normal text-gray-500">Juan Carlos P.</span>
                     </th>
                     <th className="py-3 px-3 text-center border-l border-white/10">
-                      💼 Comercial<br/><span className="text-[10px] font-normal text-gray-400">Dennis / Vanesa</span>
+                      💼 Comercial<br/><span className="text-[10px] font-normal text-gray-500">Dennis / Vanesa</span>
                     </th>
                   </tr>
                 </thead>
@@ -600,14 +600,14 @@ export default function FasesPage() {
                     { no: 10, etapa: 'Aprobación Final, Cobros y Cierre Gerencial', luis: 'A', planners: 'I', pm: 'C', soporte: 'I', apps: 'I', it: 'I', log: 'I', com: 'R' },
                   ].map((row) => (
                     <tr key={row.no} className="hover:bg-white/[0.03] transition-colors">
-                      <td className="py-2.5 px-4 text-center font-mono font-bold text-gray-400">{row.no}</td>
-                      <td className="py-2.5 px-4 font-semibold text-gray-100">{row.etapa}</td>
+                      <td className="py-2.5 px-4 text-center font-mono font-bold text-gray-500">{row.no}</td>
+                      <td className="py-2.5 px-4 font-semibold text-gray-800">{row.etapa}</td>
                       
                       {/* Luis Orellana */}
                       <td className="py-2.5 px-3 text-center border-l border-white/5 bg-indigo-950/20">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.luis === 'A' ? 'bg-amber-400 text-black shadow-md' :
-                          row.luis === 'R' ? 'bg-red-500 text-white shadow-md' :
+                          row.luis === 'R' ? 'bg-red-500 text-gray-900 shadow-md' :
                           row.luis === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.luis}</span>
                       </td>
@@ -616,7 +616,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5 bg-amber-950/20">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.planners === 'A' ? 'bg-amber-400 text-black shadow-md' :
-                          row.planners === 'R' ? 'bg-red-500 text-white shadow-md' :
+                          row.planners === 'R' ? 'bg-red-500 text-gray-900 shadow-md' :
                           row.planners === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.planners}</span>
                       </td>
@@ -625,7 +625,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5 bg-emerald-950/20">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.pm === 'A' ? 'bg-amber-400 text-black shadow-md' :
-                          row.pm === 'R' ? 'bg-red-500 text-white shadow-md' :
+                          row.pm === 'R' ? 'bg-red-500 text-gray-900 shadow-md' :
                           row.pm === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.pm}</span>
                       </td>
@@ -634,7 +634,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.soporte === 'A' ? 'bg-amber-400 text-black' :
-                          row.soporte === 'R' ? 'bg-red-500 text-white font-bold' :
+                          row.soporte === 'R' ? 'bg-red-500 text-gray-900 font-bold' :
                           row.soporte === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.soporte}</span>
                       </td>
@@ -643,7 +643,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.apps === 'A' ? 'bg-amber-400 text-black' :
-                          row.apps === 'R' ? 'bg-red-500 text-white font-bold' :
+                          row.apps === 'R' ? 'bg-red-500 text-gray-900 font-bold' :
                           row.apps === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.apps}</span>
                       </td>
@@ -652,7 +652,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.it === 'A' ? 'bg-amber-400 text-black' :
-                          row.it === 'R' ? 'bg-red-500 text-white font-bold' :
+                          row.it === 'R' ? 'bg-red-500 text-gray-900 font-bold' :
                           row.it === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.it}</span>
                       </td>
@@ -661,7 +661,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.log === 'A' ? 'bg-amber-400 text-black' :
-                          row.log === 'R' ? 'bg-red-500 text-white font-bold' :
+                          row.log === 'R' ? 'bg-red-500 text-gray-900 font-bold' :
                           row.log === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.log}</span>
                       </td>
@@ -670,7 +670,7 @@ export default function FasesPage() {
                       <td className="py-2.5 px-3 text-center border-l border-white/5">
                         <span className={`px-2.5 py-1 rounded-md font-extrabold font-mono text-xs ${
                           row.com === 'A' ? 'bg-amber-400 text-black' :
-                          row.com === 'R' ? 'bg-red-500 text-white font-bold' :
+                          row.com === 'R' ? 'bg-red-500 text-gray-900 font-bold' :
                           row.com === 'C' ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-gray-500'
                         }`}>{row.com}</span>
                       </td>
@@ -686,7 +686,7 @@ export default function FasesPage() {
       {/* 1. VISTA EXACTA DE "PROBLEMATICAS | RESPONSABLE" */}
       {vistaActiva === 'PROBLEMATICAS' && (
         <div className="space-y-4 animate-fade-in">
-          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
+          <div className="glass-card overflow-hidden border border-gray-200 shadow-md">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -703,7 +703,7 @@ export default function FasesPage() {
                       className="hover:bg-white/[0.04] transition-colors"
                     >
                       {/* Problemática */}
-                      <td className="py-3.5 px-6 font-semibold text-gray-100 uppercase tracking-wide border-r border-white/5">
+                      <td className="py-3.5 px-6 font-semibold text-gray-800 uppercase tracking-wide border-r border-white/5">
                         {item.problematica}
                       </td>
 
@@ -719,14 +719,14 @@ export default function FasesPage() {
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => handleOpenEditProblematica(item)}
-                            className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-white"
+                            className="p-1.5 rounded hover:bg-white/10 text-gray-500 hover:text-gray-900"
                             title="Editar"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteProblematica(item.id)}
-                            className="p-1.5 rounded hover:bg-[#222] text-gray-400 hover:text-red-400"
+                            className="p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-red-400"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -753,8 +753,8 @@ export default function FasesPage() {
                 onClick={() => setSelectedContratoId(c.id)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
                   c.id === currentContrato.id
-                    ? 'bg-emerald-600 text-white shadow-lg'
-                    : 'bg-white/5 text-gray-400 hover:text-white'
+                    ? 'bg-emerald-600 text-gray-900 shadow-lg'
+                    : 'bg-white/5 text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -764,13 +764,13 @@ export default function FasesPage() {
             ))}
           </div>
 
-          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
-            <div className="bg-emerald-950/80 px-6 py-4 border-b border-[#333] flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-card overflow-hidden border border-gray-200 shadow-md">
+            <div className="bg-emerald-950/80 px-6 py-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs uppercase font-extrabold tracking-widest text-emerald-400">
                   {currentContrato.cliente.toUpperCase()}
                 </p>
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-base font-bold text-gray-900">
                   {currentContrato.matrizEntregas.licitacion_ref}
                 </h3>
                 <p className="text-xs text-emerald-300/80 italic mt-0.5">
@@ -782,7 +782,7 @@ export default function FasesPage() {
                 <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold px-3 py-1">
                   CÓDIGO: {currentContrato.matrizEntregas.codigo_producto}
                 </span>
-                <p className="text-xs font-bold text-white mt-1">
+                <p className="text-xs font-bold text-gray-900 mt-1">
                   {currentContrato.matrizEntregas.nombre_producto}
                 </p>
               </div>
@@ -791,40 +791,40 @@ export default function FasesPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left border-collapse">
                 <thead>
-                  <tr className="bg-emerald-900/60 text-white font-bold text-center border-b border-[#333]">
-                    <th className="py-2.5 px-3 border-r border-[#333] w-16" rowSpan={2}>ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-[#333] w-16" rowSpan={2}>DÍAS</th>
-                    <th className="py-2 px-3 border-r border-[#333]" colSpan={currentContrato.matrizEntregas.hospitales.length}>
+                  <tr className="bg-emerald-900/60 text-gray-900 font-bold text-center border-b border-gray-200">
+                    <th className="py-2.5 px-3 border-r border-gray-200 w-16" rowSpan={2}>ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-gray-200 w-16" rowSpan={2}>DÍAS</th>
+                    <th className="py-2 px-3 border-r border-gray-200" colSpan={currentContrato.matrizEntregas.hospitales.length}>
                       CENTROS DE ATENCIÓN (HOSPITALES Y BANCO DE SANGRE)
                     </th>
-                    <th className="py-2.5 px-3 border-r border-[#333] w-24 bg-emerald-800/80" rowSpan={2}>TOTAL POR ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-[#333] w-28 bg-amber-950/60 text-amber-300" rowSpan={2}>FECHA LÍMITE DE ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-gray-200 w-24 bg-emerald-800/80" rowSpan={2}>TOTAL POR ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-gray-200 w-28 bg-amber-950/60 text-amber-300" rowSpan={2}>FECHA LÍMITE DE ENTREGA</th>
                     <th className="py-2.5 px-3 w-28 bg-orange-950/60 text-orange-300" rowSpan={2}>FECHAS PARA PONER EN LA APP</th>
                   </tr>
-                  <tr className="bg-emerald-900/40 text-emerald-200 font-semibold text-center border-b border-[#333]">
+                  <tr className="bg-emerald-900/40 text-emerald-200 font-semibold text-center border-b border-gray-200">
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <th key={idx} className="py-2 px-3 border-r border-[#333] text-[11px] whitespace-nowrap">
+                      <th key={idx} className="py-2 px-3 border-r border-gray-200 text-[11px] whitespace-nowrap">
                         {h.nombre}
                       </th>
                     ))}
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-emerald-900/30 text-gray-200">
+                <tbody className="divide-y divide-emerald-900/30 text-gray-700">
                   {currentContrato.matrizEntregas.entregas.map((ent, eIdx) => {
                     const totalFila = currentContrato.matrizEntregas!.hospitales.reduce(
                       (acc, curr) => acc + (curr.cantidades[eIdx] || 0), 0
                     )
                     return (
                       <tr key={eIdx} className="hover:bg-white/[0.02] text-center font-mono">
-                        <td className="py-2.5 px-3 font-bold text-white bg-white/[0.02] border-r border-white/5">
+                        <td className="py-2.5 px-3 font-bold text-gray-900 bg-white/[0.02] border-r border-white/5">
                           {ent.num}
                         </td>
                         <td className="py-2.5 px-3 text-emerald-400 font-bold border-r border-white/5">
                           {ent.dias}
                         </td>
                         {currentContrato.matrizEntregas!.hospitales.map((h, hIdx) => (
-                          <td key={hIdx} className="py-2.5 px-3 border-r border-white/5 text-gray-100">
+                          <td key={hIdx} className="py-2.5 px-3 border-r border-white/5 text-gray-800">
                             {h.cantidades[eIdx]}
                           </td>
                         ))}
@@ -842,26 +842,26 @@ export default function FasesPage() {
                   })}
 
                   <tr className="bg-emerald-950/80 font-bold text-center border-t-2 border-emerald-500">
-                    <td colSpan={2} className="py-3 px-3 text-right uppercase text-emerald-300 tracking-wider border-r border-[#333]">
+                    <td colSpan={2} className="py-3 px-3 text-right uppercase text-emerald-300 tracking-wider border-r border-gray-200">
                       TOTAL GENERAL:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-3 px-3 text-white border-r border-[#333] text-sm">
+                      <td key={idx} className="py-3 px-3 text-gray-900 border-r border-gray-200 text-sm">
                         {h.total.toLocaleString()}
                       </td>
                     ))}
-                    <td className="py-3 px-3 text-base text-emerald-400 bg-emerald-600/30 border-r border-[#333] font-black">
+                    <td className="py-3 px-3 text-base text-emerald-400 bg-emerald-600/30 border-r border-gray-200 font-black">
                       {currentContrato.matrizEntregas.hospitales.reduce((a, b) => a + b.total, 0).toLocaleString()}
                     </td>
                     <td colSpan={2} className="bg-black/20"></td>
                   </tr>
 
                   <tr className="bg-emerald-900/20 text-center font-semibold">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-emerald-400 border-r border-[#333]">
+                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-emerald-400 border-r border-gray-200">
                       📅 INSTALACIÓN:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-emerald-300 bg-emerald-500/20 font-bold border-r border-[#333]">
+                      <td key={idx} className="py-2.5 px-3 text-emerald-300 bg-emerald-500/20 font-bold border-r border-gray-200">
                         {h.fechaInstalacion}
                       </td>
                     ))}
@@ -869,7 +869,7 @@ export default function FasesPage() {
                   </tr>
 
                   <tr className="bg-black/20 text-center font-mono">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-400 border-r border-white/5">
+                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-500 border-r border-white/5">
                       📞 CONTACTO:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
@@ -881,11 +881,11 @@ export default function FasesPage() {
                   </tr>
 
                   <tr className="bg-black/10 text-center">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-400 border-r border-white/5">
+                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-500 border-r border-white/5">
                       👤 PERSONA:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-white font-medium border-r border-white/5">
+                      <td key={idx} className="py-2.5 px-3 text-gray-900 font-medium border-r border-white/5">
                         {h.persona}
                       </td>
                     ))}
@@ -893,7 +893,7 @@ export default function FasesPage() {
                   </tr>
 
                   <tr className="bg-white/[0.01] text-center text-[10px]">
-                    <td colSpan={2} className="py-2 px-3 text-right uppercase text-gray-400 border-r border-white/5">
+                    <td colSpan={2} className="py-2 px-3 text-right uppercase text-gray-500 border-r border-white/5">
                       ⏰ CONDICIÓN:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
@@ -921,8 +921,8 @@ export default function FasesPage() {
                 onClick={() => setSelectedContratoId(c.id)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
                   c.id === currentContrato.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-white/5 text-gray-400 hover:text-white'
+                    ? 'bg-indigo-600 text-gray-900 shadow-lg'
+                    : 'bg-white/5 text-gray-500 hover:text-gray-900'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -938,7 +938,7 @@ export default function FasesPage() {
 
             return (
               <div key={sIdx} className="glass-card overflow-hidden border border-white/10 shadow-xl">
-                <div className="bg-[#111] border border-[#333] px-5 py-3 border-b border-[#333] flex items-center justify-between">
+                <div className="bg-white border border-gray-200 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
                   <h3 className="font-bold text-sm text-yellow-300 uppercase tracking-wider flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
                     {seccionNombre}
@@ -952,16 +952,16 @@ export default function FasesPage() {
                   <table className="w-full text-left text-sm border-collapse">
                     <thead>
                       <tr className="bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider">
-                        <th className="py-2.5 px-4 border-r border-[#333] w-24 text-center">Numeral</th>
-                        <th className="py-2.5 px-4 border-r border-[#333]">Proceso</th>
-                        <th className="py-2.5 px-4 border-r border-[#333] w-44 text-center">Ejecución</th>
-                        <th className="py-2.5 px-4 border-r border-[#333] w-36 text-center">Ejecutado</th>
+                        <th className="py-2.5 px-4 border-r border-gray-200 w-24 text-center">Numeral</th>
+                        <th className="py-2.5 px-4 border-r border-gray-200">Proceso</th>
+                        <th className="py-2.5 px-4 border-r border-gray-200 w-44 text-center">Ejecución</th>
+                        <th className="py-2.5 px-4 border-r border-gray-200 w-36 text-center">Ejecutado</th>
                         <th className="py-2.5 px-4">Comentario</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-xs">
                       {filasSeccion.map((fila) => {
-                        let comentarioBg = 'text-gray-300'
+                        let comentarioBg = 'text-gray-600'
                         const comStr = (fila.comentario || '').toLowerCase()
                         if (fila.comentarioColor === 'yellow' || comStr.includes('pendiente')) {
                           comentarioBg = 'bg-yellow-400 text-black font-bold px-2 py-1 rounded inline-block shadow'
@@ -979,7 +979,7 @@ export default function FasesPage() {
                             <td className="py-2.5 px-4 text-center font-mono font-bold text-yellow-400/90 border-r border-white/5">
                               {fila.numeral}
                             </td>
-                            <td className="py-2.5 px-4 font-semibold text-gray-100 border-r border-white/5">
+                            <td className="py-2.5 px-4 font-semibold text-gray-800 border-r border-white/5">
                               {fila.proceso}
                             </td>
                             <td className="py-2.5 px-4 text-center border-r border-white/5">
@@ -1024,17 +1024,17 @@ export default function FasesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="glass-card w-full max-w-md p-6 animate-scale-in">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">
+              <h3 className="text-lg font-semibold text-gray-900">
                 {editingProblematicaId ? 'Editar Problemática' : 'Agregar Problemática / Responsable'}
               </h3>
-              <button onClick={() => setModalProblematicaOpen(false)} className="p-1 rounded-lg hover:bg-white/5 text-gray-400">
+              <button onClick={() => setModalProblematicaOpen(false)} className="p-1 rounded-lg hover:bg-white/5 text-gray-500">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveProblematica} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300">
+                <label className="block text-sm font-medium mb-1 text-gray-600">
                   Problemática / Tarea Clave *
                 </label>
                 <input
@@ -1048,7 +1048,7 @@ export default function FasesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300">
+                <label className="block text-sm font-medium mb-1 text-gray-600">
                   Responsable *
                 </label>
                 <input

@@ -760,7 +760,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         color: 'completado',
         dias: null,
         label: 'Completado',
-        badgeClass: 'bg-emerald-500/15 text-emerald-400 border border-[#333]'
+        badgeClass: 'bg-emerald-500/15 text-emerald-400 border border-gray-200'
       }
     }
 
@@ -769,7 +769,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         color: 'sin_fecha',
         dias: null,
         label: 'Por definir',
-        badgeClass: 'bg-white/5 text-gray-400 border border-white/10'
+        badgeClass: 'bg-white/5 text-gray-500 border border-white/10'
       }
     }
 
@@ -784,21 +784,21 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         color: 'rojo',
         dias: diffDays,
         label: diffDays < 0 ? `Vencido (${Math.abs(diffDays)}d)` : diffDays === 0 ? 'Vence hoy' : '1 día restante (<2d)',
-        badgeClass: 'bg-red-500/25 text-red-300 border border-[#333] font-bold shadow-sm shadow-red-500/20'
+        badgeClass: 'bg-red-500/25 text-red-300 border border-gray-200 font-bold shadow-sm shadow-red-500/20'
       }
     } else if (diffDays <= 6) {
       return {
         color: 'naranja',
         dias: diffDays,
         label: `${diffDays} días restantes (<6d)`,
-        badgeClass: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold shadow-sm shadow-amber-500/20'
+        badgeClass: 'bg-amber-500/25 text-amber-300 border border-gray-200 font-bold shadow-sm shadow-amber-500/20'
       }
     } else {
       return {
         color: 'verde',
         dias: diffDays,
         label: `${diffDays} días restantes (>6d)`,
-        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold shadow-sm shadow-emerald-500/20'
+        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-gray-200 font-bold shadow-sm shadow-emerald-500/20'
       }
     }
   }
@@ -838,7 +838,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="w-10 h-10 border-3 border-[#333] border-t-indigo-500 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-3 border-gray-200 border-t-indigo-500 rounded-full animate-spin" />
       </div>
     )
   }
@@ -881,7 +881,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Perfil activo y selector */}
-        <div className="glass-card px-4 py-2 flex items-center gap-3 border border-[#333]">
+        <div className="glass-card px-4 py-2 flex items-center gap-3 border border-gray-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
               {currentUser?.nombre?.[0]}{currentUser?.apellido?.[0]}
@@ -905,7 +905,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 const selected = availableUsers.find(u => u.id === e.target.value)
                 if (selected) setCurrentUser(selected)
               }}
-              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 pr-6 text-gray-300 appearance-none cursor-pointer hover:border-[#333]"
+              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 pr-6 text-gray-600 appearance-none cursor-pointer hover:border-gray-200"
               title="Cambiar usuario para probar permisos"
             >
               {availableUsers.map(u => (
@@ -914,7 +914,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" />
+            <ChevronDown className="absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 pointer-events-none" />
           </div>
         </div>
       </div>
@@ -951,7 +951,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
               <div
-                className="h-full bg-[#111] border border-[#333] transition-all duration-500"
+                className="h-full bg-white border border-gray-200 transition-all duration-500"
                 style={{ width: `${progresoPromedio}%` }}
               />
             </div>
@@ -971,16 +971,16 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Resumen Semafórico de Pendientes */}
-      <div className="glass-card p-5 border border-white/10 bg-[#111] border border-[#333] animate-fade-in">
+      <div className="glass-card p-5 border border-white/10 bg-white border border-gray-200 animate-fade-in">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-400" />
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-gray-900">
                 Resumen de Pendientes del Contrato (Semaforización de Cumplimiento)
               </h3>
             </div>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               Control de plazos: <span className="text-emerald-400 font-semibold">&gt; 6 días en Verde</span> • <span className="text-amber-400 font-semibold">&lt; 6 días en Naranja</span> • <span className="text-red-400 font-semibold">&lt; 2 días en Rojo</span>
             </p>
           </div>
@@ -992,7 +992,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 filterSemaforo === 'pendientes'
                   ? 'bg-amber-500 text-black shadow-sm'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                  : 'bg-white/5 text-gray-600 hover:bg-white/10'
               }`}
             >
               Ver Solo Pendientes ({pendientesList.length})
@@ -1017,7 +1017,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'rojo'
                 ? 'bg-red-500/20 border-red-500 ring-2 ring-red-500/50'
-                : 'bg-red-500/10 border-[#333] hover:bg-[#222]'
+                : 'bg-red-500/10 border-gray-200 hover:bg-gray-100'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1027,7 +1027,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </span>
               <span className="text-lg font-black text-red-400 font-mono">{countRojo}</span>
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">Acción correctiva inmediata</p>
+            <p className="text-[11px] text-gray-500 mt-1">Acción correctiva inmediata</p>
           </button>
 
           {/* Naranja: Menos de 6 días */}
@@ -1037,7 +1037,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'naranja'
                 ? 'bg-amber-500/20 border-amber-500 ring-2 ring-amber-500/50'
-                : 'bg-amber-500/10 border-[#333] hover:bg-[#222]'
+                : 'bg-amber-500/10 border-gray-200 hover:bg-gray-100'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1047,7 +1047,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </span>
               <span className="text-lg font-black text-amber-400 font-mono">{countNaranja}</span>
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">Seguimiento preventivo</p>
+            <p className="text-[11px] text-gray-500 mt-1">Seguimiento preventivo</p>
           </button>
 
           {/* Verde: Más de 6 días */}
@@ -1057,7 +1057,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'verde'
                 ? 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/50'
-                : 'bg-emerald-500/10 border-[#333] hover:bg-[#222]'
+                : 'bg-emerald-500/10 border-gray-200 hover:bg-gray-100'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1067,14 +1067,14 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </span>
               <span className="text-lg font-black text-emerald-400 font-mono">{countVerde}</span>
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">En tiempo y holgura</p>
+            <p className="text-[11px] text-gray-500 mt-1">En tiempo y holgura</p>
           </button>
 
           {/* Sin fecha o completados */}
           <div className="p-3 rounded-xl border border-white/10 bg-white/[0.02] text-left">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-gray-400">Total Completados</span>
-              <span className="text-lg font-black text-white font-mono">{completados}</span>
+              <span className="text-xs font-medium text-gray-500">Total Completados</span>
+              <span className="text-lg font-black text-gray-900 font-mono">{completados}</span>
             </div>
             <p className="text-[11px] text-gray-500 mt-1">{countSinFecha} pendientes sin fecha fijada</p>
           </div>
@@ -1159,8 +1159,8 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               onClick={() => setFilterMisObligaciones(!filterMisObligaciones)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                 filterMisObligaciones
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                  ? 'bg-indigo-600 text-gray-900 shadow-md'
+                  : 'bg-white/5 text-gray-600 hover:bg-white/10'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
@@ -1196,16 +1196,16 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Tabla de numerales con Doble Validación (Ejecución vs Supervisión) */}
-        <div className="glass-card overflow-hidden border border-[#333] shadow-md">
+        <div className="glass-card overflow-hidden border border-gray-200 shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider">
                   <th className="py-2.5 px-3 border-r border-black/20 w-16 text-center">Numeral</th>
                   <th className="py-2.5 px-3 border-r border-black/20">Proceso</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 min-w-[280px] text-center bg-[#111] border border-[#333] text-white rounded-none">📋 Descripción de lo Solicitado</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 w-44 text-center bg-[#111] border border-[#333] text-white rounded-none">🏷️ Producto / Equipo</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center bg-[#111] border border-[#333] text-white rounded-none">⚡ Tipo de Pendiente</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 min-w-[280px] text-center bg-white border border-gray-200 text-gray-900 rounded-none">📋 Descripción de lo Solicitado</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 w-44 text-center bg-white border border-gray-200 text-gray-900 rounded-none">🏷️ Producto / Equipo</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center bg-white border border-gray-200 text-gray-900 rounded-none">⚡ Tipo de Pendiente</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center">Fecha Cumplimiento</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-36 text-center">Ejecución</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-32 text-center">Ejecutado</th>
@@ -1239,7 +1239,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                       : 'Por definir'
 
                     // Resaltado de comentarios estilo Excel
-                    let comentarioBg = 'text-gray-300'
+                    let comentarioBg = 'text-gray-600'
                     if (m.comentarios?.toLowerCase().includes('pendiente') || m.comentarios?.toLowerCase().includes('compra')) {
                       comentarioBg = 'bg-yellow-400 text-black font-bold px-2 py-0.5 rounded shadow'
                     } else if (m.comentarios?.toLowerCase().includes('cobros') || m.comentarios?.toLowerCase().includes('entregar') || m.comentarios?.toLowerCase().includes('año')) {
@@ -1259,7 +1259,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                         </td>
 
                         {/* Proceso */}
-                        <td className="py-2.5 px-3 font-semibold text-gray-100 border-r border-white/5">
+                        <td className="py-2.5 px-3 font-semibold text-gray-800 border-r border-white/5">
                           {m.descripcion}
                         </td>
 
@@ -1269,7 +1269,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                             const val = descSolicitadaMap[m.id] || getFallbackDescSolicitada(m.descripcion, m.numeral, project?.cliente || '')
                             return (
                               <div className="space-y-1">
-                                <p className="text-[11px] text-gray-200 line-clamp-2 leading-relaxed font-sans">
+                                <p className="text-[11px] text-gray-700 line-clamp-2 leading-relaxed font-sans">
                                   {val}
                                 </p>
                                 <button
@@ -1314,7 +1314,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                     }}
                                     autoFocus
                                     placeholder="Escribe o elige producto..."
-                                    className="input-field !py-1 !px-2 text-[11px] font-semibold w-full bg-slate-900 border-[#333] text-amber-200"
+                                    className="input-field !py-1 !px-2 text-[11px] font-semibold w-full bg-slate-900 border-gray-200 text-amber-200"
                                   />
                                   <datalist id="lista-productos-sugeridos">
                                     <option value="F200 Marca: SD BIOSENSOR" />
@@ -1338,7 +1338,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                   setEditingProductoId(m.id)
                                   setEditProductoValue(val)
                                 }}
-                                className="w-full text-left px-2.5 py-1 rounded-lg text-[11px] transition-all cursor-pointer group bg-[#111] border border-[#333] text-orange-200 font-bold border border-[#333] hover:border-orange-400 hover:scale-[1.02] shadow-sm"
+                                className="w-full text-left px-2.5 py-1 rounded-lg text-[11px] transition-all cursor-pointer group bg-white border border-gray-200 text-orange-200 font-bold border border-gray-200 hover:border-orange-400 hover:scale-[1.02] shadow-sm"
                                 title="Clic para editar o cambiar el producto/equipo"
                               >
                                 <span className="flex items-center justify-between gap-1">
@@ -1362,8 +1362,8 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                 }}
                                 className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide border-2 shadow-lg transition-all duration-200 cursor-pointer select-none hover:scale-105 active:scale-95 ${
                                   val === 'Contrato'
-                                    ? 'bg-[#111] border border-[#333] text-white border-[#333] shadow-blue-500/40 hover:shadow-blue-500/60'
-                                    : 'bg-[#111] border border-[#333] text-white border-[#333] shadow-purple-500/40 hover:shadow-purple-500/60'
+                                    ? 'bg-white border border-gray-200 text-gray-900 border-gray-200 shadow-blue-500/40 hover:shadow-blue-500/60'
+                                    : 'bg-white border border-gray-200 text-gray-900 border-gray-200 shadow-purple-500/40 hover:shadow-purple-500/60'
                                 }`}
                                 title="Clic para cambiar entre Contrato y Visita"
                               >
@@ -1396,12 +1396,12 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                   type="date"
                                   disabled={!canEdit}
                                   onChange={(e) => handleQuickUpdateFecha(m.id, e.target.value)}
-                                  className="bg-transparent text-gray-500 hover:text-gray-300 text-xs cursor-pointer focus:outline-none border-b border-dashed border-gray-600"
+                                  className="bg-transparent text-gray-500 hover:text-gray-600 text-xs cursor-pointer focus:outline-none border-b border-dashed border-gray-600"
                                   title="Haz clic para definir fecha de cumplimiento"
                                 />
                               )}
                               {m.estado !== 'Completado' && m.fecha_fin && (
-                                <span className="text-[10px] text-gray-400 font-sans">
+                                <span className="text-[10px] text-gray-500 font-sans">
                                   {semInfo.label}
                                 </span>
                               )}
@@ -1412,7 +1412,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                         {/* Ejecución */}
                         <td className="py-2.5 px-3 text-center border-r border-white/5">
                           <span className={`badge text-[11px] font-semibold ${
-                            isMyTask ? 'bg-indigo-500/20 text-indigo-300 ring-1 ring-indigo-400/40' : 'bg-white/5 text-gray-300'
+                            isMyTask ? 'bg-indigo-500/20 text-indigo-300 ring-1 ring-indigo-400/40' : 'bg-white/5 text-gray-600'
                           }`}>
                             {ejecutor?.nombre ? `${ejecutor.nombre} ${ejecutor.apellido || ''}`.trim() : 'Sin asignar'}
                           </span>
@@ -1427,7 +1427,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                               onChange={() => handleToggleCheck(m.id, isEjecutado)}
                               className="w-4 h-4 rounded border-gray-500 text-emerald-500 focus:ring-emerald-500 cursor-pointer accent-emerald-500 transition-transform group-hover:scale-110"
                             />
-                            <span className={`text-xs transition-colors ${isEjecutado ? 'text-emerald-400 font-bold' : 'text-gray-400 group-hover:text-gray-200'}`}>
+                            <span className={`text-xs transition-colors ${isEjecutado ? 'text-emerald-400 font-bold' : 'text-gray-500 group-hover:text-gray-700'}`}>
                               Completed
                             </span>
                           </label>
@@ -1466,7 +1466,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                               onChange={() => handleToggleCheck(m.id, isEjecutado)}
                               className="w-4 h-4 rounded border-gray-500 text-violet-500 focus:ring-violet-500 cursor-pointer accent-violet-500 transition-transform group-hover:scale-110"
                             />
-                            <span className={`text-xs transition-colors ${isEjecutado ? 'text-emerald-400 font-bold' : 'text-gray-400 group-hover:text-gray-200'}`}>
+                            <span className={`text-xs transition-colors ${isEjecutado ? 'text-emerald-400 font-bold' : 'text-gray-500 group-hover:text-gray-700'}`}>
                               Completed
                             </span>
                           </label>
@@ -1491,7 +1491,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                             ) : canEdit ? (
                               <button
                                 onClick={() => startEdit(m)}
-                                className="p-1 rounded hover:bg-white/10 text-gray-400 hover:text-white"
+                                className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-gray-900"
                                 title="Editar comentario"
                               >
                                 <Edit3 className="w-3.5 h-3.5" />
@@ -1506,7 +1506,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                               <button
                                 type="button"
                                 onClick={() => abrirPresionMilestone(m)}
-                                className="p-1 rounded bg-red-600/80 hover:bg-red-500 text-white"
+                                className="p-1 rounded bg-red-600/80 hover:bg-red-500 text-gray-900"
                                 title="Presionar al responsable"
                               >
                                 <Zap className="w-3.5 h-3.5" />
@@ -1517,7 +1517,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                               <button
                                 type="button"
                                 onClick={() => handleDeleteMilestone(m.id)}
-                                className="p-1 rounded hover:bg-[#222] text-gray-500 hover:text-red-400"
+                                className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-red-400"
                                 title="Eliminar"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -1538,31 +1538,31 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal Agregar Nuevo Numeral / Proceso al Contrato (Seccionado en 3FN) */}
       {modalAddOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in max-h-[92vh] overflow-y-auto border border-[#333] shadow-md space-y-5">
+          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in max-h-[92vh] overflow-y-auto border border-gray-200 shadow-md space-y-5">
             {/* Header Modal */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-yellow-500/20 text-yellow-400 border border-[#333]">
+                <div className="p-2.5 rounded-xl bg-yellow-500/20 text-yellow-400 border border-gray-200">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
                     Nuevo Proceso Contractual (3FN)
                     <span className="badge bg-yellow-500/20 text-yellow-300 text-[10px] font-mono">Formulario Seccionado</span>
                   </h3>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     Registro de obligación para <span className="text-yellow-300 font-semibold">{project?.nombre || project?.contrato_num}</span>.
                   </p>
                 </div>
               </div>
-              <button onClick={() => setModalAddOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white">
+              <button onClick={() => setModalAddOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateMilestone} className="space-y-5 text-xs">
               {/* SECCIÓN 1: Identificación del Proceso */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-gray-200 space-y-3">
                 <div className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-300 flex items-center justify-center text-[10px]">1</span>
                   🏢 Sección 1: Identificación del Proceso & Numeral
@@ -1570,7 +1570,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-1">
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Numeral / Código *
                     </label>
                     <input
@@ -1584,7 +1584,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Proceso Contractual *
                     </label>
                     <input
@@ -1592,7 +1592,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                       placeholder="ej: PEDIDO DEL PRODUCTO, CONTROLES Y CONSUMIBLES, IMPORTACION..."
                       value={newNumeral.descripcion}
                       onChange={(e) => setNewNumeral({ ...newNumeral, descripcion: e.target.value })}
-                      className="input-field font-bold text-white bg-slate-950 uppercase"
+                      className="input-field font-bold text-gray-900 bg-slate-950 uppercase"
                       required
                     />
                   </div>
@@ -1600,7 +1600,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </div>
 
               {/* SECCIÓN 2: Especificación Técnica y Equipamiento */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-gray-200 space-y-3">
                 <div className="flex items-center gap-2 text-teal-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-300 flex items-center justify-center text-[10px]">2</span>
                   📋 Sección 2: Especificación Técnica & Equipamiento
@@ -1614,13 +1614,13 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                     placeholder="Detalle técnico de requerimientos, mantenimientos, insumos o especificaciones contractuales..."
                     value={newNumeral.descripcion_solicitada}
                     onChange={(e) => setNewNumeral({ ...newNumeral, descripcion_solicitada: e.target.value })}
-                    className="input-field resize-none h-20 text-xs font-sans bg-slate-950 text-gray-200"
+                    className="input-field resize-none h-20 text-xs font-sans bg-slate-950 text-gray-700"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       🏷️ Producto / Equipo Relacionado
                     </label>
                     <input
@@ -1633,7 +1633,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       ⚡ Tipo de Pendiente
                     </label>
                     <select
@@ -1649,7 +1649,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </div>
 
               {/* SECCIÓN 3: Asignaciones & Validación (3FN) */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-gray-200 space-y-3">
                 <div className="flex items-center gap-2 text-violet-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-violet-500/20 text-violet-300 flex items-center justify-center text-[10px]">3</span>
                   👥 Sección 3: Asignaciones de Ejecución, Supervisión & Plazos (3FN)
@@ -1657,7 +1657,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Ejecutor Técnico Asignado *
                     </label>
                     <select
@@ -1675,7 +1675,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Supervisión / Auditoría (Planner)
                     </label>
                     <select
@@ -1695,7 +1695,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Fecha Límite de Cumplimiento
                     </label>
                     <input
@@ -1707,7 +1707,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                    <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                       Área Responsable
                     </label>
                     <select
@@ -1728,14 +1728,14 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase mb-1 text-gray-300">
+                  <label className="block text-xs font-semibold uppercase mb-1 text-gray-600">
                     Comentarios Iniciales de Ejecución / Acta
                   </label>
                   <textarea
                     placeholder="Detalles sobre entregas, estatus con el administrador de contrato o requerimientos especiales..."
                     value={newNumeral.comentarios}
                     onChange={(e) => setNewNumeral({ ...newNumeral, comentarios: e.target.value })}
-                    className="input-field resize-none h-16 text-xs bg-slate-950 text-gray-300 font-sans"
+                    className="input-field resize-none h-16 text-xs bg-slate-950 text-gray-600 font-sans"
                   />
                 </div>
               </div>
@@ -1752,7 +1752,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 <button
                   type="submit"
                   disabled={creating}
-                  className="btn-primary flex-1 py-2.5 bg-[#111] border border-[#333] hover:bg-[#222] text-black font-extrabold shadow-sm text-xs"
+                  className="btn-primary flex-1 py-2.5 bg-white border border-gray-200 hover:bg-gray-100 text-black font-extrabold shadow-sm text-xs"
                 >
                   {creating ? 'Guardando en 3FN...' : 'Guardar Proceso en Base de Datos (3FN)'}
                 </button>
@@ -1774,20 +1774,20 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal para Ver / Editar Descripción de lo Solicitado */}
       {modalDetalleItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in border border-[#333] shadow-md space-y-4">
+          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in border border-gray-200 shadow-md space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <span className="p-2.5 rounded-xl bg-teal-500/20 text-teal-300 text-lg">📋</span>
                 <div>
-                  <h3 className="text-base font-bold text-white">
+                  <h3 className="text-base font-bold text-gray-900">
                     Descripción de lo Solicitado (Numeral {modalDetalleItem.numeral})
                   </h3>
-                  <p className="text-xs text-gray-400">{modalDetalleItem.proceso}</p>
+                  <p className="text-xs text-gray-500">{modalDetalleItem.proceso}</p>
                 </div>
               </div>
               <button
                 onClick={() => setModalDetalleItem(null)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white"
+                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1820,7 +1820,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   saveDescSolicitada(modalDetalleItem.id, modalDetalleItem.detalle)
                   setModalDetalleItem(null)
                 }}
-                className="btn-primary text-xs flex items-center gap-2 bg-[#111] border border-[#333] hover:bg-[#222] shadow-sm"
+                className="btn-primary text-xs flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-100 shadow-sm"
               >
                 <Save className="w-4 h-4" />
                 Guardar Descripción
@@ -1833,26 +1833,26 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal de Escaneo y Reconocimiento de Notas a Lapicero (OCR & IA) */}
       {ocrModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-4xl p-6 animate-scale-in max-h-[92vh] flex flex-col border border-[#333] shadow-md">
+          <div className="glass-card w-full max-w-4xl p-6 animate-scale-in max-h-[92vh] flex flex-col border border-gray-200 shadow-md">
             {/* Header Modal */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-[#111] border border-[#333] text-emerald-400 border border-[#333]">
+                <div className="p-2.5 rounded-xl bg-white border border-gray-200 text-emerald-400 border border-gray-200">
                   <ScanLine className="w-6 h-6 animate-pulse" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     Escáner de Numerales y Anotaciones a Lapicero
                     <span className="badge bg-emerald-500/20 text-emerald-300 text-xs font-mono">IA / OCR Activo</span>
                   </h3>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-500">
                     Archivo procesado: <span className="font-mono text-emerald-400 font-semibold">{ocrFileName}</span>
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setOcrModalOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1863,25 +1863,25 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               {ocrScanning ? (
                 <div className="py-16 text-center space-y-4">
                   <div className="relative inline-block">
-                    <div className="w-16 h-16 border-4 border-[#333] border-t-emerald-400 rounded-full animate-spin mx-auto" />
+                    <div className="w-16 h-16 border-4 border-gray-200 border-t-emerald-400 rounded-full animate-spin mx-auto" />
                     <PenTool className="w-6 h-6 text-emerald-400 absolute inset-0 m-auto animate-bounce" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white">Analizando trazos de lapicero y numerales...</p>
-                    <p className="text-xs text-gray-400 mt-1">Identificando procesos, fechas manuscritas, checks y notas al margen</p>
+                    <p className="text-sm font-bold text-gray-900">Analizando trazos de lapicero y numerales...</p>
+                    <p className="text-xs text-gray-500 mt-1">Identificando procesos, fechas manuscritas, checks y notas al margen</p>
                   </div>
                 </div>
               ) : (
                 <>
                   {/* Banner de estado de detección */}
-                  <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-[#333] flex items-center justify-between">
+                  <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-gray-200 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <Sparkles className="w-5 h-5 text-emerald-400" />
                       <div>
                         <span className="text-xs font-bold text-emerald-300">
                           Se detectaron {ocrItems.length} numerales con anotaciones a lapicero
                         </span>
-                        <p className="text-[11px] text-gray-400">
+                        <p className="text-[11px] text-gray-500">
                           Revisa la información antes de aplicar las actualizaciones a la matriz del contrato.
                         </p>
                       </div>
@@ -1903,7 +1903,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                     {/* Preview de la imagen/archivo */}
                     {ocrFilePreview && (
                       <div className="md:col-span-1 rounded-xl overflow-hidden border border-white/10 bg-slate-900/60 p-2 flex flex-col">
-                        <span className="text-[11px] font-semibold text-gray-400 mb-2 flex items-center gap-1">
+                        <span className="text-[11px] font-semibold text-gray-500 mb-2 flex items-center gap-1">
                           <Eye className="w-3.5 h-3.5" /> Documento / Foto cargada:
                         </span>
                         <div className="flex-1 rounded-lg overflow-hidden relative border border-white/5 bg-black/40 flex items-center justify-center min-h-[200px]">
@@ -1919,7 +1919,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
 
                     {/* Tabla de numerales detectados */}
                     <div className={`${ocrFilePreview ? 'md:col-span-2' : 'md:col-span-3'} space-y-2`}>
-                      <span className="text-[11px] font-semibold text-gray-300">
+                      <span className="text-[11px] font-semibold text-gray-600">
                         Numerales reconocidos y notas manuscritas extraídas:
                       </span>
 
@@ -1927,7 +1927,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                         <div className="overflow-x-auto max-h-[300px]">
                           <table className="w-full text-left text-xs border-collapse">
                             <thead>
-                              <tr className="bg-slate-900 text-gray-300 font-bold border-b border-white/10 text-[11px]">
+                              <tr className="bg-slate-900 text-gray-600 font-bold border-b border-white/10 text-[11px]">
                                 <th className="p-2 w-16 text-center">Numeral</th>
                                 <th className="p-2">Proceso / Producto</th>
                                 <th className="p-2 w-28">Fecha Extraída</th>
@@ -1962,7 +1962,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                       className="input-field !py-0.5 !px-1 text-xs font-semibold w-full"
                                     />
                                     {item.producto && (
-                                      <span className="inline-block mt-1 text-[10px] text-orange-300 bg-orange-500/10 px-1.5 py-0.5 rounded border border-[#333] font-mono">
+                                      <span className="inline-block mt-1 text-[10px] text-orange-300 bg-orange-500/10 px-1.5 py-0.5 rounded border border-gray-200 font-mono">
                                         🏷️ {item.producto}
                                       </span>
                                     )}
@@ -2017,7 +2017,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   {ocrSuccessMsg && (
-                    <div className="p-3 rounded-xl bg-emerald-500/20 border border-[#333] text-emerald-300 text-xs font-bold text-center animate-fade-in flex items-center justify-center gap-2">
+                    <div className="p-3 rounded-xl bg-emerald-500/20 border border-gray-200 text-emerald-300 text-xs font-bold text-center animate-fade-in flex items-center justify-center gap-2">
                       <Check className="w-4 h-4" />
                       {ocrSuccessMsg}
                     </div>
@@ -2039,7 +2039,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 type="button"
                 disabled={ocrScanning || ocrImporting || ocrItems.length === 0}
                 onClick={handleApplyOcrItems}
-                className="btn-primary text-xs flex items-center gap-2 bg-[#111] border border-[#333] hover:bg-[#222] shadow-sm"
+                className="btn-primary text-xs flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-100 shadow-sm"
               >
                 {ocrImporting ? (
                   <>

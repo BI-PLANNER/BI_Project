@@ -164,7 +164,7 @@ export default function Sidebar() {
                 {!collapsed && <span className="font-semibold text-xs">{item.label}</span>}
               </div>
               {!collapsed && (item as any).badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-[#333]'}`}>
+                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-gray-200'}`}>
                   {(item as any).badge}
                 </span>
               )}
@@ -182,12 +182,12 @@ export default function Sidebar() {
       {!collapsed ? (
         <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/10 space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-bold text-gray-400">Usuario Activo</span>
+            <span className="text-[10px] uppercase font-bold text-gray-500">Usuario Activo</span>
             <span className={`badge ${
               userProfile.isLuisOrellana
-                ? 'bg-teal-500/20 text-teal-300 border border-[#333]'
+                ? 'bg-teal-500/20 text-teal-300 border border-gray-200'
                 : userProfile.isGerenteGeneral
-                ? 'bg-amber-500/20 text-amber-300 border border-[#333]'
+                ? 'bg-amber-500/20 text-amber-300 border border-gray-200'
                 : 'bg-indigo-500/20 text-indigo-300'
             } text-[9px] px-1.5 font-mono`}>
               {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
@@ -204,7 +204,7 @@ export default function Sidebar() {
               {initials}
             </div>
             <div className="truncate">
-              <p className="text-xs font-bold text-gray-100 truncate">
+              <p className="text-xs font-bold text-gray-800 truncate">
                 {userProfile.nombre} {userProfile.apellido}
               </p>
               <p className={`text-[10px] ${

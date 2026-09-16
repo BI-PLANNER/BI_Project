@@ -132,17 +132,17 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-950/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-[#333]">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-gray-200">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">Sincronizador Directo de Excel / CSV</h2>
+              <h2 className="text-lg font-bold text-gray-900 tracking-tight">Sincronizador Directo de Excel / CSV</h2>
               <p className="text-xs text-slate-400">Carga inmediata de cualquier hoja o celda hacia Supabase</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-gray-900 hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -156,7 +156,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-3 ${
-              file ? 'border-[#333] bg-emerald-950/10' : 'border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-[#222]'
+              file ? 'border-gray-200 bg-emerald-950/10' : 'border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-gray-100'
             }`}
           >
             <input
@@ -172,7 +172,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
                   <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{file.name}</p>
+                  <p className="text-sm font-bold text-gray-900">{file.name}</p>
                   <p className="text-xs text-slate-400">{(file.size / 1024).toFixed(1)} KB • Haz clic para cambiar archivo</p>
                 </div>
               </>
@@ -182,7 +182,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
                   <Upload className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">Arrastra aquí tu archivo Excel (.xlsx) o CSV</p>
+                  <p className="text-sm font-bold text-gray-900">Arrastra aquí tu archivo Excel (.xlsx) o CSV</p>
                   <p className="text-xs text-slate-400 mt-1">O haz clic para explorar en tus carpetas locales</p>
                 </div>
               </>
@@ -192,9 +192,9 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           {/* Status Message */}
           {statusMsg && (
             <div className={`p-4 rounded-xl text-xs font-medium flex items-start gap-2.5 border ${
-              statusMsg.type === 'success' ? 'bg-emerald-950/40 border-[#333] text-emerald-300' :
-              statusMsg.type === 'error' ? 'bg-rose-950/40 border-[#333] text-rose-300' :
-              'bg-indigo-950/40 border-[#333] text-indigo-300'
+              statusMsg.type === 'success' ? 'bg-emerald-950/40 border-gray-200 text-emerald-300' :
+              statusMsg.type === 'error' ? 'bg-rose-950/40 border-gray-200 text-rose-300' :
+              'bg-indigo-950/40 border-gray-200 text-indigo-300'
             }`}>
               {statusMsg.type === 'success' && <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400 mt-0.5" />}
               {statusMsg.type === 'error' && <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />}
@@ -207,7 +207,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
             <div className="grid grid-cols-2 gap-3 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
               <div className="text-center">
                 <span className="text-[10px] text-slate-400 uppercase font-semibold">Licitaciones Procesadas</span>
-                <p className="text-lg font-black text-white font-mono">{stats.licsCount}</p>
+                <p className="text-lg font-black text-gray-900 font-mono">{stats.licsCount}</p>
               </div>
               <div className="text-center border-l border-slate-800">
                 <span className="text-[10px] text-slate-400 uppercase font-semibold">Renglones Guardados</span>
@@ -222,14 +222,14 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           <button
             onClick={onClose}
             disabled={uploading}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-gray-900 hover:bg-slate-800 transition"
           >
             Cancelar
           </button>
           <button
             onClick={processAndSyncExcel}
             disabled={!file || uploading}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition shadow-lg ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-gray-900 transition shadow-lg ${
               file && !uploading
                 ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed'

@@ -341,9 +341,9 @@ export interface VMesaAyudaIncidencias {
 
 // --- Helpers Visuales y Colores ---
 export const SEMAFORO_COLORS = {
-  Verde: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-[#333]', dot: 'bg-emerald-500' },
-  Anaranjado: { bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-[#333]', dot: 'bg-amber-500' },
-  Rojo: { bg: 'bg-red-500/15', text: 'text-red-400', border: 'border-[#333]', dot: 'bg-red-500' },
+  Verde: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-gray-200', dot: 'bg-emerald-500' },
+  Anaranjado: { bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-gray-200', dot: 'bg-amber-500' },
+  Rojo: { bg: 'bg-red-500/15', text: 'text-red-400', border: 'border-gray-200', dot: 'bg-red-500' },
 } as const
 
 // --- Tipos de Compatibilidad para Contratos y Proyectos ---

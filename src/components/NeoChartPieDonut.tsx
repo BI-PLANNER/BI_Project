@@ -144,23 +144,23 @@ export default function NeoChartPieDonut({
   const isMultiItem = slices.length > 4
 
   return (
-    <div className="relative rounded-3xl bg-slate-900/90 border border-white/10 p-5 md:p-6 shadow-md backdrop-blur-xl flex flex-col justify-between space-y-4 hover:border-[#333] transition-all duration-300">
+    <div className="relative rounded-3xl bg-slate-900/90 border border-white/10 p-5 md:p-6 shadow-md backdrop-blur-xl flex flex-col justify-between space-y-4 hover:border-gray-200 transition-all duration-300">
       {/* 1. Header con Título Amplio y Badge */}
       <div className="flex items-start justify-between border-b border-white/[0.08] pb-3.5">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-[#333] flex items-center justify-center text-indigo-400 shadow">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-gray-200 flex items-center justify-center text-indigo-400 shadow">
               <PieIcon className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-white uppercase tracking-wider">{title}</h3>
+              <h3 className="text-sm font-black text-gray-900 uppercase tracking-wider">{title}</h3>
               {subtitle && <p className="text-xs text-slate-400">{subtitle}</p>}
             </div>
           </div>
         </div>
 
         {badge && (
-          <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-slate-950 text-cyan-300 border border-[#333] shadow-inner">
+          <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-slate-950 text-cyan-300 border border-gray-200 shadow-inner">
             {badge}
           </span>
         )}
@@ -276,7 +276,7 @@ export default function NeoChartPieDonut({
                     <span className="text-[11px] font-mono uppercase font-bold text-slate-300 block truncate max-w-[110px]">
                       {activeItem.label}
                     </span>
-                    <span className="text-xl font-black text-white font-mono block leading-none">
+                    <span className="text-xl font-black text-gray-900 font-mono block leading-none">
                       {activeItem.percent.toFixed(1)}%
                     </span>
                     <span className="text-xs font-mono font-bold text-cyan-300 block mt-1">
@@ -288,7 +288,7 @@ export default function NeoChartPieDonut({
                     <span className="text-[11px] font-mono uppercase font-bold text-slate-400 block truncate max-w-[110px]">
                       {centerLabel || 'Total'}
                     </span>
-                    <span className="text-lg font-black text-white font-mono block leading-none">
+                    <span className="text-lg font-black text-gray-900 font-mono block leading-none">
                       {centerValue !== undefined ? centerValue : total}
                     </span>
                     <span className="text-[10px] font-mono text-emerald-400 block mt-0.5">100% Base</span>
@@ -299,9 +299,9 @@ export default function NeoChartPieDonut({
 
             {/* Tooltip flotante al pasar sobre el pastel */}
             {type === 'pie' && activeItem && (
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-950/95 border border-[#333] px-3.5 py-1.5 rounded-2xl shadow-md backdrop-blur-md pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-950/95 border border-gray-200 px-3.5 py-1.5 rounded-2xl shadow-md backdrop-blur-md pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: activeItem.color }} />
-                <span className="text-xs font-bold text-white truncate max-w-[140px]">{activeItem.label}</span>
+                <span className="text-xs font-bold text-gray-900 truncate max-w-[140px]">{activeItem.label}</span>
                 <span className="text-xs font-mono font-black text-cyan-300">{activeItem.percent.toFixed(1)}%</span>
                 <span className="text-[11px] font-mono text-slate-300">({formatValue(activeItem.value)})</span>
               </div>
@@ -324,8 +324,8 @@ export default function NeoChartPieDonut({
                     onClick={() => onSelectSlice && onSelectSlice(item)}
                     className={`p-2 rounded-2xl transition-all duration-200 cursor-pointer border ${
                       isHovered
-                        ? 'bg-white/[0.12] border-[#333] shadow-lg scale-[1.01]'
-                        : 'bg-slate-950/50 hover:bg-[#222] border-white/[0.06]'
+                        ? 'bg-white/[0.12] border-gray-200 shadow-lg scale-[1.01]'
+                        : 'bg-slate-950/50 hover:bg-gray-100 border-white/[0.06]'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1">
@@ -339,7 +339,7 @@ export default function NeoChartPieDonut({
                           }}
                         />
                         <div className="min-w-0 truncate">
-                          <div className="text-xs font-bold text-white leading-tight truncate" title={item.label}>
+                          <div className="text-xs font-bold text-gray-900 leading-tight truncate" title={item.label}>
                             {item.label}
                           </div>
                           {item.sublabel && (
@@ -351,7 +351,7 @@ export default function NeoChartPieDonut({
                       </div>
 
                       <div className="text-right flex-shrink-0 font-mono">
-                        <div className="text-xs font-black text-white">
+                        <div className="text-xs font-black text-gray-900">
                           {item.percent.toFixed(1)}%
                         </div>
                         <div className="text-[9.5px] font-bold text-cyan-300">
@@ -380,7 +380,7 @@ export default function NeoChartPieDonut({
 
       {/* 4. Recuadro de Insight Ejecutivo / Comprensión Rápida */}
       {insight && (
-        <div className="bg-slate-950/70 p-3 rounded-2xl border border-[#333] text-xs text-gray-300 flex items-start gap-2.5">
+        <div className="bg-slate-950/70 p-3 rounded-2xl border border-gray-200 text-xs text-gray-600 flex items-start gap-2.5">
           <Info className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
           <div className="leading-relaxed text-[11px]">{insight}</div>
         </div>
