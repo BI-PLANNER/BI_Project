@@ -113,10 +113,8 @@ export default function Sidebar() {
 
   // Secciones permitidas para Luis Orellana
   const LUIS_ALLOWED_HREFS = [
-    '/dashboard/analisis',
-    '/dashboard/stock',
-    '/dashboard/reporte',
-    '/dashboard/cumplimiento'
+    '/dashboard/analytics',
+    '/dashboard/stock'
   ]
 
   // Navigation items (full list)
@@ -125,27 +123,13 @@ export default function Sidebar() {
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
     ...(userProfile.canViewReporte ? [{
-      href: '/dashboard/reporte',
-      label: 'Reporte de Actividades Realizadas',
-      icon: BookOpen,
-      badge: userProfile.isLuisOrellana ? 'BI Lenny' : 'BI Lenny',
-      badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30 font-bold'
+      href: '/dashboard/analytics/reportes',
+      label: 'Centro de Analítica BI',
+      icon: PieIcon,
+      badge: 'Hub Unificado',
+      badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
     }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database },
-    {
-      href: '/dashboard/analisis',
-      label: 'Análisis & Precios BI',
-      icon: BarChart3,
-      badge: 'NUEVO',
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold'
-    },
-    {
-      href: '/dashboard/obligaciones',
-      label: 'Dashboard Obligaciones',
-      icon: PieIcon,
-      badge: 'Gerente General',
-      badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
-    },
     {
       href: '/dashboard/stock',
       label: 'Stock & Inventario BI',
