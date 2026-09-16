@@ -13,28 +13,28 @@
   --brand-accent: #666666;
 
   /* Light theme base — Apple / Clean inspired */
-  --bg-primary: #f9fafb;     /* gray-50 */
+  --bg-primary: #f3f4f6;     /* gray-100 (darker background to contrast with white cards) */
   --bg-secondary: #ffffff;   /* white */
   --bg-card: #ffffff;
-  --bg-card-hover: #f3f4f6;  /* gray-100 */
+  --bg-card-hover: #f9fafb;  /* gray-50 */
   --bg-elevated: #ffffff;
 
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  --border-default: rgba(0, 0, 0, 0.1);
-  --border-active: rgba(0, 0, 0, 0.2);
+  --border-subtle: rgba(0, 0, 0, 0.12); /* darker borders to mark separation */
+  --border-default: rgba(0, 0, 0, 0.20);
+  --border-active: rgba(0, 0, 0, 0.35);
 
   --text-primary: #111827;   /* gray-900 */
   --text-secondary: #4b5563; /* gray-600 */
-  --text-muted: #9ca3af;     /* gray-400 */
+  --text-muted: #6b7280;     /* gray-500 (slightly darker for readability) */
 
   /* Semáforo - Clean colors for minimalist look */
   --semaforo-verde: #10b981;
   --semaforo-anaranjado: #f59e0b;
   --semaforo-rojo: #ef4444;
 
-  /* Shadows - Very subtle */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* Shadows - More pronounced to separate boxes */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.08);
 }
 
 /* ============================================================
