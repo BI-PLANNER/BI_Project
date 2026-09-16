@@ -124,9 +124,7 @@ export default function Sidebar() {
     ...(userProfile.canViewReporte ? [{
       href: '/dashboard/analytics/reportes',
       label: 'Centro de Analítica BI',
-      icon: PieIcon,
-      badge: 'Hub Unificado',
-      badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 font-bold'
+      icon: PieIcon
     }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database }
   ]
