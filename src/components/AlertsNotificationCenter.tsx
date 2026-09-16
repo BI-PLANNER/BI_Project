@@ -206,9 +206,6 @@ export default function AlertsNotificationCenter({
       setLoading(false)
     }
   }
-      setLoading(false)
-    }
-  }
 
   // Auto cargar alertas en vivo al montar el componente
   useEffect(() => {
