@@ -193,7 +193,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
                 type="button"
                 onClick={handleEnviar}
                 disabled={enviando}
-                className="btn-primary !bg-red-600 hover:!bg-red-500 flex-1 text-xs flex items-center justify-center gap-2 shadow-lg shadow-red-600/30"
+                className="btn-primary !bg-red-600 hover:!bg-red-500 flex-1 text-xs flex items-center justify-center gap-2 shadow-sm"
               >
                 {enviando ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

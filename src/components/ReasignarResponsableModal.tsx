@@ -203,12 +203,12 @@ export default function ReasignarResponsableModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 overflow-y-auto animate-fade-in">
-      <div className="glass-card w-full max-w-2xl p-6 rounded-3xl border border-indigo-500/30 shadow-2xl space-y-5 my-8 max-h-[92vh] overflow-y-auto bg-gradient-to-b from-slate-900/95 to-slate-950/95">
+      <div className="glass-card w-full max-w-2xl p-6 rounded-3xl border border-[#333] shadow-md space-y-5 my-8 max-h-[92vh] overflow-y-auto bg-[#111] border border-[#333]">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shadow-lg shadow-indigo-500/10">
+            <div className="p-2.5 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-[#333] shadow-sm">
               <ArrowRightLeft className="w-6 h-6" />
             </div>
             <div>
@@ -237,14 +237,14 @@ export default function ReasignarResponsableModal({
         </div>
 
         {savedSuccess && (
-          <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-2 animate-scale-in">
+          <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-[#333] text-emerald-300 text-xs font-bold flex items-center gap-2 animate-scale-in">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>¡Cambios guardados y responsabilidad reasignada con éxito! Actualizando tablero...</span>
           </div>
         )}
 
         {errorMsg && (
-          <div className="p-3.5 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-300 text-xs font-bold flex items-center gap-2">
+          <div className="p-3.5 rounded-2xl bg-red-500/20 border border-[#333] text-red-300 text-xs font-bold flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -253,7 +253,7 @@ export default function ReasignarResponsableModal({
         <form onSubmit={handleSave} className="space-y-4 text-xs">
 
           {/* 1. SELECCIÓN DE RESPONSABLE */}
-          <div className="p-4 rounded-2xl bg-slate-950/80 border border-indigo-500/20 space-y-3">
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-[#333] space-y-3">
             <label className="text-xs font-black text-indigo-300 uppercase tracking-wider flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <UserCheck className="w-4 h-4 text-indigo-400" />
@@ -282,7 +282,7 @@ export default function ReasignarResponsableModal({
                   placeholder="Escribe el nombre completo del responsable..."
                   value={responsableCustom}
                   onChange={(e) => setResponsableCustom(e.target.value)}
-                  className="w-full bg-slate-900 text-white font-bold text-xs rounded-xl p-3 border border-indigo-500/50 focus:border-indigo-400 outline-none"
+                  className="w-full bg-slate-900 text-white font-bold text-xs rounded-xl p-3 border border-[#333] focus:border-indigo-400 outline-none"
                   autoFocus
                 />
               ) : (
@@ -363,7 +363,7 @@ export default function ReasignarResponsableModal({
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Rojo'
                       ? 'bg-red-500/30 border-red-500 text-red-200 ring-2 ring-red-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-red-500/10'
+                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-[#222]'
                   }`}
                 >
                   🔴 Rojo (Crítico)
@@ -374,7 +374,7 @@ export default function ReasignarResponsableModal({
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Anaranjado'
                       ? 'bg-amber-500/30 border-amber-500 text-amber-200 ring-2 ring-amber-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-amber-500/10'
+                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-[#222]'
                   }`}
                 >
                   🟠 Naranja
@@ -385,7 +385,7 @@ export default function ReasignarResponsableModal({
                   className={`p-2 rounded-xl border text-center font-bold text-[10px] transition cursor-pointer ${
                     estatus === 'Verde'
                       ? 'bg-emerald-500/30 border-emerald-500 text-emerald-200 ring-2 ring-emerald-500/50'
-                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-emerald-500/10'
+                      : 'bg-slate-950 border-white/10 text-gray-400 hover:bg-[#222]'
                   }`}
                 >
                   🟢 Verde (En Plazo)
@@ -448,7 +448,7 @@ export default function ReasignarResponsableModal({
           </div>
 
           {/* 6. TOGGLE NOTIFICACIÓN POR CORREO */}
-          <div className="p-3 rounded-2xl bg-indigo-950/40 border border-indigo-500/20 flex items-center justify-between">
+          <div className="p-3 rounded-2xl bg-indigo-950/40 border border-[#333] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bell className="w-4 h-4 text-indigo-400" />
               <div>
@@ -482,7 +482,7 @@ export default function ReasignarResponsableModal({
             <button
               type="submit"
               disabled={saving}
-              className="btn-primary !py-2.5 !px-5 text-xs font-black flex items-center gap-2 shadow-lg shadow-indigo-500/25 cursor-pointer disabled:opacity-50"
+              className="btn-primary !py-2.5 !px-5 text-xs font-black flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
             >
               {saving ? (
                 <>

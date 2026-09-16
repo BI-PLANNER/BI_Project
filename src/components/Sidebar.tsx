@@ -164,7 +164,7 @@ export default function Sidebar() {
                 {!collapsed && <span className="font-semibold text-xs">{item.label}</span>}
               </div>
               {!collapsed && (item as any).badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'}`}>
+                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-300 border-[#333]'}`}>
                   {(item as any).badge}
                 </span>
               )}
@@ -185,22 +185,22 @@ export default function Sidebar() {
             <span className="text-[10px] uppercase font-bold text-gray-400">Usuario Activo</span>
             <span className={`badge ${
               userProfile.isLuisOrellana
-                ? 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                ? 'bg-teal-500/20 text-teal-300 border border-[#333]'
                 : userProfile.isGerenteGeneral
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                ? 'bg-amber-500/20 text-amber-300 border border-[#333]'
                 : 'bg-indigo-500/20 text-indigo-300'
             } text-[9px] px-1.5 font-mono`}>
               {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-7 h-7 rounded-lg ${
+            <div className={`w-7 h-7 rounded-md ${
               userProfile.isLuisOrellana
-                ? 'bg-gradient-to-tr from-teal-500 to-cyan-600'
+                ? 'bg-[#34d399] text-black'
                 : userProfile.isGerenteGeneral
-                ? 'bg-gradient-to-tr from-amber-500 to-orange-600'
-                : 'bg-gradient-to-tr from-indigo-500 to-violet-500'
-            } flex items-center justify-center text-xs font-bold text-white shadow`}>
+                ? 'bg-[#fbbf24] text-black'
+                : 'bg-white text-black'
+            } flex items-center justify-center text-xs font-bold shadow-sm`}>
               {initials}
             </div>
             <div className="truncate">

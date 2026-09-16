@@ -452,7 +452,7 @@ export default function DashboardAnalisisPage() {
             <select
               value={selectedEmpresa}
               onChange={e => setSelectedEmpresa(e.target.value)}
-              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-emerald-300 px-3 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer"
+              className="bg-slate-900 border border-[#333] rounded-lg text-xs font-bold text-emerald-300 px-3 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer"
             >
               <option value="TODOS">🏢 TODAS LAS EMPRESAS</option>
               <option value="LABYMED">🔵 LABYMED S.A. de C.V.</option>
@@ -468,7 +468,7 @@ export default function DashboardAnalisisPage() {
             <select
               value={selectedYear}
               onChange={e => setSelectedYear(e.target.value)}
-              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-amber-300 px-3 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
+              className="bg-slate-900 border border-[#333] rounded-lg text-xs font-bold text-amber-300 px-3 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
             >
               {yearOptions.map(y => (
                 <option key={y} value={y}>
@@ -485,7 +485,7 @@ export default function DashboardAnalisisPage() {
             <select
               value={selectedMonth}
               onChange={e => setSelectedMonth(e.target.value)}
-              className="bg-slate-900 border border-slate-700/80 rounded-lg text-xs font-bold text-indigo-300 px-3 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="bg-slate-900 border border-[#333] rounded-lg text-xs font-bold text-indigo-300 px-3 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
             >
               {MONTH_NAMES.map(m => (
                 <option key={m} value={m}>
@@ -497,7 +497,7 @@ export default function DashboardAnalisisPage() {
 
           <button
             onClick={() => window.location.reload()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/60 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-[#333] transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refrescar</span>
@@ -524,7 +524,7 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Total Adjudicado */}
-        <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-400 uppercase">Adjudicado</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -540,7 +540,7 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Eficiencia Financiera (%) */}
-        <div className="bg-slate-900/80 border border-violet-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-violet-300 uppercase">Eficiencia en Montos</span>
             <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center">
@@ -556,7 +556,7 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Renglones Perdidos */}
-        <div className="bg-slate-900/80 border border-rose-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-rose-400 uppercase">Renglones Perdidos</span>
             <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
@@ -572,7 +572,7 @@ export default function DashboardAnalisisPage() {
         </div>
 
         {/* Renglones Desiertos */}
-        <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-4 space-y-2 shadow-lg">
+        <div className="bg-slate-900/80 border border-[#333] rounded-2xl p-4 space-y-2 shadow-lg">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-amber-400 uppercase">Declarados Desiertos</span>
             <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
@@ -649,7 +649,7 @@ export default function DashboardAnalisisPage() {
                   <tr 
                     key={idx} 
                     onClick={() => setSelectedMonth(row.mes)}
-                    className={`cursor-pointer transition ${isCurrentFilter ? 'bg-indigo-600/20 font-bold border-l-4 border-indigo-500' : 'hover:bg-slate-800/40'}`}
+                    className={`cursor-pointer transition ${isCurrentFilter ? 'bg-indigo-600/20 font-bold border-l-4 border-indigo-500' : 'hover:bg-[#222]'}`}
                   >
                     <td className="p-2 font-bold text-white flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-indigo-400" />
@@ -749,7 +749,7 @@ export default function DashboardAnalisisPage() {
             </thead>
             <tbody className="divide-y divide-slate-800 text-slate-300">
               {orgChartData.map((row, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/40 transition">
+                <tr key={idx} className="hover:bg-[#222] transition">
                   <td className="p-2 font-bold text-white max-w-xs">
                     <span title={row.orgFull}>{row.orgFull}</span>
                   </td>
@@ -958,17 +958,17 @@ export default function DashboardAnalisisPage() {
                 </tr>
               ) : (
                 filteredRows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-800/40 transition">
+                  <tr key={idx} className="hover:bg-[#222] transition">
                     <td className="p-3 font-bold text-indigo-300 font-mono text-[11px]">
                       {row.mes}
                     </td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         row.empresa === 'LABYMED' 
-                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
+                          ? 'bg-blue-500/20 text-blue-400 border border-[#333]' 
                           : (row.empresa === 'LAB&MED' 
-                              ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' 
-                              : 'bg-amber-500/20 text-amber-400 border border-amber-500/30')
+                              ? 'bg-purple-500/20 text-purple-400 border border-[#333]' 
+                              : 'bg-amber-500/20 text-amber-400 border border-[#333]')
                       }`}>
                         {row.empresa}
                       </span>
@@ -996,15 +996,15 @@ export default function DashboardAnalisisPage() {
                     </td>
                     <td className="p-3 text-center">
                       {row.status === 'ADJUDICADA' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-[#333]">
                           🟢 ADJUDICADA
                         </span>
                       ) : row.status === 'DESIERTA' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-[#333]">
                           🟡 DESIERTA
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-[#333]">
                           🔴 PERDIDA
                         </span>
                       )}
@@ -1027,7 +1027,7 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* ─── SLIDE: ANÁLISIS DE PÉRDIDAS ─── */}
-      <div className="bg-slate-950 border border-rose-500/40 rounded-2xl p-6 space-y-6 shadow-2xl">
+      <div className="bg-slate-950 border border-[#333] rounded-2xl p-6 space-y-6 shadow-md">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -1042,7 +1042,7 @@ export default function DashboardAnalisisPage() {
 
         {/* KPIs de Pérdidas */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-rose-950/40 border border-rose-500/30 rounded-2xl p-4">
+          <div className="bg-rose-950/40 border border-[#333] rounded-2xl p-4">
             <p className="text-[11px] font-bold text-rose-300 uppercase mb-1">Total Perdido ($)</p>
             <p className="text-2xl font-black text-rose-400 font-mono">
               ${perdidasData.totalMonto.toLocaleString('en-US', { minimumFractionDigits: 2 })}
@@ -1100,7 +1100,7 @@ export default function DashboardAnalisisPage() {
         {/* Tabla Detallada de Pérdidas */}
         <div className="overflow-x-auto max-h-[420px]">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-rose-500/30 text-slate-400 font-semibold">
+            <thead className="sticky top-0 bg-slate-950/95 backdrop-blur border-b border-[#333] text-slate-400 font-semibold">
               <tr>
                 <th className="p-3">Mes</th>
                 <th className="p-3">Empresa</th>
@@ -1123,13 +1123,13 @@ export default function DashboardAnalisisPage() {
                 </tr>
               ) : (
                 perdidasData.rows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-rose-950/20 transition">
+                  <tr key={idx} className="hover:bg-[#222] transition">
                     <td className="p-3 font-bold text-rose-300 font-mono text-[11px]">{row.mes}</td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        row.empresa === 'LABYMED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : row.empresa === 'LAB&MED' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                        : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        row.empresa === 'LABYMED' ? 'bg-blue-500/20 text-blue-400 border border-[#333]'
+                        : row.empresa === 'LAB&MED' ? 'bg-purple-500/20 text-purple-400 border border-[#333]'
+                        : 'bg-amber-500/20 text-amber-400 border border-[#333]'
                       }`}>{row.empresa}</span>
                     </td>
                     <td className="p-3 font-mono text-[11px] text-slate-300 font-bold">{row.licitacion}</td>

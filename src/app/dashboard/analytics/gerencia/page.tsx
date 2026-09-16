@@ -437,21 +437,21 @@ export default function DashboardObligacionesPage() {
     <div className="space-y-6 pb-12">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed top-5 right-5 z-50 animate-bounce bg-emerald-600 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 border border-emerald-400/40">
+        <div className="fixed top-5 right-5 z-50 animate-bounce bg-emerald-600 text-white font-bold text-xs px-4 py-3 rounded-2xl shadow-md flex items-center gap-2 border border-[#333]">
           <CheckCircle2 className="w-4 h-4" />
           <span>{successToast}</span>
         </div>
       )}
 
       {/* 1. Header Principal con Indicador de Seguridad & Acceso Exclusivo */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 relative overflow-hidden">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-[#111] border border-[#333] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-              <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-indigo-500/30">
+              <span className="badge bg-indigo-500/20 text-indigo-300 font-mono font-bold text-xs flex items-center gap-1 border border-[#333]">
                 <Sparkles className="w-3 h-3 text-indigo-400" />
                 DASHBOARD ESTRATÉGICO
               </span>
@@ -467,7 +467,7 @@ export default function DashboardObligacionesPage() {
                       setMainView('reporte')
                     }
                   }}
-                  className="px-4 py-2 rounded-2xl bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 hover:from-teal-300 hover:to-cyan-300 text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-xl shadow-teal-500/30 border border-teal-300"
+                  className="px-4 py-2 rounded-2xl bg-[#111] border border-[#333] hover:bg-[#222] text-slate-950 text-xs font-black flex items-center gap-2 transition-all transform hover:scale-105 cursor-pointer shadow-sm border border-teal-300"
                   title="Ir a la sección de Reporte de Actividades Realizadas"
                 >
                   <BookOpen className="w-4 h-4 text-slate-950" />
@@ -486,9 +486,9 @@ export default function DashboardObligacionesPage() {
           </div>
 
           {/* Tarjeta de Control de Usuario Asignado */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-950/80 p-3 rounded-2xl border border-amber-500/30 shrink-0 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-950/80 p-3 rounded-2xl border border-[#333] shrink-0 shadow-xl">
             <div className="flex items-center gap-2.5 pr-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow">
+              <div className="w-9 h-9 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
@@ -518,7 +518,7 @@ export default function DashboardObligacionesPage() {
         {/* Formulario desplegable para configurar el usuario asignado */}
         {isConfiguringUser && (
           <div className="mt-4 pt-4 border-t border-white/10 animate-fade-in">
-            <div className="bg-slate-950/80 p-4 rounded-2xl border border-indigo-500/30 flex flex-col md:flex-row items-stretch md:items-center gap-3">
+            <div className="bg-slate-950/80 p-4 rounded-2xl border border-[#333] flex flex-col md:flex-row items-stretch md:items-center gap-3">
               <div className="flex-1">
                 <label className="text-[11px] font-bold text-gray-300 block mb-1">
                   Ingrese el correo o identificador del usuario que tendrá acceso exclusivo:
@@ -559,7 +559,7 @@ export default function DashboardObligacionesPage() {
                 onClick={() => setChartType('pie')}
                 className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer flex items-center gap-1.5 ${
                   chartType === 'pie'
-                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow'
+                    ? 'bg-[#111] border border-[#333] text-white shadow'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -570,7 +570,7 @@ export default function DashboardObligacionesPage() {
                 onClick={() => setChartType('donut')}
                 className={`px-3 py-1 rounded-lg transition-all text-xs cursor-pointer ${
                   chartType === 'donut'
-                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow'
+                    ? 'bg-[#111] border border-[#333] text-white shadow'
                     : 'text-gray-400 hover:text-white'
                 }`}
               >
@@ -590,7 +590,7 @@ export default function DashboardObligacionesPage() {
                   setMainView('reporte')
                 }
               }}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-teal-500/20"
+              className="px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-slate-950 text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Ver la sección de Reporte de Actividades Realizadas"
             >
               <BookOpen className="w-4 h-4 text-slate-950" />
@@ -599,7 +599,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={() => setIsNotificacionesModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10"
+              className="px-3.5 py-2 rounded-xl bg-[#111] border border-[#333] hover:from-amber-500/30 hover:to-orange-500/30 border border-[#333] text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Flujo automatizado de correos de cumplimiento a encargados"
             >
               <Zap className="w-4 h-4 text-amber-400" />
@@ -626,7 +626,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={handleExportCSV}
-              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-[#222] border border-[#333] text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Descargar archivo Excel / CSV"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -635,7 +635,7 @@ export default function DashboardObligacionesPage() {
 
             <button
               onClick={() => window.print()}
-              className="btn-primary !py-2 !px-4 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-lg shadow-indigo-500/20"
+              className="btn-primary !py-2 !px-4 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
               title="Imprimir reporte en PDF o papel"
             >
               <Printer className="w-4 h-4" />
@@ -660,19 +660,19 @@ export default function DashboardObligacionesPage() {
             <span className="text-[10px] text-indigo-300 block mt-0.5">100% Asignadas y Auditadas</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-emerald-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-emerald-400 uppercase font-bold block">🟢 En Plazo (Verde):</span>
             <span className="text-2xl font-black text-emerald-300 font-mono">{totalVerde}</span>
             <span className="text-[10px] text-emerald-400/80 block mt-0.5">{pctVerde}% de efectividad</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-red-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Críticos / Urgentes:</span>
             <span className="text-2xl font-black text-red-400 font-mono">{totalRojo}</span>
             <span className="text-[10px] text-red-400/80 block mt-0.5">Atención prioritaria</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-amber-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-amber-400 uppercase font-bold block">🟠 Advertencia:</span>
             <span className="text-2xl font-black text-amber-400 font-mono">{totalNaranja}</span>
             <span className="text-[10px] text-amber-400/80 block mt-0.5">En trámite / cotización</span>
@@ -682,8 +682,8 @@ export default function DashboardObligacionesPage() {
 
       {/* 2. Bloque de Validación de Acceso de Usuario */}
       {!hasAccess ? (
-        <div className="glass-card p-8 rounded-3xl border border-amber-500/40 bg-gradient-to-b from-slate-900 via-amber-950/20 to-slate-900 text-center space-y-4 shadow-2xl">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 mx-auto flex items-center justify-center text-amber-400 shadow-xl">
+        <div className="glass-card p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] text-center space-y-4 shadow-md">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-[#333] mx-auto flex items-center justify-center text-amber-400 shadow-xl">
             <Lock className="w-8 h-8" />
           </div>
           <h2 className="text-xl font-black text-white">Módulo Reservado Exclusivamente para Gerencia General</h2>
@@ -693,7 +693,7 @@ export default function DashboardObligacionesPage() {
           <div className="pt-2">
             <button
               onClick={() => setAuthorizedOverride(true)}
-              className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold border border-amber-500/40 transition cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-[#222] text-amber-300 text-xs font-bold border border-[#333] transition cursor-pointer"
             >
               Validar Acceso de Gerente General
             </button>
@@ -705,7 +705,7 @@ export default function DashboardObligacionesPage() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                <div className="w-8 h-8 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm">
                   <PieIcon className="w-4 h-4" />
                 </div>
                 <div>
@@ -717,7 +717,7 @@ export default function DashboardObligacionesPage() {
                   </p>
                 </div>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 shrink-0">
+              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-[#333] shrink-0">
                 {chartType === 'pie' ? '🥧 Modo Pastel Amplio con %' : '🍩 Modo Anillo Amplio'} • 26 Obligaciones
               </span>
             </div>
@@ -880,7 +880,7 @@ export default function DashboardObligacionesPage() {
           </div>
 
           {/* 5. Tabla Matriz Completa de Obligaciones */}
-          <div className="glass-card rounded-3xl border border-white/10 shadow-2xl overflow-hidden bg-slate-900/90">
+          <div className="glass-card rounded-3xl border border-white/10 shadow-md overflow-hidden bg-slate-900/90">
             <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-black text-white flex items-center gap-2">
@@ -892,7 +892,7 @@ export default function DashboardObligacionesPage() {
                 </p>
               </div>
 
-              <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-indigo-500/20">
+              <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-[#333]">
                 100% Sincronizado
               </span>
             </div>
@@ -945,8 +945,8 @@ export default function DashboardObligacionesPage() {
                             <span className="font-mono text-[11px] text-gray-300 block">{item.numero_contrato}</span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold mt-0.5 inline-block ${
                               item.tipo_pendiente === 'CONTRATO'
-                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                ? 'bg-blue-500/20 text-blue-300 border border-[#333]'
+                                : 'bg-purple-500/20 text-purple-300 border border-[#333]'
                             }`}>
                               {item.tipo_pendiente}
                             </span>
@@ -978,7 +978,7 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3">
                             <div className="flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-[9px] font-bold text-indigo-300 shrink-0">
+                              <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-[#333] flex items-center justify-center text-[9px] font-bold text-indigo-300 shrink-0">
                                 {item.responsable.charAt(0)}
                               </div>
                               <div className="truncate max-w-[130px]">
@@ -1005,10 +1005,10 @@ export default function DashboardObligacionesPage() {
                           <td className="py-3 px-3 text-center">
                             <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                               isRojo
-                                ? 'bg-red-500/25 text-red-300 border border-red-500/40'
+                                ? 'bg-red-500/25 text-red-300 border border-[#333]'
                                 : isNaranja
-                                ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
-                                : 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                                ? 'bg-amber-500/25 text-amber-300 border border-[#333]'
+                                : 'bg-emerald-500/25 text-emerald-300 border border-[#333]'
                             }`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${
                                 isRojo ? 'bg-red-400 animate-pulse' : isNaranja ? 'bg-amber-400' : 'bg-emerald-400'
@@ -1020,7 +1020,7 @@ export default function DashboardObligacionesPage() {
                           <td className="py-3 px-3 text-right">
                             <button
                               onClick={() => handleOpenEdit(item)}
-                              className="px-2.5 py-1 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-[11px] font-bold transition cursor-pointer"
+                              className="px-2.5 py-1 rounded-xl bg-indigo-500/20 hover:bg-[#222] text-indigo-300 border border-[#333] text-[11px] font-bold transition cursor-pointer"
                               title="Reasignar responsable o editar"
                             >
                               Reasignar
@@ -1038,18 +1038,18 @@ export default function DashboardObligacionesPage() {
           {/* ━━━━ SECCIÓN: REPORTE DE CUMPLIMIENTO DE RESPONSABILIDADES — PLANNER BI ━━━━ */}
           <div className="space-y-5 mt-2">
             {/* Header de la sección */}
-            <div className="glass-card p-5 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 relative overflow-hidden shadow-2xl">
+            <div className="glass-card p-5 rounded-3xl border border-[#333] bg-[#111] border border-[#333] relative overflow-hidden shadow-md">
               <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-amber-500/8 rounded-full blur-2xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+                  <div className="w-10 h-10 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm shrink-0">
                     <ClipboardList className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] border border-amber-500/30 flex items-center gap-1">
+                      <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px] border border-[#333] flex items-center gap-1">
                         <Shield className="w-3 h-3" />
                         ACCESO EXCLUSIVO GERENCIA GENERAL
                       </span>
@@ -1069,7 +1069,7 @@ export default function DashboardObligacionesPage() {
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">Responsables auditados</span>
                     <span className="text-3xl font-black text-white font-mono">{reporteCumplimiento.length}</span>
                   </div>
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600/30 to-violet-600/30 border border-indigo-500/30 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-[#111] border border-[#333] border border-[#333] flex items-center justify-center">
                     <Users className="w-6 h-6 text-indigo-300" />
                   </div>
                 </div>
@@ -1077,7 +1077,7 @@ export default function DashboardObligacionesPage() {
 
               {/* KPI strip general del reporte */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-white/10 relative z-10">
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-emerald-500/20">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
                   <span className="text-[10px] text-emerald-400 uppercase font-bold block">🏆 Mejor Rendimiento</span>
                   <span className="text-sm font-black text-white block truncate mt-0.5">
                     {reporteCumplimiento[0]?.nombre?.split(' ')[0] || '—'}
@@ -1086,7 +1086,7 @@ export default function DashboardObligacionesPage() {
                     {reporteCumplimiento[0]?.pctCumplimiento ?? 0}% cumplimiento
                   </span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-red-500/20">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
                   <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Mayor Carga Crítica</span>
                   <span className="text-sm font-black text-white block truncate mt-0.5">
                     {(reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.nombre?.split(' ')[0]) || '—'}
@@ -1095,7 +1095,7 @@ export default function DashboardObligacionesPage() {
                     {reporteCumplimiento.slice().sort((a, b) => b.criticos - a.criticos)[0]?.criticos ?? 0} tarea(s) crítica(s)
                   </span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-indigo-500/20">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
                   <span className="text-[10px] text-indigo-400 uppercase font-bold block">📊 Promedio General</span>
                   <span className="text-2xl font-black text-indigo-300 font-mono mt-0.5 block">
                     {reporteCumplimiento.length > 0
@@ -1104,7 +1104,7 @@ export default function DashboardObligacionesPage() {
                   </span>
                   <span className="text-[10px] text-gray-400">Tasa de cumplimiento del equipo</span>
                 </div>
-                <div className="bg-slate-950/60 rounded-2xl p-3 border border-amber-500/20">
+                <div className="bg-slate-950/60 rounded-2xl p-3 border border-[#333]">
                   <span className="text-[10px] text-amber-400 uppercase font-bold block">⚠️ Con Pendientes Críticos</span>
                   <span className="text-2xl font-black text-amber-300 font-mono mt-0.5 block">
                     {reporteCumplimiento.filter(r => r.criticos > 0).length}
@@ -1122,20 +1122,20 @@ export default function DashboardObligacionesPage() {
                 const pct = resp.pctCumplimiento
 
                 const cardBorder = esCritico
-                  ? 'border-red-500/30 bg-red-950/10'
+                  ? 'border-[#333] bg-red-950/10'
                   : esTop
-                  ? 'border-emerald-500/30 bg-emerald-950/10'
+                  ? 'border-[#333] bg-emerald-950/10'
                   : pct >= 70
-                  ? 'border-indigo-500/20'
-                  : 'border-amber-500/20 bg-amber-950/10'
+                  ? 'border-[#333]'
+                  : 'border-[#333] bg-amber-950/10'
 
                 const barColor = esCritico
-                  ? 'bg-gradient-to-r from-red-600 to-rose-500'
+                  ? 'bg-[#111] border border-[#333]'
                   : pct >= 80
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                  ? 'bg-[#111] border border-[#333]'
                   : pct >= 50
-                  ? 'bg-gradient-to-r from-indigo-500 to-violet-500'
-                  : 'bg-gradient-to-r from-amber-500 to-orange-500'
+                  ? 'bg-[#111] border border-[#333]'
+                  : 'bg-[#111] border border-[#333]'
 
                 const badgeLabel = esTop
                   ? '🏆 Top Rendimiento'
@@ -1146,12 +1146,12 @@ export default function DashboardObligacionesPage() {
                   : '⚠️ Monitorear'
 
                 const badgeStyle = esTop
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-[#333]'
                   : esCritico
-                  ? 'bg-red-500/20 text-red-300 border-red-500/30'
+                  ? 'bg-red-500/20 text-red-300 border-[#333]'
                   : pct >= 70
-                  ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
-                  : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                  ? 'bg-indigo-500/20 text-indigo-300 border-[#333]'
+                  : 'bg-amber-500/20 text-amber-300 border-[#333]'
 
                 const AREA_COL: Record<string, string> = {
                   'APLICACIONES': '#06B6D4', 'PM': '#8B5CF6', 'LOGISTICA': '#3B82F6',
@@ -1219,15 +1219,15 @@ export default function DashboardObligacionesPage() {
                         <span className="text-lg font-black text-white font-mono block">{resp.total}</span>
                         <span className="text-[9px] text-gray-400 uppercase font-bold">Total</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-emerald-500/20">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
                         <span className="text-lg font-black text-emerald-300 font-mono block">{resp.completados + resp.enPlazo}</span>
                         <span className="text-[9px] text-emerald-400 uppercase font-bold">En Plazo</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-amber-500/20">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
                         <span className="text-lg font-black text-amber-300 font-mono block">{resp.advertencia}</span>
                         <span className="text-[9px] text-amber-400 uppercase font-bold">Aviso</span>
                       </div>
-                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-red-500/20">
+                      <div className="bg-slate-950/60 rounded-xl p-2 text-center border border-[#333]">
                         <span className="text-lg font-black text-red-300 font-mono block">{resp.criticos}</span>
                         <span className="text-[9px] text-red-400 uppercase font-bold">Críticos</span>
                       </div>
@@ -1256,10 +1256,10 @@ export default function DashboardObligacionesPage() {
             </div>
 
             {/* Tabla ranking ejecutiva */}
-            <div className="glass-card rounded-3xl border border-white/10 shadow-2xl overflow-hidden bg-slate-900/90">
+            <div className="glass-card rounded-3xl border border-white/10 shadow-md overflow-hidden bg-slate-900/90">
               <div className="p-4 border-b border-white/10 bg-slate-950/40 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow">
+                  <div className="w-7 h-7 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow">
                     <Award className="w-4 h-4" />
                   </div>
                   <div>
@@ -1267,7 +1267,7 @@ export default function DashboardObligacionesPage() {
                     <p className="text-[10px] text-gray-400">Ordenado por tasa de cumplimiento — Generado automáticamente desde los 26 pendientes del Planner BI</p>
                   </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/20 shrink-0">
+                <span className="text-xs font-mono font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-xl border border-[#333] shrink-0">
                   🔐 Solo Gerente General
                 </span>
               </div>
@@ -1339,7 +1339,7 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.criticos > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full bg-red-500/25 text-red-300 border border-red-500/40 font-bold font-mono">
+                              <span className="px-2 py-0.5 rounded-full bg-red-500/25 text-red-300 border border-[#333] font-bold font-mono">
                                 {resp.criticos}
                               </span>
                             ) : (
@@ -1349,7 +1349,7 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.advertencia > 0 ? (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold font-mono">
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/25 text-amber-300 border border-[#333] font-bold font-mono">
                                 {resp.advertencia}
                               </span>
                             ) : (
@@ -1379,11 +1379,11 @@ export default function DashboardObligacionesPage() {
 
                           <td className="py-3 px-3 text-center">
                             {resp.criticos === 0 && pct >= 80 ? (
-                              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">✅ Óptimo</span>
+                              <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-[#333] text-[10px] font-bold">✅ Óptimo</span>
                             ) : resp.criticos > 1 ? (
-                              <span className="px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 text-[10px] font-bold">🚨 Atención</span>
+                              <span className="px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-[#333] text-[10px] font-bold">🚨 Atención</span>
                             ) : (
-                              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">⚠️ Monitorear</span>
+                              <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-[#333] text-[10px] font-bold">⚠️ Monitorear</span>
                             )}
                           </td>
                         </tr>
@@ -1404,7 +1404,7 @@ export default function DashboardObligacionesPage() {
                       La tasa de cumplimiento considera tareas En Plazo y Completadas vs. el total asignado.
                     </span>
                   </div>
-                  <span className="ml-auto text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-indigo-500/20 shrink-0">
+                  <span className="ml-auto text-[10px] font-mono text-indigo-300 bg-indigo-500/10 px-2.5 py-1 rounded-xl border border-[#333] shrink-0">
                     Actualizado: {new Date().toLocaleDateString('es-SV', { dateStyle: 'short' })} — Control Planner LABANDMED
                   </span>
                 </div>
@@ -1415,14 +1415,14 @@ export default function DashboardObligacionesPage() {
 
           {/* ━━━━ SECCIÓN: REPORTE DE ACTIVIDADES REALIZADAS — EXCLUSIVO LUIS ORELLANA & JOSÉ LENNY ━━━━ */}
           {((currentUserEmail || '').toLowerCase().includes('orellana') || (currentUserEmail || '').toLowerCase().includes('jose.gomez') || (currentUserEmail || '').toLowerCase().includes('lenny')) && (
-            <div id="reporte-actividades-realizadas" className="glass-card p-6 md:p-8 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 shadow-2xl space-y-4 mt-8">
+            <div id="reporte-actividades-realizadas" className="glass-card p-6 md:p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] shadow-md space-y-4 mt-8">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-teal-500/30 flex items-center gap-1.5 px-3 py-1">
+                    <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-[#333] flex items-center gap-1.5 px-3 py-1">
                       <Sparkles className="w-3.5 h-3.5 text-teal-400" /> SECCIÓN OFICIAL DE ENTREGABLES
                     </span>
-                    <span className="badge bg-amber-500/20 text-amber-300 font-mono text-xs border border-amber-500/30 px-3 py-1">
+                    <span className="badge bg-amber-500/20 text-amber-300 font-mono text-xs border border-[#333] px-3 py-1">
                       🔒 Exclusivo Luis Orellana & BI Lenny
                     </span>
                   </div>
@@ -1437,7 +1437,7 @@ export default function DashboardObligacionesPage() {
 
                 <a
                   href="/dashboard/reporte"
-                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center gap-2 transition hover:opacity-90 shadow-lg shadow-teal-500/20 shrink-0 self-start md:self-auto cursor-pointer"
+                  className="px-5 py-3 rounded-2xl bg-[#111] border border-[#333] text-slate-950 font-black text-xs flex items-center gap-2 transition hover:opacity-90 shadow-sm shrink-0 self-start md:self-auto cursor-pointer"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Abrir Reporte Completo (11 Módulos)</span>

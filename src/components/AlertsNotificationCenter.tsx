@@ -327,10 +327,10 @@ export default function AlertsNotificationCenter({
           onClick={() => setIsOpen(!isOpen)}
           className={`relative w-10 h-10 mx-auto rounded-xl border transition-all duration-300 flex items-center justify-center group cursor-pointer ${
             isOpen
-              ? 'bg-rose-500/20 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
+              ? 'bg-rose-500/20 border-[#333] shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
               : criticalCount > 0
-              ? 'bg-slate-900/90 border-rose-500/30 text-rose-400 hover:border-rose-500/60 hover:bg-rose-950/30'
-              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-300'
+              ? 'bg-slate-900/90 border-[#333] text-rose-400 hover:border-[#333] hover:bg-[#222]'
+              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-[#333] hover:text-cyan-300'
           }`}
           title={`Centro de Alertas (${criticalCount > 0 ? `${criticalCount} Críticas` : '0 Quiebres'})`}
         >
@@ -351,10 +351,10 @@ export default function AlertsNotificationCenter({
             isSidebar ? 'w-full justify-start px-3 py-2 rounded-2xl' : 'p-2.5 rounded-2xl'
           } border transition-all duration-300 flex items-center gap-2.5 group cursor-pointer ${
             isOpen
-              ? 'bg-rose-500/20 border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
+              ? 'bg-rose-500/20 border-[#333] shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-300'
               : criticalCount > 0
-              ? 'bg-slate-900/90 border-rose-500/30 text-rose-400 hover:border-rose-500/60 hover:bg-rose-950/30 shadow-md shadow-rose-950/20'
-              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-300'
+              ? 'bg-slate-900/90 border-[#333] text-rose-400 hover:border-[#333] hover:bg-[#222] shadow-md shadow-rose-950/20'
+              : 'bg-slate-900/90 border-white/10 text-slate-300 hover:border-[#333] hover:text-cyan-300'
           }`}
           title="Centro de Alertas de Oferta vs Demanda"
         >
@@ -396,7 +396,7 @@ export default function AlertsNotificationCenter({
             {/* Header del Centro de Alertas */}
             <div className="px-6 py-4 border-b border-white/10 bg-slate-950/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-shrink-0">
               <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 shadow-inner">
+                <div className="p-3 rounded-2xl bg-rose-500/15 border border-[#333] text-rose-400 shadow-inner">
                   <ShieldAlert className="w-6 h-6" />
                 </div>
                 <div>
@@ -422,7 +422,7 @@ export default function AlertsNotificationCenter({
 
                 <button
                   onClick={handleExportCSV}
-                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Exportar Pedido</span>
@@ -445,7 +445,7 @@ export default function AlertsNotificationCenter({
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'CRITICO'
                     ? 'bg-rose-500/20 border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
-                    : 'bg-rose-950/20 border-rose-500/20 hover:border-rose-500/40'
+                    : 'bg-rose-950/20 border-[#333] hover:border-[#333]'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -463,7 +463,7 @@ export default function AlertsNotificationCenter({
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'REORDEN'
                     ? 'bg-amber-500/20 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                    : 'bg-amber-950/20 border-amber-500/20 hover:border-amber-500/40'
+                    : 'bg-amber-950/20 border-[#333] hover:border-[#333]'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function AlertsNotificationCenter({
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'RIESGO_FEFO'
                     ? 'bg-indigo-500/20 border-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.3)]'
-                    : 'bg-indigo-950/20 border-indigo-500/20 hover:border-indigo-500/40'
+                    : 'bg-indigo-950/20 border-[#333] hover:border-[#333]'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -494,7 +494,7 @@ export default function AlertsNotificationCenter({
                 <div className="text-[10px] text-slate-400 mt-0.5">Vence &le; 90d con exceso</div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/20">
+              <div className="p-3.5 rounded-2xl bg-emerald-950/20 border border-[#333]">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-emerald-300">Inversión Sugerida</span>
                   <DollarSign className="w-4 h-4 text-emerald-400" />
@@ -514,7 +514,7 @@ export default function AlertsNotificationCenter({
                   onClick={() => setActiveFilter('TODAS')}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     activeFilter === 'TODAS'
-                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
+                      ? 'bg-[#111] border border-[#333] text-white shadow-md'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -525,7 +525,7 @@ export default function AlertsNotificationCenter({
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     activeFilter === 'CRITICO'
                       ? 'bg-rose-600 text-white shadow-md'
-                      : 'text-rose-400 hover:bg-rose-950/40'
+                      : 'text-rose-400 hover:bg-[#222]'
                   }`}
                 >
                   🔴 Quiebre ({resumen.quiebres_inminentes_criticos})
@@ -535,7 +535,7 @@ export default function AlertsNotificationCenter({
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     activeFilter === 'REORDEN'
                       ? 'bg-amber-600 text-white shadow-md'
-                      : 'text-amber-400 hover:bg-amber-950/40'
+                      : 'text-amber-400 hover:bg-[#222]'
                   }`}
                 >
                   🟡 Reorden ({resumen.reorden_sugerido})
@@ -545,7 +545,7 @@ export default function AlertsNotificationCenter({
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     activeFilter === 'RIESGO_FEFO'
                       ? 'bg-indigo-600 text-white shadow-md'
-                      : 'text-indigo-400 hover:bg-indigo-950/40'
+                      : 'text-indigo-400 hover:bg-[#222]'
                   }`}
                 >
                   🟣 FEFO ({resumen.riesgo_fefo_caducidad})
@@ -568,7 +568,7 @@ export default function AlertsNotificationCenter({
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value as any)}
-                  className="px-3 py-2 bg-slate-950 border border-cyan-500/40 text-cyan-300 rounded-xl text-xs focus:outline-none focus:border-cyan-400 font-semibold cursor-pointer"
+                  className="px-3 py-2 bg-slate-950 border border-[#333] text-cyan-300 rounded-xl text-xs focus:outline-none focus:border-cyan-400 font-semibold cursor-pointer"
                 >
                   <option value="urgencia">🚨 Orden: Mayor Urgencia</option>
                   <option value="fecha_quiebre">⏳ Orden: Fecha de Quiebre</option>
@@ -615,18 +615,18 @@ export default function AlertsNotificationCenter({
                         key={alerta.sku + idx}
                         className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                           isCritico
-                            ? 'bg-rose-950/25 border-rose-500/35 hover:border-rose-500/70 shadow-lg shadow-rose-950/20'
+                            ? 'bg-rose-950/25 border-[#333] hover:border-[#333] shadow-sm'
                             : isReorden
-                            ? 'bg-amber-950/25 border-amber-500/35 hover:border-amber-500/70 shadow-lg shadow-amber-950/20'
+                            ? 'bg-amber-950/25 border-[#333] hover:border-[#333] shadow-sm'
                             : isFefo
-                            ? 'bg-indigo-950/25 border-indigo-500/35 hover:border-indigo-500/70'
+                            ? 'bg-indigo-950/25 border-[#333] hover:border-[#333]'
                             : 'bg-slate-900/60 border-white/10'
                         }`}
                       >
                         {/* SKU e Información del Producto */}
                         <div className="space-y-2 min-w-[320px] flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-mono font-extrabold text-xs px-2.5 py-0.5 rounded-lg bg-slate-950 text-cyan-300 border border-cyan-500/30">
+                            <span className="font-mono font-extrabold text-xs px-2.5 py-0.5 rounded-lg bg-slate-950 text-cyan-300 border border-[#333]">
                               {alerta.sku}
                             </span>
                             <span className="text-xs font-bold text-slate-300 px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
@@ -635,10 +635,10 @@ export default function AlertsNotificationCenter({
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                                 isCritico
-                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                                  ? 'bg-rose-500/20 text-rose-300 border-[#333] animate-pulse'
                                   : isReorden
-                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                                  : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+                                  ? 'bg-amber-500/20 text-amber-300 border-[#333]'
+                                  : 'bg-indigo-500/20 text-indigo-300 border-[#333]'
                               }`}
                             >
                               {isCritico ? '🔴 Peligro Quiebre' : isReorden ? '🟡 Punto Reorden' : '🟣 Riesgo FEFO'}
@@ -658,12 +658,12 @@ export default function AlertsNotificationCenter({
                           <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px] font-mono">
                             {/* Fecha de Quiebre / Agotamiento */}
                             {alerta.stock_actual_kits === 0 || alerta.dias_cobertura <= 0 ? (
-                              <span className="px-2 py-0.5 rounded-md bg-rose-500/25 text-rose-300 border border-rose-500/40 font-bold flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-rose-500/25 text-rose-300 border border-[#333] font-bold flex items-center gap-1">
                                 <AlertTriangle className="w-3 h-3 text-rose-400" />
                                 <span>Quiebre: INMEDIATO (Stock 0)</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-slate-950 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-slate-950 text-amber-300 border border-[#333] flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-amber-400" />
                                 <span>Agotamiento est: <strong>{formatFutureDate(alerta.dias_cobertura)}</strong> ({alerta.dias_cobertura}d)</span>
                               </span>
@@ -671,12 +671,12 @@ export default function AlertsNotificationCenter({
 
                             {/* Fecha Límite para Orden de Compra */}
                             {alerta.dias_cobertura <= 30 ? (
-                              <span className="px-2 py-0.5 rounded-md bg-rose-950/80 text-rose-200 border border-rose-500/40 font-bold flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-rose-950/80 text-rose-200 border border-[#333] font-bold flex items-center gap-1">
                                 <CalendarDays className="w-3 h-3 text-rose-400" />
                                 <span>Emitir Orden: YA (Lead Time 30d vencido)</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-slate-950 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-slate-950 text-cyan-300 border border-[#333] flex items-center gap-1">
                                 <Calendar className="w-3 h-3 text-cyan-400" />
                                 <span>Emitir orden antes de: <strong>{formatFutureDate(alerta.dias_cobertura - 30)}</strong></span>
                               </span>
@@ -684,7 +684,7 @@ export default function AlertsNotificationCenter({
 
                             {/* Lote y Vencimiento FEFO */}
                             {alerta.lote_proximo ? (
-                              <span className="px-2 py-0.5 rounded-md bg-purple-950/60 text-purple-300 border border-purple-500/30 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-purple-950/60 text-purple-300 border border-[#333] flex items-center gap-1">
                                 <Tag className="w-3 h-3 text-purple-400" />
                                 <span>Lote: <strong className="text-white">{alerta.lote_proximo.lote}</strong> • Vence: <strong>{alerta.lote_proximo.vence}</strong> ({alerta.lote_proximo.dias}d)</span>
                               </span>
@@ -731,7 +731,7 @@ export default function AlertsNotificationCenter({
                             <div className="text-[9.5px] font-mono text-slate-400">{alerta.consumo_diario_kits} k/día</div>
                           </div>
 
-                          <div className="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 col-span-3 sm:col-span-1">
+                          <div className="p-2 rounded-xl bg-emerald-950/40 border border-[#333] col-span-3 sm:col-span-1">
                             <div className="text-[10px] font-bold text-emerald-300 uppercase">Sugerido Compra</div>
                             <div className="font-mono font-black text-sm text-emerald-400 mt-0.5">
                               +{alerta.sugerido_comprar_kits} <span className="text-[10px]">Kits</span>
@@ -757,7 +757,7 @@ export default function AlertsNotificationCenter({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleExportCSV}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Descargar Orden de Compra Sugerida (.CSV)</span>

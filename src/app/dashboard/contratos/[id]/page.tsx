@@ -760,7 +760,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         color: 'completado',
         dias: null,
         label: 'Completado',
-        badgeClass: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+        badgeClass: 'bg-emerald-500/15 text-emerald-400 border border-[#333]'
       }
     }
 
@@ -784,21 +784,21 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         color: 'rojo',
         dias: diffDays,
         label: diffDays < 0 ? `Vencido (${Math.abs(diffDays)}d)` : diffDays === 0 ? 'Vence hoy' : '1 día restante (<2d)',
-        badgeClass: 'bg-red-500/25 text-red-300 border border-red-500/50 font-bold shadow-sm shadow-red-500/20'
+        badgeClass: 'bg-red-500/25 text-red-300 border border-[#333] font-bold shadow-sm shadow-red-500/20'
       }
     } else if (diffDays <= 6) {
       return {
         color: 'naranja',
         dias: diffDays,
         label: `${diffDays} días restantes (<6d)`,
-        badgeClass: 'bg-amber-500/25 text-amber-300 border border-amber-500/50 font-bold shadow-sm shadow-amber-500/20'
+        badgeClass: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold shadow-sm shadow-amber-500/20'
       }
     } else {
       return {
         color: 'verde',
         dias: diffDays,
         label: `${diffDays} días restantes (>6d)`,
-        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/50 font-bold shadow-sm shadow-emerald-500/20'
+        badgeClass: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold shadow-sm shadow-emerald-500/20'
       }
     }
   }
@@ -838,7 +838,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="w-10 h-10 border-3 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-3 border-[#333] border-t-indigo-500 rounded-full animate-spin" />
       </div>
     )
   }
@@ -881,7 +881,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Perfil activo y selector */}
-        <div className="glass-card px-4 py-2 flex items-center gap-3 border border-indigo-500/20">
+        <div className="glass-card px-4 py-2 flex items-center gap-3 border border-[#333]">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
               {currentUser?.nombre?.[0]}{currentUser?.apellido?.[0]}
@@ -905,7 +905,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 const selected = availableUsers.find(u => u.id === e.target.value)
                 if (selected) setCurrentUser(selected)
               }}
-              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 pr-6 text-gray-300 appearance-none cursor-pointer hover:border-indigo-500/50"
+              className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 pr-6 text-gray-300 appearance-none cursor-pointer hover:border-[#333]"
               title="Cambiar usuario para probar permisos"
             >
               {availableUsers.map(u => (
@@ -951,7 +951,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
           <div className="flex items-center gap-3">
             <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-500"
+                className="h-full bg-[#111] border border-[#333] transition-all duration-500"
                 style={{ width: `${progresoPromedio}%` }}
               />
             </div>
@@ -971,7 +971,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Resumen Semafórico de Pendientes */}
-      <div className="glass-card p-5 border border-white/10 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-900/90 animate-fade-in">
+      <div className="glass-card p-5 border border-white/10 bg-[#111] border border-[#333] animate-fade-in">
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
@@ -991,7 +991,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               onClick={() => setFilterSemaforo(filterSemaforo === 'pendientes' ? 'todos' : 'pendientes')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 filterSemaforo === 'pendientes'
-                  ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/30'
+                  ? 'bg-amber-500 text-black shadow-sm'
                   : 'bg-white/5 text-gray-300 hover:bg-white/10'
               }`}
             >
@@ -1017,7 +1017,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'rojo'
                 ? 'bg-red-500/20 border-red-500 ring-2 ring-red-500/50'
-                : 'bg-red-500/10 border-red-500/30 hover:bg-red-500/15'
+                : 'bg-red-500/10 border-[#333] hover:bg-[#222]'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1037,7 +1037,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'naranja'
                 ? 'bg-amber-500/20 border-amber-500 ring-2 ring-amber-500/50'
-                : 'bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/15'
+                : 'bg-amber-500/10 border-[#333] hover:bg-[#222]'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1057,7 +1057,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
               filterSemaforo === 'verde'
                 ? 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/50'
-                : 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/15'
+                : 'bg-emerald-500/10 border-[#333] hover:bg-[#222]'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -1148,7 +1148,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
             <button
               type="button"
               onClick={() => setModalAddOpen(true)}
-              className="btn-primary text-xs flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"
+              className="btn-primary text-xs flex items-center gap-1.5 shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
               + Agregar Proceso / Numeral
@@ -1196,16 +1196,16 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
         </div>
 
         {/* Tabla de numerales con Doble Validación (Ejecución vs Supervisión) */}
-        <div className="glass-card overflow-hidden border border-yellow-500/30 shadow-2xl">
+        <div className="glass-card overflow-hidden border border-[#333] shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider">
                   <th className="py-2.5 px-3 border-r border-black/20 w-16 text-center">Numeral</th>
                   <th className="py-2.5 px-3 border-r border-black/20">Proceso</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 min-w-[280px] text-center bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-none">📋 Descripción de lo Solicitado</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 w-44 text-center bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-none">🏷️ Producto / Equipo</th>
-                  <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-none">⚡ Tipo de Pendiente</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 min-w-[280px] text-center bg-[#111] border border-[#333] text-white rounded-none">📋 Descripción de lo Solicitado</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 w-44 text-center bg-[#111] border border-[#333] text-white rounded-none">🏷️ Producto / Equipo</th>
+                  <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center bg-[#111] border border-[#333] text-white rounded-none">⚡ Tipo de Pendiente</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-40 text-center">Fecha Cumplimiento</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-36 text-center">Ejecución</th>
                   <th className="py-2.5 px-3 border-r border-black/20 w-32 text-center">Ejecutado</th>
@@ -1314,7 +1314,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                     }}
                                     autoFocus
                                     placeholder="Escribe o elige producto..."
-                                    className="input-field !py-1 !px-2 text-[11px] font-semibold w-full bg-slate-900 border-amber-500/60 text-amber-200"
+                                    className="input-field !py-1 !px-2 text-[11px] font-semibold w-full bg-slate-900 border-[#333] text-amber-200"
                                   />
                                   <datalist id="lista-productos-sugeridos">
                                     <option value="F200 Marca: SD BIOSENSOR" />
@@ -1338,7 +1338,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                   setEditingProductoId(m.id)
                                   setEditProductoValue(val)
                                 }}
-                                className="w-full text-left px-2.5 py-1 rounded-lg text-[11px] transition-all cursor-pointer group bg-gradient-to-r from-orange-500/20 to-amber-500/15 text-orange-200 font-bold border border-orange-500/40 hover:border-orange-400 hover:scale-[1.02] shadow-sm"
+                                className="w-full text-left px-2.5 py-1 rounded-lg text-[11px] transition-all cursor-pointer group bg-[#111] border border-[#333] text-orange-200 font-bold border border-[#333] hover:border-orange-400 hover:scale-[1.02] shadow-sm"
                                 title="Clic para editar o cambiar el producto/equipo"
                               >
                                 <span className="flex items-center justify-between gap-1">
@@ -1362,8 +1362,8 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                 }}
                                 className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wide border-2 shadow-lg transition-all duration-200 cursor-pointer select-none hover:scale-105 active:scale-95 ${
                                   val === 'Contrato'
-                                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white border-blue-400/60 shadow-blue-500/40 hover:shadow-blue-500/60'
-                                    : 'bg-gradient-to-r from-purple-600 to-fuchsia-500 text-white border-purple-400/60 shadow-purple-500/40 hover:shadow-purple-500/60'
+                                    ? 'bg-[#111] border border-[#333] text-white border-[#333] shadow-blue-500/40 hover:shadow-blue-500/60'
+                                    : 'bg-[#111] border border-[#333] text-white border-[#333] shadow-purple-500/40 hover:shadow-purple-500/60'
                                 }`}
                                 title="Clic para cambiar entre Contrato y Visita"
                               >
@@ -1517,7 +1517,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                               <button
                                 type="button"
                                 onClick={() => handleDeleteMilestone(m.id)}
-                                className="p-1 rounded hover:bg-red-500/10 text-gray-500 hover:text-red-400"
+                                className="p-1 rounded hover:bg-[#222] text-gray-500 hover:text-red-400"
                                 title="Eliminar"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -1538,11 +1538,11 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal Agregar Nuevo Numeral / Proceso al Contrato (Seccionado en 3FN) */}
       {modalAddOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in max-h-[92vh] overflow-y-auto border border-yellow-500/30 shadow-2xl space-y-5">
+          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in max-h-[92vh] overflow-y-auto border border-[#333] shadow-md space-y-5">
             {/* Header Modal */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                <div className="p-2.5 rounded-xl bg-yellow-500/20 text-yellow-400 border border-[#333]">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
@@ -1562,7 +1562,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
 
             <form onSubmit={handleCreateMilestone} className="space-y-5 text-xs">
               {/* SECCIÓN 1: Identificación del Proceso */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-blue-500/20 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
                 <div className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-300 flex items-center justify-center text-[10px]">1</span>
                   🏢 Sección 1: Identificación del Proceso & Numeral
@@ -1600,7 +1600,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </div>
 
               {/* SECCIÓN 2: Especificación Técnica y Equipamiento */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-teal-500/20 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
                 <div className="flex items-center gap-2 text-teal-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-teal-500/20 text-teal-300 flex items-center justify-center text-[10px]">2</span>
                   📋 Sección 2: Especificación Técnica & Equipamiento
@@ -1649,7 +1649,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               </div>
 
               {/* SECCIÓN 3: Asignaciones & Validación (3FN) */}
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-violet-500/20 space-y-3">
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-[#333] space-y-3">
                 <div className="flex items-center gap-2 text-violet-400 font-bold uppercase tracking-wider text-[11px]">
                   <span className="w-5 h-5 rounded-full bg-violet-500/20 text-violet-300 flex items-center justify-center text-[10px]">3</span>
                   👥 Sección 3: Asignaciones de Ejecución, Supervisión & Plazos (3FN)
@@ -1752,7 +1752,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 <button
                   type="submit"
                   disabled={creating}
-                  className="btn-primary flex-1 py-2.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black font-extrabold shadow-lg shadow-yellow-500/30 text-xs"
+                  className="btn-primary flex-1 py-2.5 bg-[#111] border border-[#333] hover:bg-[#222] text-black font-extrabold shadow-sm text-xs"
                 >
                   {creating ? 'Guardando en 3FN...' : 'Guardar Proceso en Base de Datos (3FN)'}
                 </button>
@@ -1774,7 +1774,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal para Ver / Editar Descripción de lo Solicitado */}
       {modalDetalleItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in border border-teal-500/30 shadow-2xl space-y-4">
+          <div className="glass-card w-full max-w-2xl p-6 animate-scale-in border border-[#333] shadow-md space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <span className="p-2.5 rounded-xl bg-teal-500/20 text-teal-300 text-lg">📋</span>
@@ -1820,7 +1820,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   saveDescSolicitada(modalDetalleItem.id, modalDetalleItem.detalle)
                   setModalDetalleItem(null)
                 }}
-                className="btn-primary text-xs flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 shadow-lg shadow-teal-600/30"
+                className="btn-primary text-xs flex items-center gap-2 bg-[#111] border border-[#333] hover:bg-[#222] shadow-sm"
               >
                 <Save className="w-4 h-4" />
                 Guardar Descripción
@@ -1833,11 +1833,11 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
       {/* Modal de Escaneo y Reconocimiento de Notas a Lapicero (OCR & IA) */}
       {ocrModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="glass-card w-full max-w-4xl p-6 animate-scale-in max-h-[92vh] flex flex-col border border-emerald-500/30 shadow-2xl">
+          <div className="glass-card w-full max-w-4xl p-6 animate-scale-in max-h-[92vh] flex flex-col border border-[#333] shadow-md">
             {/* Header Modal */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-500/20 text-emerald-400 border border-emerald-500/40">
+                <div className="p-2.5 rounded-xl bg-[#111] border border-[#333] text-emerald-400 border border-[#333]">
                   <ScanLine className="w-6 h-6 animate-pulse" />
                 </div>
                 <div>
@@ -1863,7 +1863,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               {ocrScanning ? (
                 <div className="py-16 text-center space-y-4">
                   <div className="relative inline-block">
-                    <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin mx-auto" />
+                    <div className="w-16 h-16 border-4 border-[#333] border-t-emerald-400 rounded-full animate-spin mx-auto" />
                     <PenTool className="w-6 h-6 text-emerald-400 absolute inset-0 m-auto animate-bounce" />
                   </div>
                   <div>
@@ -1874,7 +1874,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
               ) : (
                 <>
                   {/* Banner de estado de detección */}
-                  <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+                  <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-[#333] flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <Sparkles className="w-5 h-5 text-emerald-400" />
                       <div>
@@ -1962,7 +1962,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                       className="input-field !py-0.5 !px-1 text-xs font-semibold w-full"
                                     />
                                     {item.producto && (
-                                      <span className="inline-block mt-1 text-[10px] text-orange-300 bg-orange-500/10 px-1.5 py-0.5 rounded border border-orange-500/20 font-mono">
+                                      <span className="inline-block mt-1 text-[10px] text-orange-300 bg-orange-500/10 px-1.5 py-0.5 rounded border border-[#333] font-mono">
                                         🏷️ {item.producto}
                                       </span>
                                     )}
@@ -2017,7 +2017,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   </div>
 
                   {ocrSuccessMsg && (
-                    <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold text-center animate-fade-in flex items-center justify-center gap-2">
+                    <div className="p-3 rounded-xl bg-emerald-500/20 border border-[#333] text-emerald-300 text-xs font-bold text-center animate-fade-in flex items-center justify-center gap-2">
                       <Check className="w-4 h-4" />
                       {ocrSuccessMsg}
                     </div>
@@ -2039,7 +2039,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                 type="button"
                 disabled={ocrScanning || ocrImporting || ocrItems.length === 0}
                 onClick={handleApplyOcrItems}
-                className="btn-primary text-xs flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 shadow-lg shadow-emerald-600/30"
+                className="btn-primary text-xs flex items-center gap-2 bg-[#111] border border-[#333] hover:bg-[#222] shadow-sm"
               >
                 {ocrImporting ? (
                   <>

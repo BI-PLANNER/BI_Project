@@ -20,7 +20,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
       {/* Tab Navigation Header */}
       <div className="px-6 pt-6 pb-2 border-b border-white/5 flex-shrink-0">
         <h1 className="text-2xl font-black text-white tracking-wide flex items-center gap-3 mb-6">
-          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <span className="w-8 h-8 rounded-lg bg-[#111] border border-[#333] flex items-center justify-center shadow-sm">
             <BarChart3 size={18} className="text-white" />
           </span>
           Centro de Analítica BI

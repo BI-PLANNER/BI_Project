@@ -220,14 +220,14 @@ export default function KardexIncidenciasPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={loadData}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/60 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-[#333] transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Actualizar</span>
           </button>
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-bold shadow-lg shadow-rose-600/30 transition active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Nueva Incidencia</span>
@@ -293,7 +293,7 @@ export default function KardexIncidenciasPage() {
             return (
               <div
                 key={inc.incidencia_id}
-                className="bg-slate-900/80 border border-slate-800/80 hover:border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 transition flex flex-col justify-between"
+                className="bg-slate-900/80 border border-[#333] hover:border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 transition flex flex-col justify-between"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -302,10 +302,10 @@ export default function KardexIncidenciasPage() {
                     </span>
                     <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold font-mono ${
                       sem.color === 'Rojo'
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                        ? 'bg-rose-500/20 text-rose-300 border border-[#333]'
                         : sem.color === 'Anaranjado'
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        ? 'bg-amber-500/20 text-amber-300 border border-[#333]'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-[#333]'
                     }`}>
                       {sem.label}
                     </span>
@@ -315,7 +315,7 @@ export default function KardexIncidenciasPage() {
                     {inc.situacion?.nombre_situacion || 'Situación no clasificada'}
                   </h3>
 
-                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50">
+                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 rounded-xl border border-[#333]">
                     {inc.comentario || 'Sin descripción detallada.'}
                   </p>
 
@@ -339,7 +339,7 @@ export default function KardexIncidenciasPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                <div className="pt-3 border-t border-[#333] flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleOpenEdit(inc)}
@@ -350,7 +350,7 @@ export default function KardexIncidenciasPage() {
                     </button>
                     <button
                       onClick={() => handleDelete(inc.incidencia_id)}
-                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/40 text-slate-300 hover:text-rose-400 text-xs transition"
+                      className="p-1.5 rounded-lg bg-slate-800 hover:bg-[#222] text-slate-300 hover:text-rose-400 text-xs transition"
                       title="Eliminar"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -359,7 +359,7 @@ export default function KardexIncidenciasPage() {
 
                   <button
                     onClick={() => handlePressure(inc)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold transition active:scale-95"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-[#222] text-rose-300 border border-[#333] text-xs font-bold transition active:scale-95"
                   >
                     <Mail className="w-3.5 h-3.5" />
                     <span>Presionar</span>
@@ -374,7 +374,7 @@ export default function KardexIncidenciasPage() {
       {/* Modal Form */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-slate-900 border border-[#333] rounded-2xl w-full max-w-lg shadow-md overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
               <h3 className="text-sm font-bold text-white">
                 {editingId ? `Editar Incidencia #${editingId}` : 'Nueva Incidencia Operativa'}
@@ -513,7 +513,7 @@ export default function KardexIncidenciasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white text-xs font-bold shadow-lg shadow-rose-600/30 transition"
+                  className="px-5 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold shadow-sm transition"
                 >
                   {editingId ? 'Guardar Cambios' : 'Registrar Incidencia'}
                 </button>

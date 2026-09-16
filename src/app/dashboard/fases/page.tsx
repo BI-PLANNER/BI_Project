@@ -180,7 +180,7 @@ export default function FasesPage() {
         color: 'rojo',
         dias: diffDays,
         label: diffDays < 0 ? `Vencido (${Math.abs(diffDays)}d)` : diffDays === 0 ? 'Vence hoy' : '1 día (<2d)',
-        badge: 'bg-red-500/25 text-red-300 border border-red-500/40 font-bold',
+        badge: 'bg-red-500/25 text-red-300 border border-[#333] font-bold',
         cellBg: 'bg-red-500/10 text-red-300 font-bold'
       }
     } else if (diffDays <= 6) {
@@ -188,7 +188,7 @@ export default function FasesPage() {
         color: 'naranja',
         dias: diffDays,
         label: `${diffDays} días (<6d)`,
-        badge: 'bg-amber-500/25 text-amber-300 border border-amber-500/40 font-bold',
+        badge: 'bg-amber-500/25 text-amber-300 border border-[#333] font-bold',
         cellBg: 'bg-amber-500/15 text-amber-300 font-bold'
       }
     } else {
@@ -196,7 +196,7 @@ export default function FasesPage() {
         color: 'verde',
         dias: diffDays,
         label: `${diffDays} días (>6d)`,
-        badge: 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-bold',
+        badge: 'bg-emerald-500/25 text-emerald-300 border border-[#333] font-bold',
         cellBg: 'bg-emerald-500/15 text-emerald-300 font-bold'
       }
     }
@@ -370,7 +370,7 @@ export default function FasesPage() {
         {vistaActiva === 'PROBLEMATICAS' && (
           <button
             onClick={handleOpenAddProblematica}
-            className="btn-primary text-xs flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"
+            className="btn-primary text-xs flex items-center gap-1.5 shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             + Agregar Problemática / Responsable
@@ -385,7 +385,7 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('MATRIZ_RACI')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'MATRIZ_RACI'
-              ? 'bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/30'
+              ? 'bg-[#111] border border-[#333] text-white shadow-sm'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -397,7 +397,7 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('PENDIENTES_FASE2')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'PENDIENTES_FASE2'
-              ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+              ? 'bg-amber-400 text-black shadow-sm'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -409,7 +409,7 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('PROBLEMATICAS')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'PROBLEMATICAS'
-              ? 'bg-yellow-400 text-black shadow-lg shadow-yellow-400/20'
+              ? 'bg-yellow-400 text-black shadow-sm'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -421,7 +421,7 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('ENTREGAS_HOSPITAL')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'ENTREGAS_HOSPITAL'
-              ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+              ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -433,7 +433,7 @@ export default function FasesPage() {
           onClick={() => setVistaActiva('NUMERALES_PROCESO')}
           className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
             vistaActiva === 'NUMERALES_PROCESO'
-              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+              ? 'bg-indigo-600 text-white shadow-sm'
               : 'text-gray-400 hover:text-white'
           }`}
         >
@@ -448,7 +448,7 @@ export default function FasesPage() {
           {/* Tarjetas de Usuarios Reales y Funciones Exclusivas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Lenny Gómez (Planner) */}
-            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-amber-400/50 transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-[#333] transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold">⚡ PLANNER</span>
                 <span className="text-[10px] text-gray-400">LabAndMed</span>
@@ -469,7 +469,7 @@ export default function FasesPage() {
             </div>
 
             {/* Roberto Batres (Planner) */}
-            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-amber-400/50 transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-amber-400 border-white/10 hover:border-[#333] transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold">⚡ PLANNER</span>
                 <span className="text-[10px] text-gray-400">LabAndMed</span>
@@ -490,7 +490,7 @@ export default function FasesPage() {
             </div>
 
             {/* Luis Orellana (Gerente) */}
-            <div className="glass-card p-5 border-l-4 border-l-indigo-500 border-white/10 hover:border-indigo-400/50 transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-indigo-500 border-white/10 hover:border-[#333] transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-[10px] font-bold">👑 GERENCIA</span>
                 <span className="text-[10px] text-gray-400">Dirección</span>
@@ -511,7 +511,7 @@ export default function FasesPage() {
             </div>
 
             {/* Juan José Fuentes Rodríguez (PM) */}
-            <div className="glass-card p-5 border-l-4 border-l-emerald-500 border-white/10 hover:border-emerald-400/50 transition-all space-y-3">
+            <div className="glass-card p-5 border-l-4 border-l-emerald-500 border-white/10 hover:border-[#333] transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">🎯 PROJECT MANAGER</span>
                 <span className="text-[10px] text-gray-400">Operaciones</span>
@@ -533,8 +533,8 @@ export default function FasesPage() {
           </div>
 
           {/* Matriz RACI Oficial de LabAndMed */}
-          <div className="glass-card overflow-hidden border border-indigo-500/30 shadow-2xl">
-            <div className="p-4 bg-gradient-to-r from-indigo-950/80 via-slate-900 to-indigo-950/80 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
+            <div className="p-4 bg-[#111] border border-[#333] border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-400" />
@@ -547,10 +547,10 @@ export default function FasesPage() {
 
               {/* Leyenda RACI */}
               <div className="flex items-center gap-2 text-xs">
-                <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-bold border border-red-500/40">R = Responsible</span>
-                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">A = Accountable</span>
-                <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-500/40">C = Consulted</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">I = Informed</span>
+                <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-300 font-bold border border-[#333]">R = Responsible</span>
+                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-[#333]">A = Accountable</span>
+                <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-[#333]">C = Consulted</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold border border-[#333]">I = Informed</span>
               </div>
             </div>
 
@@ -686,7 +686,7 @@ export default function FasesPage() {
       {/* 1. VISTA EXACTA DE "PROBLEMATICAS | RESPONSABLE" */}
       {vistaActiva === 'PROBLEMATICAS' && (
         <div className="space-y-4 animate-fade-in">
-          <div className="glass-card overflow-hidden border border-yellow-400/30 shadow-2xl">
+          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -726,7 +726,7 @@ export default function FasesPage() {
                           </button>
                           <button
                             onClick={() => handleDeleteProblematica(item.id)}
-                            className="p-1.5 rounded hover:bg-red-500/10 text-gray-400 hover:text-red-400"
+                            className="p-1.5 rounded hover:bg-[#222] text-gray-400 hover:text-red-400"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -764,8 +764,8 @@ export default function FasesPage() {
             ))}
           </div>
 
-          <div className="glass-card overflow-hidden border border-emerald-500/30 shadow-2xl">
-            <div className="bg-emerald-950/80 px-6 py-4 border-b border-emerald-500/40 flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-card overflow-hidden border border-[#333] shadow-md">
+            <div className="bg-emerald-950/80 px-6 py-4 border-b border-[#333] flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs uppercase font-extrabold tracking-widest text-emerald-400">
                   {currentContrato.cliente.toUpperCase()}
@@ -791,19 +791,19 @@ export default function FasesPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left border-collapse">
                 <thead>
-                  <tr className="bg-emerald-900/60 text-white font-bold text-center border-b border-emerald-700/50">
-                    <th className="py-2.5 px-3 border-r border-emerald-700/50 w-16" rowSpan={2}>ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-emerald-700/50 w-16" rowSpan={2}>DÍAS</th>
-                    <th className="py-2 px-3 border-r border-emerald-700/50" colSpan={currentContrato.matrizEntregas.hospitales.length}>
+                  <tr className="bg-emerald-900/60 text-white font-bold text-center border-b border-[#333]">
+                    <th className="py-2.5 px-3 border-r border-[#333] w-16" rowSpan={2}>ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-[#333] w-16" rowSpan={2}>DÍAS</th>
+                    <th className="py-2 px-3 border-r border-[#333]" colSpan={currentContrato.matrizEntregas.hospitales.length}>
                       CENTROS DE ATENCIÓN (HOSPITALES Y BANCO DE SANGRE)
                     </th>
-                    <th className="py-2.5 px-3 border-r border-emerald-700/50 w-24 bg-emerald-800/80" rowSpan={2}>TOTAL POR ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-emerald-700/50 w-28 bg-amber-950/60 text-amber-300" rowSpan={2}>FECHA LÍMITE DE ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-[#333] w-24 bg-emerald-800/80" rowSpan={2}>TOTAL POR ENTREGA</th>
+                    <th className="py-2.5 px-3 border-r border-[#333] w-28 bg-amber-950/60 text-amber-300" rowSpan={2}>FECHA LÍMITE DE ENTREGA</th>
                     <th className="py-2.5 px-3 w-28 bg-orange-950/60 text-orange-300" rowSpan={2}>FECHAS PARA PONER EN LA APP</th>
                   </tr>
-                  <tr className="bg-emerald-900/40 text-emerald-200 font-semibold text-center border-b border-emerald-700/50">
+                  <tr className="bg-emerald-900/40 text-emerald-200 font-semibold text-center border-b border-[#333]">
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <th key={idx} className="py-2 px-3 border-r border-emerald-700/50 text-[11px] whitespace-nowrap">
+                      <th key={idx} className="py-2 px-3 border-r border-[#333] text-[11px] whitespace-nowrap">
                         {h.nombre}
                       </th>
                     ))}
@@ -842,26 +842,26 @@ export default function FasesPage() {
                   })}
 
                   <tr className="bg-emerald-950/80 font-bold text-center border-t-2 border-emerald-500">
-                    <td colSpan={2} className="py-3 px-3 text-right uppercase text-emerald-300 tracking-wider border-r border-emerald-700/50">
+                    <td colSpan={2} className="py-3 px-3 text-right uppercase text-emerald-300 tracking-wider border-r border-[#333]">
                       TOTAL GENERAL:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-3 px-3 text-white border-r border-emerald-700/50 text-sm">
+                      <td key={idx} className="py-3 px-3 text-white border-r border-[#333] text-sm">
                         {h.total.toLocaleString()}
                       </td>
                     ))}
-                    <td className="py-3 px-3 text-base text-emerald-400 bg-emerald-600/30 border-r border-emerald-700/50 font-black">
+                    <td className="py-3 px-3 text-base text-emerald-400 bg-emerald-600/30 border-r border-[#333] font-black">
                       {currentContrato.matrizEntregas.hospitales.reduce((a, b) => a + b.total, 0).toLocaleString()}
                     </td>
                     <td colSpan={2} className="bg-black/20"></td>
                   </tr>
 
                   <tr className="bg-emerald-900/20 text-center font-semibold">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-emerald-400 border-r border-emerald-700/50">
+                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-emerald-400 border-r border-[#333]">
                       📅 INSTALACIÓN:
                     </td>
                     {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-emerald-300 bg-emerald-500/20 font-bold border-r border-emerald-700/50">
+                      <td key={idx} className="py-2.5 px-3 text-emerald-300 bg-emerald-500/20 font-bold border-r border-[#333]">
                         {h.fechaInstalacion}
                       </td>
                     ))}
@@ -938,7 +938,7 @@ export default function FasesPage() {
 
             return (
               <div key={sIdx} className="glass-card overflow-hidden border border-white/10 shadow-xl">
-                <div className="bg-gradient-to-r from-yellow-500/20 via-yellow-500/10 to-transparent px-5 py-3 border-b border-yellow-500/30 flex items-center justify-between">
+                <div className="bg-[#111] border border-[#333] px-5 py-3 border-b border-[#333] flex items-center justify-between">
                   <h3 className="font-bold text-sm text-yellow-300 uppercase tracking-wider flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
                     {seccionNombre}
@@ -952,10 +952,10 @@ export default function FasesPage() {
                   <table className="w-full text-left text-sm border-collapse">
                     <thead>
                       <tr className="bg-yellow-400 text-black font-extrabold text-xs uppercase tracking-wider">
-                        <th className="py-2.5 px-4 border-r border-yellow-500/40 w-24 text-center">Numeral</th>
-                        <th className="py-2.5 px-4 border-r border-yellow-500/40">Proceso</th>
-                        <th className="py-2.5 px-4 border-r border-yellow-500/40 w-44 text-center">Ejecución</th>
-                        <th className="py-2.5 px-4 border-r border-yellow-500/40 w-36 text-center">Ejecutado</th>
+                        <th className="py-2.5 px-4 border-r border-[#333] w-24 text-center">Numeral</th>
+                        <th className="py-2.5 px-4 border-r border-[#333]">Proceso</th>
+                        <th className="py-2.5 px-4 border-r border-[#333] w-44 text-center">Ejecución</th>
+                        <th className="py-2.5 px-4 border-r border-[#333] w-36 text-center">Ejecutado</th>
                         <th className="py-2.5 px-4">Comentario</th>
                       </tr>
                     </thead>

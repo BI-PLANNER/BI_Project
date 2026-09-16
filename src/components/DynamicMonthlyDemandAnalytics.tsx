@@ -476,12 +476,12 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* ========================================================================= */}
       {/* 1. HEADER EJECUTIVO POWER BI: TÍTULO, SELECTOR DE VISTA & SLICERS */}
       {/* ========================================================================= */}
-      <div className="p-5 rounded-3xl bg-slate-900/90 border border-white/10 shadow-2xl backdrop-blur-xl space-y-4">
+      <div className="p-5 rounded-3xl bg-slate-900/90 border border-white/10 shadow-md backdrop-blur-xl space-y-4">
         
         {/* Fila Superior: Título & Selector de Modo */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 shadow-lg shadow-cyan-500/10">
+            <div className="p-3 rounded-2xl bg-cyan-500/15 border border-[#333] text-cyan-400 shadow-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
@@ -489,7 +489,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 <h3 className="text-lg font-black text-white tracking-tight">
                   Demanda & Entregas por Producto
                 </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-[#333]">
                   Power BI Official (176,681)
                 </span>
               </div>
@@ -505,7 +505,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               onClick={() => setAnalyticsViewMode('entregas')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                 analyticsViewMode === 'entregas'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
+                  ? 'bg-[#111] border border-[#333] text-white shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
@@ -516,7 +516,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               onClick={() => setAnalyticsViewMode('catalogo_global')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                 analyticsViewMode === 'catalogo_global'
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25'
+                  ? 'bg-[#111] border border-[#333] text-white shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
@@ -568,7 +568,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
             )}
 
             {/* Slicer Marca Global (Con Auto-Switch) */}
-            <div className="flex items-center gap-1.5 bg-slate-950 px-3.5 py-2 rounded-xl border border-cyan-500/30 text-xs shadow-sm shadow-cyan-500/10">
+            <div className="flex items-center gap-1.5 bg-slate-950 px-3.5 py-2 rounded-xl border border-[#333] text-xs shadow-sm shadow-cyan-500/10">
               <Tag className="w-3.5 h-3.5 text-cyan-400" />
               <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Marca:</span>
               <select
@@ -606,7 +606,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
             {/* Exportar CSV */}
             <button
               onClick={handleExportCSV}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer flex-shrink-0"
+              className="px-4 py-2 rounded-xl bg-[#111] border border-[#333] hover:bg-[#222] text-white text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer flex-shrink-0"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Exportar</span>
@@ -621,7 +621,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* 2. NOTIFICACIÓN INFORMATIVA INTELIGENTE CUANDO SE SELECCIONA UNA MARCA */}
       {/* ========================================================================= */}
       {selectedMarca !== 'TODAS' && (
-        <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-in fade-in duration-200">
+        <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-[#333] backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2.5 text-indigo-200">
             <Info className="w-4 h-4 text-indigo-400 flex-shrink-0" />
             <span>
@@ -661,7 +661,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* IZQUIERDA: TABLA JERÁRQUICA (Entregas por Producto) */}
-          <div className="lg:col-span-5 rounded-3xl bg-slate-900/80 border border-white/10 shadow-2xl p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
+          <div className="lg:col-span-5 rounded-3xl bg-slate-900/80 border border-white/10 shadow-md p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 flex-shrink-0">
               <div>
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -670,7 +670,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 </h4>
                 <p className="text-[11px] text-slate-400">Jerarquía: Año ➔ Mes ➔ Producto</p>
               </div>
-              <span className="font-mono text-xs font-black text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-xl border border-cyan-500/30">
+              <span className="font-mono text-xs font-black text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-xl border border-[#333]">
                 Total: {grandTotalQTY.toLocaleString()}
               </span>
             </div>
@@ -745,7 +745,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                     ))
                   )}
                 </tbody>
-                <tfoot className="bg-slate-950 sticky bottom-0 border-t-2 border-cyan-500/40 text-xs font-black text-white">
+                <tfoot className="bg-slate-950 sticky bottom-0 border-t-2 border-[#333] text-xs font-black text-white">
                   <tr>
                     <td colSpan={3} className="px-3 py-2.5 text-cyan-300 uppercase tracking-wider">
                       Total
@@ -760,7 +760,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
           </div>
 
           {/* DERECHA: GRÁFICO DE BARRAS APILADAS (Demanda por Mes) */}
-          <div className="lg:col-span-7 rounded-3xl bg-slate-900/80 border border-white/10 shadow-2xl p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
+          <div className="lg:col-span-7 rounded-3xl bg-slate-900/80 border border-white/10 shadow-md p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 flex-shrink-0">
               <div>
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
@@ -856,7 +856,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
 
                 {/* Floating Tooltip cuando se pasa el cursor sobre una barra */}
                 {hoveredBarDetail && (
-                  <div className="absolute top-3 left-3 bg-slate-900/95 border border-cyan-500/40 rounded-xl p-3 shadow-2xl z-20 pointer-events-none max-w-xs text-xs backdrop-blur-md animate-in fade-in duration-150">
+                  <div className="absolute top-3 left-3 bg-slate-900/95 border border-[#333] rounded-xl p-3 shadow-md z-20 pointer-events-none max-w-xs text-xs backdrop-blur-md animate-in fade-in duration-150">
                     <div className="font-bold text-white border-b border-white/10 pb-1 flex items-center justify-between gap-4">
                       <span>{hoveredBarDetail.label}</span>
                       <span className="font-mono text-cyan-400">{hoveredBarDetail.total.toLocaleString()} QTY</span>
@@ -923,16 +923,16 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* 4. VISTA B: CATÁLOGO MAESTRO & SKUs (1,496 PRODUCTOS & 51 MARCAS) */}
       {/* ========================================================================= */}
       {analyticsViewMode === 'catalogo_global' && (
-        <div className="rounded-3xl bg-slate-900/80 border border-white/10 shadow-2xl p-5 space-y-4 backdrop-blur-xl">
+        <div className="rounded-3xl bg-slate-900/80 border border-white/10 shadow-md p-5 space-y-4 backdrop-blur-xl">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
+              <div className="p-2 rounded-xl bg-indigo-500/15 border border-[#333] text-indigo-400">
                 <Database className="w-4 h-4" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>Catálogo Maestro de Productos & Equipos</span>
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-950 border border-indigo-500/30 text-indigo-300 font-bold">
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-950 border border-[#333] text-indigo-300 font-bold">
                     {filteredCatalog.length} Productos
                   </span>
                 </h4>
@@ -1010,11 +1010,11 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                       </td>
                       <td className="px-4 py-2.5">
                         {prod.es_equipo ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-[#333]">
                             <Cpu className="w-3 h-3" /> Equipo
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-[#333]">
                             <Tag className="w-3 h-3" /> Reactivo
                           </span>
                         )}
@@ -1061,7 +1061,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               >
                 Anterior
               </button>
-              <span className="px-2.5 py-1 rounded-lg bg-indigo-950 border border-indigo-500/30 text-indigo-300 font-mono font-bold">
+              <span className="px-2.5 py-1 rounded-lg bg-indigo-950 border border-[#333] text-indigo-300 font-mono font-bold">
                 {catalogPage} / {totalCatalogPages}
               </span>
               <button

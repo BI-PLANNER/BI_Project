@@ -128,11 +128,11 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="bg-slate-900 border border-slate-800 w-full max-w-xl rounded-2xl shadow-md overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-950/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-[#333]">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
@@ -156,7 +156,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-3 ${
-              file ? 'border-emerald-500/50 bg-emerald-950/10' : 'border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-slate-950/70'
+              file ? 'border-[#333] bg-emerald-950/10' : 'border-slate-700 hover:border-indigo-500 bg-slate-950/40 hover:bg-[#222]'
             }`}
           >
             <input
@@ -192,9 +192,9 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           {/* Status Message */}
           {statusMsg && (
             <div className={`p-4 rounded-xl text-xs font-medium flex items-start gap-2.5 border ${
-              statusMsg.type === 'success' ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300' :
-              statusMsg.type === 'error' ? 'bg-rose-950/40 border-rose-500/30 text-rose-300' :
-              'bg-indigo-950/40 border-indigo-500/30 text-indigo-300'
+              statusMsg.type === 'success' ? 'bg-emerald-950/40 border-[#333] text-emerald-300' :
+              statusMsg.type === 'error' ? 'bg-rose-950/40 border-[#333] text-rose-300' :
+              'bg-indigo-950/40 border-[#333] text-indigo-300'
             }`}>
               {statusMsg.type === 'success' && <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400 mt-0.5" />}
               {statusMsg.type === 'error' && <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />}

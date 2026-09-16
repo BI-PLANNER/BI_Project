@@ -156,7 +156,7 @@ export default function ReporteTecnicoPage() {
   if (authLoading) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-10 h-10 border-4 border-teal-500/30 border-t-teal-400 rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#333] border-t-teal-400 rounded-full animate-spin" />
         <p className="text-xs font-mono text-gray-400">Verificando permisos de acceso...</p>
       </div>
     )
@@ -166,13 +166,13 @@ export default function ReporteTecnicoPage() {
   if (!canAccess) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center p-6">
-        <div className="glass-card max-w-lg w-full p-8 rounded-3xl border border-amber-500/30 bg-slate-900/95 text-center space-y-5 shadow-2xl backdrop-blur-xl">
-          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/10">
+        <div className="glass-card max-w-lg w-full p-8 rounded-3xl border border-[#333] bg-slate-900/95 text-center space-y-5 shadow-md backdrop-blur-xl">
+          <div className="w-16 h-16 rounded-3xl bg-amber-500/20 border border-[#333] text-amber-400 flex items-center justify-center mx-auto shadow-sm">
             <Lock className="w-8 h-8" />
           </div>
 
           <div className="space-y-2">
-            <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-xs border border-amber-500/30 px-3 py-1">
+            <span className="badge bg-amber-500/20 text-amber-300 font-mono font-bold text-xs border border-[#333] px-3 py-1">
               🔒 ACCESO EXCLUSIVO
             </span>
             <h2 className="text-2xl font-black text-white">Reporte de Actividades & Cumplimiento</h2>
@@ -180,7 +180,7 @@ export default function ReporteTecnicoPage() {
               Este informe técnico oficial de entregables de Business Intelligence está restringido y configurado para visualización exclusiva de:
             </p>
 
-            <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-teal-500/20 text-xs font-mono space-y-1.5 text-left mt-3">
+            <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-[#333] text-xs font-mono space-y-1.5 text-left mt-3">
               <p className="font-bold text-teal-300 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
                 🎯 Luis Orellana <span className="text-[10px] text-teal-400/70">(Gerencia de Integración)</span>
@@ -209,7 +209,7 @@ export default function ReporteTecnicoPage() {
 
             <Link
               href="/login"
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition hover:opacity-90 shadow-lg shadow-teal-500/20 cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#111] border border-[#333] text-slate-950 font-black text-xs flex items-center justify-center gap-2 transition hover:opacity-90 shadow-sm cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
               <span>Iniciar Sesión como Luis Orellana</span>
@@ -224,19 +224,19 @@ export default function ReporteTecnicoPage() {
     <div className="space-y-8 pb-20 max-w-[1500px] mx-auto">
 
       {/* ══════════ 1. HEADER PRINCIPAL ══════════ */}
-      <div className="glass-card p-6 md:p-8 rounded-3xl border border-teal-500/30 bg-gradient-to-br from-slate-900 via-teal-950/40 to-slate-900 relative overflow-hidden shadow-2xl">
+      <div className="glass-card p-6 md:p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] relative overflow-hidden shadow-md">
         <div className="absolute -top-20 -right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 left-1/3 w-64 h-64 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-teal-500/30 flex items-center gap-1.5 px-3 py-1">
+            <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-[#333] flex items-center gap-1.5 px-3 py-1">
               <Sparkles className="w-3.5 h-3.5 text-teal-400" /> CUMPLIMIENTO & ENTREGABLES TÉCNICOS
             </span>
-            <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-xs border border-emerald-500/30 px-3 py-1">
+            <span className="badge bg-emerald-500/20 text-emerald-300 font-mono text-xs border border-[#333] px-3 py-1">
               v2.0 · En Producción — Vercel
             </span>
-            <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-xs border border-indigo-500/30 px-3 py-1">
+            <span className="badge bg-indigo-500/20 text-indigo-300 font-mono text-xs border border-[#333] px-3 py-1">
               Supabase PostgreSQL Cloud
             </span>
           </div>
@@ -289,7 +289,7 @@ export default function ReporteTecnicoPage() {
 
               <button
                 onClick={() => window.print()}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-slate-950 font-black text-xs flex items-center gap-2 hover:opacity-90 transition cursor-pointer shadow-lg shadow-teal-500/20"
+                className="px-5 py-2.5 rounded-xl bg-[#111] border border-[#333] text-slate-950 font-black text-xs flex items-center gap-2 hover:opacity-90 transition cursor-pointer shadow-sm"
               >
                 <Printer className="w-4 h-4" />
                 <span>Imprimir / Guardar PDF</span>
@@ -300,9 +300,9 @@ export default function ReporteTecnicoPage() {
       </div>
 
       {/* ══════════ 2. RESUMEN DE IMPACTO OPERATIVO ══════════ */}
-      <div className="glass-card p-6 rounded-3xl border border-teal-500/20 shadow-2xl bg-slate-900/90 space-y-4">
+      <div className="glass-card p-6 rounded-3xl border border-[#333] shadow-md bg-slate-900/90 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-teal-600 to-cyan-600 flex items-center justify-center text-white shadow-lg">
+          <div className="w-9 h-9 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -318,7 +318,7 @@ export default function ReporteTecnicoPage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <div className="bg-slate-950/60 rounded-2xl p-4 border border-teal-500/20 space-y-1">
+          <div className="bg-slate-950/60 rounded-2xl p-4 border border-[#333] space-y-1">
             <p className="text-xs text-teal-400 uppercase font-black flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4" /> Problema Operativo Resuelto
             </p>
@@ -327,7 +327,7 @@ export default function ReporteTecnicoPage() {
             </p>
           </div>
 
-          <div className="bg-slate-950/60 rounded-2xl p-4 border border-cyan-500/20 space-y-1">
+          <div className="bg-slate-950/60 rounded-2xl p-4 border border-[#333] space-y-1">
             <p className="text-xs text-cyan-400 uppercase font-black flex items-center gap-1.5">
               <Users className="w-4 h-4" /> Usuarios & Roles Cobertura
             </p>
@@ -336,7 +336,7 @@ export default function ReporteTecnicoPage() {
             </p>
           </div>
 
-          <div className="bg-slate-950/60 rounded-2xl p-4 border border-amber-500/20 space-y-1">
+          <div className="bg-slate-950/60 rounded-2xl p-4 border border-[#333] space-y-1">
             <p className="text-xs text-amber-400 uppercase font-black flex items-center gap-1.5">
               <Zap className="w-4 h-4" /> Eficiencia & Automatización
             </p>
@@ -348,18 +348,18 @@ export default function ReporteTecnicoPage() {
       </div>
 
       {/* ══════════ 2.1 ARQUITECTURA SAAS (SOFTWARE AS A SERVICE) & VALOR ESTRATÉGICO ══════════ */}
-      <div className="glass-card p-6 md:p-8 rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-slate-900 via-cyan-950/20 to-slate-900 shadow-2xl space-y-6">
+      <div className="glass-card p-6 md:p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] shadow-md space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+            <div className="w-10 h-10 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm">
               <Globe className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="badge bg-cyan-500/20 text-cyan-300 font-mono font-bold text-[10px] border border-cyan-500/30 px-2.5 py-0.5">
+                <span className="badge bg-cyan-500/20 text-cyan-300 font-mono font-bold text-[10px] border border-[#333] px-2.5 py-0.5">
                   MODALIDAD SAAS CLOUD
                 </span>
-                <span className="badge bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px] border border-emerald-500/30 px-2.5 py-0.5">
+                <span className="badge bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px] border border-[#333] px-2.5 py-0.5">
                   PROPIEDAD 100% LAB & MED
                 </span>
               </div>
@@ -368,7 +368,7 @@ export default function ReporteTecnicoPage() {
               </h2>
             </div>
           </div>
-          <p className="text-xs font-mono text-cyan-300 bg-cyan-950/60 px-3 py-1.5 rounded-xl border border-cyan-500/30 self-start md:self-auto">
+          <p className="text-xs font-mono text-cyan-300 bg-cyan-950/60 px-3 py-1.5 rounded-xl border border-[#333] self-start md:self-auto">
             ⚡ Infraestructura Serverless · Alta Disponibilidad 99.9%
           </p>
         </div>
@@ -380,7 +380,7 @@ export default function ReporteTecnicoPage() {
 
         {/* 4 PILARES DEL MODELO SAAS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-slate-950/70 p-4 rounded-2xl border border-cyan-500/20 space-y-2">
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-[#333] space-y-2">
             <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm">
               ☁️
             </div>
@@ -390,7 +390,7 @@ export default function ReporteTecnicoPage() {
             </p>
           </div>
 
-          <div className="bg-slate-950/70 p-4 rounded-2xl border border-teal-500/20 space-y-2">
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-[#333] space-y-2">
             <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm">
               🔄
             </div>
@@ -400,7 +400,7 @@ export default function ReporteTecnicoPage() {
             </p>
           </div>
 
-          <div className="bg-slate-950/70 p-4 rounded-2xl border border-indigo-500/20 space-y-2">
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-[#333] space-y-2">
             <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
               🔐
             </div>
@@ -410,7 +410,7 @@ export default function ReporteTecnicoPage() {
             </p>
           </div>
 
-          <div className="bg-slate-950/70 p-4 rounded-2xl border border-amber-500/20 space-y-2">
+          <div className="bg-slate-950/70 p-4 rounded-2xl border border-[#333] space-y-2">
             <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
               💰
             </div>
@@ -469,10 +469,10 @@ export default function ReporteTecnicoPage() {
       </div>
 
       {/* ══════════ 3. LOS 11 MÓDULOS DE LA APLICACIÓN WEB ══════════ */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-5">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-slate-900/90 space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-teal-600 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+            <div className="w-9 h-9 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
               <Layers className="w-5 h-5" />
             </div>
             <div>
@@ -480,18 +480,18 @@ export default function ReporteTecnicoPage() {
               <p className="text-xs text-gray-400">Páginas web completamente operativas y accesibles desde el menú lateral (Sidebar)</p>
             </div>
           </div>
-          <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-teal-500/30 px-3 py-1">
+          <span className="badge bg-teal-500/20 text-teal-300 font-mono font-bold text-xs border border-[#333] px-3 py-1">
             100% Funcionales
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {MODULES.map((mod, idx) => (
-            <div key={mod.ruta} className="bg-slate-950/70 rounded-2xl p-4 border border-white/10 hover:border-teal-500/40 transition-all flex flex-col justify-between space-y-3">
+            <div key={mod.ruta} className="bg-slate-950/70 rounded-2xl p-4 border border-white/10 hover:border-[#333] transition-all flex flex-col justify-between space-y-3">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] text-gray-500 font-bold">MÓDULO #{String(idx + 1).padStart(2, '0')}</span>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-[#333]">
                     ✅ {mod.estado}
                   </span>
                 </div>
@@ -512,10 +512,10 @@ export default function ReporteTecnicoPage() {
       </div>
 
       {/* ══════════ 4. BASE DE DATOS POSTGRESQL (21 TABLAS + 5 VISTAS) ══════════ */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-5">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-slate-900/90 space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-lg">
+            <div className="w-9 h-9 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
               <Database className="w-5 h-5" />
             </div>
             <div>
@@ -523,7 +523,7 @@ export default function ReporteTecnicoPage() {
               <p className="text-xs text-gray-400">Diseñado desde cero en Tercera Forma Normal en Supabase Cloud</p>
             </div>
           </div>
-          <span className="badge bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs border border-cyan-500/30 px-3 py-1">
+          <span className="badge bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs border border-[#333] px-3 py-1">
             21 Tablas Relacionales
           </span>
         </div>
@@ -544,7 +544,7 @@ export default function ReporteTecnicoPage() {
                   <td className="py-2.5 px-3 font-mono text-gray-500 text-[10px] text-center">{i + 1}</td>
                   <td className="py-2.5 px-3 font-mono text-cyan-300 font-bold">{t.name}</td>
                   <td className="py-2.5 px-3">
-                    <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                    <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-[#333]">
                       {t.grupo}
                     </span>
                   </td>
@@ -568,8 +568,8 @@ export default function ReporteTecnicoPage() {
               { v: 'v_cronograma_entregas_pendientes', desc: 'Cronograma con semáforo logístico de entregas programadas' },
               { v: 'v_mesa_ayuda_incidencias', desc: 'Incidencias activas con técnico responsable y área asignada' },
             ].map((vw, vi) => (
-              <div key={vw.v} className="p-3 rounded-xl bg-slate-950/70 border border-cyan-500/15 flex items-start gap-3">
-                <span className="font-mono text-xs font-black px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shrink-0">
+              <div key={vw.v} className="p-3 rounded-xl bg-slate-950/70 border border-[#333] flex items-start gap-3">
+                <span className="font-mono text-xs font-black px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-[#333] shrink-0">
                   V{vi + 1}
                 </span>
                 <div>
@@ -585,9 +585,9 @@ export default function ReporteTecnicoPage() {
       {/* ══════════ 5. APIS, SCRIPTS PYTHON & AUTOMATIZACIONES ══════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* APIs Backend & Scripts */}
-        <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-4">
+        <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-slate-900/90 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-600 flex items-center justify-center text-white shadow-lg">
+            <div className="w-9 h-9 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
               <Code2 className="w-5 h-5" />
             </div>
             <div>
@@ -598,9 +598,9 @@ export default function ReporteTecnicoPage() {
 
           <div className="space-y-2.5">
             {APIS.map(api => (
-              <div key={api.ruta} className="p-3 rounded-xl bg-slate-950/70 border border-violet-500/15 space-y-1">
+              <div key={api.ruta} className="p-3 rounded-xl bg-slate-950/70 border border-[#333] space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">{api.metodo}</span>
+                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-[#333]">{api.metodo}</span>
                   <span className="font-mono text-xs font-bold text-violet-300">{api.ruta}</span>
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed">{api.desc}</p>
@@ -608,9 +608,9 @@ export default function ReporteTecnicoPage() {
             ))}
 
             {SCRIPTS.map(s => (
-              <div key={s.name} className="p-3 rounded-xl bg-slate-950/70 border border-amber-500/15 space-y-1">
+              <div key={s.name} className="p-3 rounded-xl bg-slate-950/70 border border-[#333] space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">{s.tipo}</span>
+                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-[#333]">{s.tipo}</span>
                   <span className="font-mono text-xs font-bold text-amber-300">{s.name}</span>
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed">{s.desc}</p>
@@ -620,9 +620,9 @@ export default function ReporteTecnicoPage() {
         </div>
 
         {/* 9 Automatizaciones Activas */}
-        <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90 space-y-4">
+        <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-slate-900/90 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg">
+            <div className="w-9 h-9 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
               <Zap className="w-5 h-5" />
             </div>
             <div>
@@ -643,12 +643,12 @@ export default function ReporteTecnicoPage() {
               { label: 'Análisis Demanda Mensual', tipo: 'Frontend', desc: 'DynamicMonthlyDemandAnalytics agrupa datos históricos por producto/mes y genera gráficas Recharts interactivas en tiempo real.' },
               { label: 'Reporte de Cumplimiento por Persona', tipo: 'Frontend', desc: 'Calcula automáticamente la tasa de cumplimiento por responsable desde los 26 hitos del Planner. Genera ranking con scorecards visuales.' },
             ].map((auto, idx) => (
-              <div key={idx} className="p-3 rounded-xl bg-slate-950/70 border border-teal-500/15 flex items-start gap-3">
+              <div key={idx} className="p-3 rounded-xl bg-slate-950/70 border border-[#333] flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-white text-xs">{auto.label}</span>
-                    <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">{auto.tipo}</span>
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-teal-500/20 text-teal-300 border border-[#333]">{auto.tipo}</span>
                   </div>
                   <p className="text-[11px] text-gray-400 leading-relaxed">{auto.desc}</p>
                 </div>
@@ -659,9 +659,9 @@ export default function ReporteTecnicoPage() {
       </div>
 
       {/* ══════════ 6. 14 LOGROS TÉCNICOS Y CONSTANCIA DE TRABAJO ══════════ */}
-      <div className="glass-card p-6 md:p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-br from-slate-900 via-amber-950/20 to-slate-900 shadow-2xl space-y-4">
+      <div className="glass-card p-6 md:p-8 rounded-3xl border border-[#333] bg-[#111] border border-[#333] shadow-md space-y-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg">
+          <div className="w-10 h-10 rounded-2xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-lg">
             <Award className="w-6 h-6" />
           </div>
           <div>
@@ -687,7 +687,7 @@ export default function ReporteTecnicoPage() {
             'Módulos con exportación instantánea a Excel (CSV) e impresión en PDF',
             'Modo oscuro empresarial con diseño personalizado en tono Teal/Aqua Marina',
           ].map((logro, i) => (
-            <div key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-950/60 border border-amber-500/15">
+            <div key={i} className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-950/60 border border-[#333]">
               <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
               <span className="text-xs text-gray-200 font-medium leading-relaxed">{logro}</span>
             </div>
@@ -701,7 +701,7 @@ export default function ReporteTecnicoPage() {
             <p className="text-[11px] text-gray-400">Documento de Constancia de Trabajo y Entregables de Business Intelligence</p>
           </div>
 
-          <div className="text-right bg-slate-950/80 p-3.5 rounded-2xl border border-teal-500/30">
+          <div className="text-right bg-slate-950/80 p-3.5 rounded-2xl border border-[#333]">
             <p className="font-mono text-teal-300 font-black text-sm">José Lenny Gómez</p>
             <p className="text-[10px] text-gray-400 font-bold">Planificación Estratégica &amp; Business Intelligence</p>
             <p className="text-[9px] text-gray-500 font-mono mt-0.5">{new Date().toLocaleDateString('es-SV', { dateStyle: 'full' })}</p>

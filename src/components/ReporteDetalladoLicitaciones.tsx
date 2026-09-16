@@ -230,7 +230,7 @@ export default function ReporteDetalladoLicitaciones({
   const content = (
     <div className="space-y-6 text-white">
       {/* 1. Header Ejecutivo del Reporte */}
-      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 relative overflow-hidden">
+      <div className="glass-card p-6 rounded-3xl border border-white/10 shadow-md bg-[#111] border border-[#333] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
@@ -300,7 +300,7 @@ export default function ReporteDetalladoLicitaciones({
 
             <button
               onClick={handleExportCSV}
-              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+              className="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-[#222] border border-[#333] text-xs font-bold text-emerald-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
               title="Descargar archivo Excel / CSV"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -309,7 +309,7 @@ export default function ReporteDetalladoLicitaciones({
 
             <button
               onClick={handlePrint}
-              className="btn-primary !py-2 !px-4 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-lg shadow-indigo-500/20"
+              className="btn-primary !py-2 !px-4 text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
               title="Imprimir reporte en PDF o papel"
             >
               <Printer className="w-4 h-4" />
@@ -335,19 +335,19 @@ export default function ReporteDetalladoLicitaciones({
             <span className="text-[10px] text-indigo-300 block mt-0.5">100% Asignadas</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-emerald-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-emerald-400 uppercase font-bold block">🟢 En Plazo / Verde:</span>
             <span className="text-2xl font-black text-emerald-300 font-mono">{totalVerde}</span>
             <span className="text-[10px] text-emerald-400/80 block mt-0.5">{pctVerde}% de efectividad</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-red-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-red-400 uppercase font-bold block">🔴 Críticos / Urgentes:</span>
             <span className="text-2xl font-black text-red-400 font-mono">{totalRojo}</span>
             <span className="text-[10px] text-red-400/80 block mt-0.5">Requieren seguimiento</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-amber-500/20">
+          <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-[#333]">
             <span className="text-[10px] text-amber-400 uppercase font-bold block">🟠 Advertencia:</span>
             <span className="text-2xl font-black text-amber-400 font-mono">{totalNaranja}</span>
             <span className="text-[10px] text-amber-400/80 block mt-0.5">En trámite / cotización</span>
@@ -359,7 +359,7 @@ export default function ReporteDetalladoLicitaciones({
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+            <div className="w-8 h-8 rounded-xl bg-[#111] border border-[#333] flex items-center justify-center text-white shadow-sm">
               <PieIcon className="w-4 h-4" />
             </div>
             <div>
@@ -371,7 +371,7 @@ export default function ReporteDetalladoLicitaciones({
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20 shrink-0">
+          <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-[#333] shrink-0">
             {chartType === 'pie' ? '🥧 Modo Pastel Amplio con %' : '🍩 Modo Anillo Amplio'} • 26 Obligaciones
           </span>
         </div>
@@ -568,7 +568,7 @@ export default function ReporteDetalladoLicitaciones({
       </div>
 
       {/* 5. Tabla Maestra Consolidada Detallada */}
-      <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-2xl bg-slate-900/90">
+      <div className="glass-card rounded-3xl border border-white/10 overflow-hidden shadow-md bg-slate-900/90">
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-950/80">
           <div>
             <h3 className="text-sm font-black text-white">Matriz Detallada de Obligaciones ({filtered.length} registros)</h3>
@@ -610,8 +610,8 @@ export default function ReporteDetalladoLicitaciones({
                     <td className="p-3 whitespace-nowrap">
                       <span className={`badge text-[9px] font-bold ${
                         row.tipo_pendiente === 'VISITA - LUIS'
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                          : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                          ? 'bg-purple-500/20 text-purple-300 border border-[#333]'
+                          : 'bg-blue-500/20 text-blue-300 border border-[#333]'
                       }`}>
                         {row.tipo_pendiente}
                       </span>
@@ -619,13 +619,13 @@ export default function ReporteDetalladoLicitaciones({
                     <td className="p-3 font-semibold text-gray-200 max-w-xs">{row.situacion}</td>
                     <td className="p-3 whitespace-nowrap">
                       <span className={`badge text-[10px] font-bold ${
-                        row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' :
-                        row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40' :
-                        row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40' :
-                        row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' :
-                        row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-pink-500/40' :
-                        row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                        'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                        row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-300 border border-[#333]' :
+                        row.area === 'PM' ? 'bg-violet-500/20 text-violet-300 border border-[#333]' :
+                        row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-300 border border-[#333]' :
+                        row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-300 border border-[#333]' :
+                        row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-300 border border-[#333]' :
+                        row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-300 border border-[#333]' :
+                        'bg-purple-500/20 text-purple-300 border border-[#333]'
                       }`}>
                         {row.area}
                       </span>
@@ -640,9 +640,9 @@ export default function ReporteDetalladoLicitaciones({
                     <td className="p-3 font-mono font-bold text-emerald-400 whitespace-nowrap">{row.fecha_cumplimiento}</td>
                     <td className="p-3 text-center whitespace-nowrap">
                       <span className={`badge text-[10px] font-bold ${
-                        isRojo ? 'bg-red-500/20 text-red-300 border border-red-500/40' :
-                        isNaranja ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' :
-                        'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        isRojo ? 'bg-red-500/20 text-red-300 border border-[#333]' :
+                        isNaranja ? 'bg-amber-500/20 text-amber-300 border border-[#333]' :
+                        'bg-emerald-500/20 text-emerald-300 border border-[#333]'
                       }`}>
                         {row.estatus}
                       </span>
