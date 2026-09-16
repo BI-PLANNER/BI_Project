@@ -14,10 +14,6 @@ export default function DashboardLayout({
           {children}
         </div>
       </main>
-
-      {/* Ambient decoration */}
-      <div className="ambient-glow bg-indigo-600" style={{ top: '10%', right: '5%' }} />
-      <div className="ambient-glow bg-violet-600" style={{ bottom: '10%', left: '30%' }} />
     </div>
   )
 }
