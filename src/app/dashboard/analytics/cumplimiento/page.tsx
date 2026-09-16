@@ -1,6 +1,6 @@
 'use client'
 
-import ReporteTecnicoPage from '../reporte/page'
+import ReporteTecnicoPage from '../reportes/page'
 
 export default function CumplimientoPage() {
   return <ReporteTecnicoPage />

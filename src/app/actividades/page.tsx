@@ -1,6 +1,6 @@
 'use client'
 
-import ReporteTecnicoPage from '../dashboard/reporte/page'
+import ReporteTecnicoPage from '../dashboard/analytics/reportes/page'
 
 export default function RootActividadesPage() {
   return (
