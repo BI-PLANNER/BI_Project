@@ -69,6 +69,73 @@ interface Props {
   collapsed?: boolean
 }
 
+// Datos mock de respaldo en caso de que el webhook falle o esté vacío
+const MOCK_ALERTAS: AlertaItem[] = [
+  {
+    sku: 'SIEM-001',
+    producto: 'Reactivos Química Clínica',
+    marca: 'SIEMENS',
+    stock_actual_kits: 2,
+    stock_actual_pruebas_u: 1000,
+    pedidos_en_transito_kits: 0,
+    consumo_diario_kits: 1.5,
+    dias_cobertura: 1,
+    stock_seguridad_kits: 15,
+    rop_kits: 20,
+    stock_maximo_kits: 50,
+    sugerido_comprar_kits: 48,
+    costo_estimado_usd: 12500.00,
+    nivel_alerta: 'CRITICO',
+    badge_color: 'rose',
+    accion_sugerida: 'Generar orden de compra urgente',
+    fecha_evaluacion: new Date().toISOString()
+  },
+  {
+    sku: 'DIR-045',
+    producto: 'Tiras Reactivas de Orina',
+    marca: 'DIRUI',
+    stock_actual_kits: 15,
+    stock_actual_pruebas_u: 1500,
+    pedidos_en_transito_kits: 5,
+    consumo_diario_kits: 2,
+    dias_cobertura: 10,
+    stock_seguridad_kits: 10,
+    rop_kits: 25,
+    stock_maximo_kits: 100,
+    sugerido_comprar_kits: 80,
+    costo_estimado_usd: 4800.00,
+    nivel_alerta: 'REORDEN',
+    badge_color: 'amber',
+    accion_sugerida: 'Revisar pedido en tránsito / Reordenar',
+    fecha_evaluacion: new Date().toISOString()
+  },
+  {
+    sku: 'SND-112',
+    producto: 'Tubos de Extracción',
+    marca: 'SINOMED',
+    stock_actual_kits: 500,
+    stock_actual_pruebas_u: 50000,
+    pedidos_en_transito_kits: 0,
+    consumo_diario_kits: 10,
+    dias_cobertura: 50,
+    stock_seguridad_kits: 100,
+    rop_kits: 150,
+    stock_maximo_kits: 1000,
+    sugerido_comprar_kits: 0,
+    costo_estimado_usd: 0,
+    nivel_alerta: 'RIESGO_FEFO',
+    badge_color: 'indigo',
+    lote_proximo: {
+      lote: 'L-202309',
+      vence: '2023-12-01',
+      dias: 45,
+      kits: 200
+    },
+    accion_sugerida: 'Aplicar política FEFO, rotar inventario',
+    fecha_evaluacion: new Date().toISOString()
+  }
+]
+
 export default function AlertsNotificationCenter({
   className = '',
   initialAlertas,
@@ -80,7 +147,12 @@ export default function AlertsNotificationCenter({
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [alertas, setAlertas] = useState<AlertaItem[]>(initialAlertas || [])
+  
+  // Usar los mocks por defecto si initialAlertas viene vacío
+  const [alertas, setAlertas] = useState<AlertaItem[]>(
+    initialAlertas && initialAlertas.length > 0 ? initialAlertas : MOCK_ALERTAS
+  )
+  
   const [resumen, setResumen] = useState<AlertasResumen>(
     initialResumen || {
       total_evaluados: 236,
@@ -118,7 +190,7 @@ export default function AlertsNotificationCenter({
       if (res.ok) {
         const data = await res.json()
         if (data.alertas_oferta_demanda) {
-          if (data.alertas_oferta_demanda.alertas) {
+          if (data.alertas_oferta_demanda.alertas && data.alertas_oferta_demanda.alertas.length > 0) {
             setAlertas(data.alertas_oferta_demanda.alertas)
           }
           if (data.alertas_oferta_demanda.resumen) {
@@ -129,76 +201,11 @@ export default function AlertsNotificationCenter({
         }
       }
     } catch (e) {
-      // Si falla, usar datos locales simulados que coincidan con los KPIs
-      console.warn('Fallback a datos de alertas locales/pre-cargados:', e)
-      if (alertas.length === 0) {
-        setAlertas([
-          {
-            sku: 'SIEM-001',
-            producto: 'Reactivos Química Clínica',
-            marca: 'SIEMENS',
-            stock_actual_kits: 2,
-            stock_actual_pruebas_u: 1000,
-            pedidos_en_transito_kits: 0,
-            consumo_diario_kits: 1.5,
-            dias_cobertura: 1,
-            stock_seguridad_kits: 15,
-            rop_kits: 20,
-            stock_maximo_kits: 50,
-            sugerido_comprar_kits: 48,
-            costo_estimado_usd: 12500.00,
-            nivel_alerta: 'CRITICO',
-            badge_color: 'rose',
-            accion_sugerida: 'Generar orden de compra urgente',
-            fecha_evaluacion: new Date().toISOString()
-          },
-          {
-            sku: 'DIR-045',
-            producto: 'Tiras Reactivas de Orina',
-            marca: 'DIRUI',
-            stock_actual_kits: 15,
-            stock_actual_pruebas_u: 1500,
-            pedidos_en_transito_kits: 5,
-            consumo_diario_kits: 2,
-            dias_cobertura: 10,
-            stock_seguridad_kits: 10,
-            rop_kits: 25,
-            stock_maximo_kits: 100,
-            sugerido_comprar_kits: 80,
-            costo_estimado_usd: 4800.00,
-            nivel_alerta: 'REORDEN',
-            badge_color: 'amber',
-            accion_sugerida: 'Revisar pedido en tránsito / Reordenar',
-            fecha_evaluacion: new Date().toISOString()
-          },
-          {
-            sku: 'SND-112',
-            producto: 'Tubos de Extracción',
-            marca: 'SINOMED',
-            stock_actual_kits: 500,
-            stock_actual_pruebas_u: 50000,
-            pedidos_en_transito_kits: 0,
-            consumo_diario_kits: 10,
-            dias_cobertura: 50,
-            stock_seguridad_kits: 100,
-            rop_kits: 150,
-            stock_maximo_kits: 1000,
-            sugerido_comprar_kits: 0,
-            costo_estimado_usd: 0,
-            nivel_alerta: 'RIESGO_FEFO',
-            badge_color: 'indigo',
-            lote_proximo: {
-              lote: 'L-202309',
-              vence: '2023-12-01',
-              dias: 45,
-              kits: 200
-            },
-            accion_sugerida: 'Aplicar política FEFO, rotar inventario',
-            fecha_evaluacion: new Date().toISOString()
-          }
-        ])
-      }
+      console.warn('Fallo webhook, usando mock data', e)
     } finally {
+      setLoading(false)
+    }
+  }
       setLoading(false)
     }
   }
