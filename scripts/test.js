@@ -1,20 +1,27 @@
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env.local' });
+const fs = require('fs');
+const envContent = fs.readFileSync('.env.local', 'utf8');
+const env = {};
+envContent.split('\n').forEach(line => {
+  const idx = line.indexOf('=');
+  if (idx > 0) {
+    const key = line.substring(0, idx).trim();
+    let val = line.substring(idx + 1).trim();
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    env[key] = val;
+  }
+});
 
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+  env.NEXT_PUBLIC_SUPABASE_URL,
+  env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
 async function test() {
-  const { data: d1, error: e1 } = await supabase.from('incidencias_seguimiento').select('incidencia_id');
-  console.log('incidencias_seguimiento:', d1 ? d1.length : e1);
-
-  const { data: d2, error: e2 } = await supabase.from('sync_excel_licitaciones').select('*');
-  console.log('sync_excel_licitaciones:', d2 ? d2.length : e2);
-
-  const { data: d3, error: e3 } = await supabase.from('licitaciones_ofertas').select('*');
-  console.log('licitaciones_ofertas:', d3 ? d3.length : e3);
+  const { data, count, error } = await supabase.from('incidencias_seguimiento').select('*', { count: 'exact' });
+  console.log('Error:', error);
+  console.log('Total with ANON key:', count);
 }
-
 test();

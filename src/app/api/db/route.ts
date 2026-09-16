@@ -21,6 +21,23 @@ export async function POST(req: NextRequest) {
     const admin: any = supabaseAdmin
 
     const act = String(action || accion || '').toLowerCase().trim()
+    
+    if (act === 'get_incidencias') {
+      const { data, error } = await admin.from('incidencias_seguimiento')
+        .select(`
+          incidencia_id,
+          fecha_cumplimiento,
+          comentario,
+          cliente:clientes(nombre_cliente),
+          contrato:contratos(contrato_id, numero_contrato, nombre_contrato),
+          situacion:situaciones(nombre_situacion),
+          persona:personas(persona_id, nombre_completo, email, area:areas(nombre_area)),
+          estatus:estatus(nombre_estatus)
+        `)
+        .order('fecha_cumplimiento')
+      return NextResponse.json({ data, error })
+    }
+
     // Handler Especial para Sincronización Diaria desde Microsoft Excel 365 (SharePoint)
     if (act === 'sync_excel_licitaciones' || table === 'sync_excel_licitaciones' || table === 'licitaciones_ofertas_sync') {
       const itemsToSync = licitaciones || payload || []

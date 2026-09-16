@@ -579,51 +579,41 @@ export default function PlannerCalendarPage() {
   const loadIncidencias = useCallback(async () => {
     setLoading(true)
     try {
-      const { data, error } = await supabase
-        .from('incidencias_seguimiento')
-        .select(`
-          incidencia_id,
-          fecha_cumplimiento,
-          comentario,
-          cliente:clientes(nombre_cliente),
-          contrato:contratos(contrato_id, numero_contrato, nombre_contrato),
-          situacion:situaciones(nombre_situacion),
-          persona:personas(persona_id, nombre_completo, email, area:areas(nombre_area)),
-          estatus:estatus(nombre_estatus)
-        `)
-        .order('fecha_cumplimiento')
+      const res = await fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'get_incidencias' })
+      })
+      
+      const { data, error } = await res.json()
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         const enriched = data.map((d: any, idx: number) => {
-          const matchingMaster = MASTER_LICITACIONES_PENDIENTES.find(
-            m => m.comentario === d.comentario || m.fecha_cumplimiento === d.fecha_cumplimiento
-          )
-
           return {
             id: d.incidencia_id || idx + 1,
-            item_num: matchingMaster?.item_num || idx + 1,
+            item_num: idx + 1,
             incidencia_id: d.incidencia_id || idx + 1,
-            fecha_cumplimiento: d.fecha_cumplimiento || matchingMaster?.fecha_cumplimiento || '',
+            fecha_cumplimiento: d.fecha_cumplimiento || '',
             contrato_id: d.contrato?.contrato_id,
-            numero_contrato: d.contrato?.numero_contrato || matchingMaster?.numero_contrato || 'Contrato Oficial',
-            nombre_contrato: d.contrato?.nombre_contrato || matchingMaster?.nombre_contrato || '',
-            cliente: d.cliente?.nombre_cliente || matchingMaster?.cliente || 'Institución',
-            tipo_pendiente: matchingMaster?.tipo_pendiente || (d.comentario?.includes('visita') ? 'VISITA - LUIS' : 'CONTRATO'),
-            situacion: d.situacion?.nombre_situacion || matchingMaster?.situacion || 'Obligación Contractual',
-            responsable: d.persona?.nombre_completo || matchingMaster?.responsable || 'Sin Asignar',
-            responsableEmail: d.persona?.email || matchingMaster?.responsableEmail || 'responsable@lm-sv.com',
-            area: matchingMaster?.area || d.persona?.area?.nombre_area || 'PM',
-            estatus: d.estatus?.nombre_estatus || matchingMaster?.estatus || 'Rojo',
-            comentario: d.comentario || matchingMaster?.comentario || ''
+            numero_contrato: d.contrato?.numero_contrato || 'Contrato Oficial',
+            nombre_contrato: d.contrato?.nombre_contrato || '',
+            cliente: d.cliente?.nombre_cliente || 'Institución',
+            tipo_pendiente: d.comentario?.toLowerCase().includes('visita') ? 'VISITA - LUIS' : 'CONTRATO',
+            situacion: d.situacion?.nombre_situacion || 'Obligación Contractual',
+            responsable: d.persona?.nombre_completo || 'Sin Asignar',
+            responsableEmail: d.persona?.email || 'responsable@lm-sv.com',
+            area: d.persona?.area?.nombre_area || 'PM',
+            estatus: d.estatus?.nombre_estatus || 'Verde',
+            comentario: d.comentario || ''
           }
         })
         setIncidencias(enriched)
       } else {
-        setIncidencias(MASTER_LICITACIONES_PENDIENTES)
+        setIncidencias([])
       }
     } catch (e) {
-      console.warn('Fallback to Master Licitaciones Data:', e)
-      setIncidencias(MASTER_LICITACIONES_PENDIENTES)
+      console.warn('Error loading from Supabase via API:', e)
+      setIncidencias([])
     } finally {
       setLoading(false)
     }
