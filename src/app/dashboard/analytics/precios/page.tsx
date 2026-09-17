@@ -81,6 +81,7 @@ export default function DashboardAnalisisPage() {
 
   const [chartPriceData, setChartPriceData] = useState<any[]>([])
   const [chartStatusData, setChartStatusData] = useState<any[]>([])
+  const [statusViewMode, setStatusViewMode] = useState<'monto' | 'cantidad'>('monto')
   const [monthlyEfficiencyData, setMonthlyEfficiencyData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
   const [orgChartData, setOrgChartData] = useState<any[]>([])
@@ -294,6 +295,9 @@ export default function DashboardAnalisisPage() {
     let countAdj = 0
     let countPer = 0
     let countDes = 0
+    let montoAdj = 0
+    let montoPer = 0
+    let montoDes = 0
 
     const productPricesMap: Record<string, { labymedPrice: number, compPrice: number, count: number }> = {}
     const rowsForTable: any[] = []
@@ -306,10 +310,13 @@ export default function DashboardAnalisisPage() {
       if (item.isAdjudicada) {
         countAdj++
         totalAdjudicadoSum += item.total
+        montoAdj += item.total
       } else if (item.isDesierta) {
         countDes++
+        montoDes += item.total
       } else {
         countPer++
+        montoPer += item.total
       }
 
       // Bar Chart grouping
@@ -352,9 +359,9 @@ export default function DashboardAnalisisPage() {
 
     // Status Pie Data
     setChartStatusData([
-      { name: 'Adjudicadas', value: countAdj, color: '#10b981' },
-      { name: 'Perdidas', value: countPer, color: '#f43f5e' },
-      { name: 'Desiertas', value: countDes, color: '#f59e0b' }
+      { name: 'Adjudicadas', count: countAdj, monto: montoAdj, value: countAdj, color: '#10b981' },
+      { name: 'Perdidas', count: countPer, monto: montoPer, value: countPer, color: '#f43f5e' },
+      { name: 'Desiertas', count: countDes, monto: montoDes, value: countDes, color: '#f59e0b' }
     ])
 
     // Licitaciones por Organización/Cliente (con montos)
@@ -820,14 +827,40 @@ export default function DashboardAnalisisPage() {
           </div>
         </div>
 
-        {/* Gráfico 2: PieChart de Resultados por Renglón */}
+        {/* Gráfico 2: PieChart de Resultados por Estado ($ o Renglones) */}
         <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm">
-          <div>
-            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <PieIcon className="w-4 h-4 text-indigo-700" />
-              Distribución por Estado ({selectedMonth})
-            </h3>
-            <p className="text-[11px] text-slate-700">Proporción de renglones según resolución</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <PieIcon className="w-4 h-4 text-indigo-700" />
+                Distribución por Estado ({selectedMonth})
+              </h3>
+              <p className="text-[11px] text-slate-700">
+                {statusViewMode === 'monto' ? 'Proporción de monto monetario ($) por estado' : 'Proporción de renglones por estado'}
+              </p>
+            </div>
+            <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 self-start sm:self-auto">
+              <button
+                onClick={() => setStatusViewMode('monto')}
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  statusViewMode === 'monto'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                $ Monto
+              </button>
+              <button
+                onClick={() => setStatusViewMode('cantidad')}
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  statusViewMode === 'cantidad'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Cantidad
+              </button>
+            </div>
           </div>
 
           <div className="h-56 w-full flex items-center justify-center">
@@ -835,19 +868,28 @@ export default function DashboardAnalisisPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={chartStatusData}
+                    data={chartStatusData.map(item => ({
+                      ...item,
+                      displayVal: statusViewMode === 'monto' ? (item.monto || 0) : (item.count || 0)
+                    }))}
                     cx="50%"
                     cy="50%"
                     innerRadius={50}
                     outerRadius={80}
                     paddingAngle={4}
-                    dataKey="value"
+                    dataKey="displayVal"
                   >
                     {chartStatusData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip
+                    formatter={(val: any) => [
+                      statusViewMode === 'monto'
+                        ? `$${Number(val).toLocaleString('es-SV', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`
+                        : `${val} renglones`,
+                      statusViewMode === 'monto' ? 'Monto' : 'Cantidad'
+                    ]}
                     contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
                   />
                 </PieChart>
@@ -857,14 +899,25 @@ export default function DashboardAnalisisPage() {
             )}
           </div>
 
-          <div className="space-y-1.5 pt-2 border-t border-slate-300">
+          <div className="space-y-2 pt-2 border-t border-slate-300">
             {chartStatusData.map((item, idx) => (
               <div key={idx} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></span>
                   <span className="text-slate-700 font-medium">{item.name}</span>
                 </div>
-                <span className="font-mono font-bold text-gray-900">{item.value} renglones</span>
+                <div className="text-right">
+                  <span className="font-mono font-bold text-gray-900 block">
+                    {statusViewMode === 'monto'
+                      ? `$${Number(item.monto || 0).toLocaleString('es-SV', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : `${item.count || 0} renglones`}
+                  </span>
+                  <span className="text-[10px] text-slate-700 font-mono block">
+                    {statusViewMode === 'monto'
+                      ? `(${item.count || 0} renglones)`
+                      : `($${Number(item.monto || 0).toLocaleString('es-SV', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
