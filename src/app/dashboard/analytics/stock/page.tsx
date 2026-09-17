@@ -1421,9 +1421,9 @@ export default function StockProductosPage() {
                             {kpis.reactivos} ({Math.round((kpis.reactivos / (kpis.total || 1)) * 100)}%)
                           </span>
                         </div>
-                        <div className="w-full h-3.5 bg-white rounded-full overflow-hidden border border-slate-300/[0.06]">
+                        <div className="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden border border-slate-300">
                           <div
-                            className="bg-white border border-slate-300 h-full rounded-full"
+                            className="bg-indigo-500 h-full rounded-full"
                             style={{ width: `${Math.round((kpis.reactivos / (kpis.total || 1)) * 100)}%` }}
                           />
                         </div>
@@ -1438,9 +1438,9 @@ export default function StockProductosPage() {
                             {kpis.equipos} ({Math.round((kpis.equipos / (kpis.total || 1)) * 100)}%)
                           </span>
                         </div>
-                        <div className="w-full h-3.5 bg-white rounded-full overflow-hidden border border-slate-300/[0.06]">
+                        <div className="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden border border-slate-300">
                           <div
-                            className="bg-white border border-slate-300 h-full rounded-full"
+                            className="bg-purple-500 h-full rounded-full"
                             style={{ width: `${Math.max(Math.round((kpis.equipos / (kpis.total || 1)) * 100), 4)}%` }}
                           />
                         </div>
@@ -1455,9 +1455,9 @@ export default function StockProductosPage() {
                             {kpis.activos} ({Math.round((kpis.activos / (kpis.total || 1)) * 100)}%)
                           </span>
                         </div>
-                        <div className="w-full h-3.5 bg-white rounded-full overflow-hidden border border-slate-300/[0.06]">
+                        <div className="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden border border-slate-300">
                           <div
-                            className="bg-white border border-slate-300 h-full rounded-full"
+                            className="bg-emerald-500 h-full rounded-full"
                             style={{ width: `${Math.round((kpis.activos / (kpis.total || 1)) * 100)}%` }}
                           />
                         </div>
