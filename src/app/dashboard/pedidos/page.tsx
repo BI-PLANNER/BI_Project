@@ -24,9 +24,11 @@ import {
   Zap,
   Filter,
   BarChart3,
-  ListFilter
+  ListFilter,
+  FileSpreadsheet
 } from 'lucide-react'
 import { dbInsert, dbUpdate } from '@/lib/api_3fn'
+import ExcelUploadModal from '@/components/ExcelUploadModal'
 
 export default function EntregasYPedidosPage() {
   const supabase = createClient()
@@ -40,6 +42,7 @@ export default function EntregasYPedidosPage() {
   const [filterEstado, setFilterEstado] = useState('todos')
   const [filterZona, setFilterZona] = useState('todas')
   const [showModal, setShowModal] = useState(false)
+  const [showExcelModal, setShowExcelModal] = useState(false)
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null)
   const [biPayload, setBiPayload] = useState<any>(null)
 
@@ -304,6 +307,14 @@ export default function EntregasYPedidosPage() {
           >
             <Plus className="w-4 h-4" />
             <span>Programar Entrega</span>
+          </button>
+
+          <button
+            onClick={() => setShowExcelModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-gray-100 text-emerald-700 border border-slate-300 text-xs font-bold shadow-sm transition cursor-pointer active:scale-95"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>Carga Masiva (Excel)</span>
           </button>
         </div>
       </div>
@@ -877,6 +888,16 @@ export default function EntregasYPedidosPage() {
           </div>
         </div>
       )}
+
+      {/* Modal para Carga Masiva */}
+      <ExcelUploadModal
+        isOpen={showExcelModal}
+        onClose={() => setShowExcelModal(false)}
+        onSuccess={() => {
+          setShowExcelModal(false)
+          loadData()
+        }}
+      />
     </div>
   )
 }
