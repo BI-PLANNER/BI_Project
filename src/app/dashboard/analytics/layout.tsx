@@ -18,9 +18,9 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex flex-col h-full bg-transparent overflow-hidden">
       {/* Tab Navigation Header */}
-      <div className="px-6 pt-6 pb-2 border-b border-slate-200 flex-shrink-0">
+      <div className="px-6 pt-6 pb-2 border-b border-slate-300 flex-shrink-0">
         <h1 className="text-2xl font-black text-gray-900 tracking-wide flex items-center gap-3 mb-6">
-          <span className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shadow-sm">
+          <span className="w-8 h-8 rounded-lg bg-white border border-slate-300 flex items-center justify-center shadow-sm">
             <BarChart3 size={18} className="text-gray-900" />
           </span>
           Centro de Analítica BI
@@ -38,7 +38,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
                   flex items-center gap-2 px-4 py-2.5 rounded-t-xl md:rounded-xl text-sm font-bold transition-all duration-300
                   border-b-2 md:border-b-0 md:border border-transparent
                   ${isActive 
-                    ? `${tab.activeBg} ${tab.color} border-b-${tab.color.replace('text-', '')} md:border-slate-200 shadow-sm` 
+                    ? `${tab.activeBg} ${tab.color} border-b-${tab.color.replace('text-', '')} md:border-slate-300 shadow-sm` 
                     : 'text-slate-700 hover:text-gray-900 hover:bg-slate-50'
                   }
                 `}

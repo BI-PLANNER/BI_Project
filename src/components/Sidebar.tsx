@@ -144,7 +144,7 @@ export default function Sidebar() {
       }`}
     >
       {/* Logo Hub */}
-      <div className="flex items-center px-3.5 h-16 border-b border-gray-200/[0.08] bg-white backdrop-blur-xl">
+      <div className="flex items-center px-3.5 h-16 border-b border-slate-300/[0.08] bg-white backdrop-blur-xl">
         <LabMedLogo size={collapsed ? 38 : 40} showText={!collapsed} glowing={true} />
       </div>
 
@@ -164,7 +164,7 @@ export default function Sidebar() {
                 {!collapsed && <span className="font-semibold text-xs">{item.label}</span>}
               </div>
               {!collapsed && (item as any).badge && (
-                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-700 border-gray-200'}`}>
+                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-mono font-bold border ${(item as any).badgeColor || 'bg-indigo-500/20 text-indigo-700 border-slate-300'}`}>
                   {(item as any).badge}
                 </span>
               )}
@@ -180,14 +180,14 @@ export default function Sidebar() {
 
       {/* Active User RACI Profile */}
       {!collapsed ? (
-        <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-slate-200 space-y-1.5">
+        <div className="mx-3 mb-2 p-2.5 rounded-xl bg-white/[0.03] border border-slate-300 space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-gray-500">Usuario Activo</span>
             <span className={`badge ${
               userProfile.isLuisOrellana
-                ? 'bg-teal-500/20 text-teal-700 border border-gray-200'
+                ? 'bg-teal-500/20 text-teal-700 border border-slate-300'
                 : userProfile.isGerenteGeneral
-                ? 'bg-amber-500/20 text-amber-700 border border-gray-200'
+                ? 'bg-amber-500/20 text-amber-700 border border-slate-300'
                 : 'bg-indigo-500/20 text-indigo-700'
             } text-[9px] px-1.5 font-mono`}>
               {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}

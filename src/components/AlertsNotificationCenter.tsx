@@ -327,10 +327,10 @@ export default function AlertsNotificationCenter({
           onClick={() => setIsOpen(!isOpen)}
           className={`relative w-10 h-10 mx-auto rounded-xl border transition-all duration-300 flex items-center justify-center group cursor-pointer ${
             isOpen
-              ? 'bg-rose-500/20 border-gray-200 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-700'
+              ? 'bg-rose-500/20 border-slate-300 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-700'
               : criticalCount > 0
-              ? 'bg-white border-gray-200 text-rose-700 hover:border-gray-200 hover:bg-gray-100'
-              : 'bg-white border-slate-200 text-slate-700 hover:border-gray-200 hover:text-cyan-700'
+              ? 'bg-white border-slate-300 text-rose-700 hover:border-slate-300 hover:bg-gray-100'
+              : 'bg-white border-slate-300 text-slate-700 hover:border-slate-300 hover:text-cyan-700'
           }`}
           title={`Centro de Alertas (${criticalCount > 0 ? `${criticalCount} Críticas` : '0 Quiebres'})`}
         >
@@ -351,10 +351,10 @@ export default function AlertsNotificationCenter({
             isSidebar ? 'w-full justify-start px-3 py-2 rounded-2xl' : 'p-2.5 rounded-2xl'
           } border transition-all duration-300 flex items-center gap-2.5 group cursor-pointer ${
             isOpen
-              ? 'bg-rose-500/20 border-gray-200 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-700'
+              ? 'bg-rose-500/20 border-slate-300 shadow-[0_0_20px_rgba(244,63,94,0.3)] text-rose-700'
               : criticalCount > 0
-              ? 'bg-white border-gray-200 text-rose-700 hover:border-gray-200 hover:bg-gray-100 shadow-sm shadow-rose-950/20'
-              : 'bg-white border-slate-200 text-slate-700 hover:border-gray-200 hover:text-cyan-700'
+              ? 'bg-white border-slate-300 text-rose-700 hover:border-slate-300 hover:bg-gray-100 shadow-sm shadow-rose-950/20'
+              : 'bg-white border-slate-300 text-slate-700 hover:border-slate-300 hover:text-cyan-700'
           }`}
           title="Centro de Alertas de Oferta vs Demanda"
         >
@@ -391,12 +391,12 @@ export default function AlertsNotificationCenter({
         >
           <div
             ref={modalRef}
-            className="w-full max-w-5xl h-[90vh] max-h-[900px] bg-white border border-slate-200 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col text-slate-900 ring-1 ring-white/10"
+            className="w-full max-w-5xl h-[90vh] max-h-[900px] bg-white border border-slate-300 rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col text-slate-900 ring-1 ring-white/10"
           >
             {/* Header del Centro de Alertas */}
-            <div className="px-6 py-4 border-b border-slate-200 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-shrink-0">
+            <div className="px-6 py-4 border-b border-slate-300 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-shrink-0">
               <div className="flex items-center gap-3.5">
-                <div className="p-3 rounded-2xl bg-rose-500/15 border border-gray-200 text-rose-700 shadow-inner">
+                <div className="p-3 rounded-2xl bg-rose-500/15 border border-slate-300 text-rose-700 shadow-inner">
                   <ShieldAlert className="w-6 h-6" />
                 </div>
                 <div>
@@ -414,7 +414,7 @@ export default function AlertsNotificationCenter({
                 <button
                   onClick={fetchAlertas}
                   disabled={loading}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-cyan-600 hover:text-gray-900 border border-slate-200 text-xs font-bold transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-cyan-600 hover:text-gray-900 border border-slate-300 text-xs font-bold transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-cyan-700' : ''}`} />
                   <span>{loading ? 'Evaluando...' : 'Re-evaluar'}</span>
@@ -422,7 +422,7 @@ export default function AlertsNotificationCenter({
 
                 <button
                   onClick={handleExportCSV}
-                  className="px-3.5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Exportar Pedido</span>
@@ -430,7 +430,7 @@ export default function AlertsNotificationCenter({
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-xl bg-slate-100 hover:bg-rose-600 hover:text-gray-900 border border-slate-200 text-slate-700 transition cursor-pointer"
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-rose-600 hover:text-gray-900 border border-slate-300 text-slate-700 transition cursor-pointer"
                   title="Cerrar (Esc)"
                 >
                   <X className="w-4 h-4" />
@@ -439,13 +439,13 @@ export default function AlertsNotificationCenter({
             </div>
 
             {/* KPI Cards de Resumen */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 sm:p-5 bg-slate-500 border-b border-slate-200 flex-shrink-0">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 sm:p-5 bg-slate-500 border-b border-slate-300 flex-shrink-0">
               <div
                 onClick={() => setActiveFilter(activeFilter === 'CRITICO' ? 'TODAS' : 'CRITICO')}
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'CRITICO'
                     ? 'bg-rose-500/20 border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
-                    : 'bg-rose-50 border-gray-200 hover:border-gray-200'
+                    : 'bg-rose-50 border-slate-300 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -463,7 +463,7 @@ export default function AlertsNotificationCenter({
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'REORDEN'
                     ? 'bg-amber-500/20 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.3)]'
-                    : 'bg-amber-50 border-gray-200 hover:border-gray-200'
+                    : 'bg-amber-50 border-slate-300 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function AlertsNotificationCenter({
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer ${
                   activeFilter === 'RIESGO_FEFO'
                     ? 'bg-indigo-500/20 border-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.3)]'
-                    : 'bg-indigo-50 border-gray-200 hover:border-gray-200'
+                    : 'bg-indigo-50 border-slate-300 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -494,7 +494,7 @@ export default function AlertsNotificationCenter({
                 <div className="text-[10px] text-slate-700 mt-0.5">Vence &le; 90d con exceso</div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-emerald-50 border border-gray-200">
+              <div className="p-3.5 rounded-2xl bg-emerald-50 border border-slate-300">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold text-emerald-700">Inversión Sugerida</span>
                   <DollarSign className="w-4 h-4 text-emerald-700" />
@@ -507,14 +507,14 @@ export default function AlertsNotificationCenter({
             </div>
 
             {/* Controles de Filtros & Búsqueda */}
-            <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white flex-shrink-0">
+            <div className="p-4 sm:p-5 border-b border-slate-300 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white flex-shrink-0">
               {/* Tabs de Severidad */}
-              <div className="flex items-center gap-1.5 p-1 bg-white rounded-2xl border border-slate-200 overflow-x-auto">
+              <div className="flex items-center gap-1.5 p-1 bg-white rounded-2xl border border-slate-300 overflow-x-auto">
                 <button
                   onClick={() => setActiveFilter('TODAS')}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
                     activeFilter === 'TODAS'
-                      ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                      ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                       : 'text-slate-700 hover:text-gray-900'
                   }`}
                 >
@@ -557,7 +557,7 @@ export default function AlertsNotificationCenter({
                 <select
                   value={selectedBrand}
                   onChange={e => setSelectedBrand(e.target.value)}
-                  className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-cyan-500 font-semibold cursor-pointer"
+                  className="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-cyan-500 font-semibold cursor-pointer"
                 >
                   <option value="ALL">Todas las Marcas ({brands.length - 1})</option>
                   {brands.filter(b => b !== 'ALL').map(b => (
@@ -568,7 +568,7 @@ export default function AlertsNotificationCenter({
                 <select
                   value={sortBy}
                   onChange={e => setSortBy(e.target.value as any)}
-                  className="px-3 py-2 bg-white border border-gray-200 text-cyan-700 rounded-xl text-xs focus:outline-none focus:border-cyan-400 font-semibold cursor-pointer"
+                  className="px-3 py-2 bg-white border border-slate-300 text-cyan-700 rounded-xl text-xs focus:outline-none focus:border-cyan-400 font-semibold cursor-pointer"
                 >
                   <option value="urgencia">🚨 Orden: Mayor Urgencia</option>
                   <option value="fecha_quiebre">⏳ Orden: Fecha de Quiebre</option>
@@ -584,7 +584,7 @@ export default function AlertsNotificationCenter({
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     placeholder="Buscar SKU, reactivo, lote..."
-                    className="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                    className="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500"
                   />
                   {searchQuery && (
                     <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-gray-900 cursor-pointer">
@@ -615,30 +615,30 @@ export default function AlertsNotificationCenter({
                         key={alerta.sku + idx}
                         className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                           isCritico
-                            ? 'bg-rose-50 border-gray-200 hover:border-gray-200 shadow-sm'
+                            ? 'bg-rose-50 border-slate-300 hover:border-slate-300 shadow-sm'
                             : isReorden
-                            ? 'bg-amber-50 border-gray-200 hover:border-gray-200 shadow-sm'
+                            ? 'bg-amber-50 border-slate-300 hover:border-slate-300 shadow-sm'
                             : isFefo
-                            ? 'bg-indigo-50 border-gray-200 hover:border-gray-200'
-                            : 'bg-white border-slate-200'
+                            ? 'bg-indigo-50 border-slate-300 hover:border-slate-300'
+                            : 'bg-white border-slate-300'
                         }`}
                       >
                         {/* SKU e Información del Producto */}
                         <div className="space-y-2 min-w-[320px] flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-mono font-extrabold text-xs px-2.5 py-0.5 rounded-lg bg-white text-cyan-700 border border-gray-200">
+                            <span className="font-mono font-extrabold text-xs px-2.5 py-0.5 rounded-lg bg-white text-cyan-700 border border-slate-300">
                               {alerta.sku}
                             </span>
-                            <span className="text-xs font-bold text-slate-700 px-2 py-0.5 rounded-md bg-slate-50 border border-gray-200">
+                            <span className="text-xs font-bold text-slate-700 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-300">
                               {alerta.marca}
                             </span>
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                                 isCritico
-                                  ? 'bg-rose-500/20 text-rose-700 border-gray-200 animate-pulse'
+                                  ? 'bg-rose-500/20 text-rose-700 border-slate-300 animate-pulse'
                                   : isReorden
-                                  ? 'bg-amber-500/20 text-amber-700 border-gray-200'
-                                  : 'bg-indigo-500/20 text-indigo-700 border-gray-200'
+                                  ? 'bg-amber-500/20 text-amber-700 border-slate-300'
+                                  : 'bg-indigo-500/20 text-indigo-700 border-slate-300'
                               }`}
                             >
                               {isCritico ? '🔴 Peligro Quiebre' : isReorden ? '🟡 Punto Reorden' : '🟣 Riesgo FEFO'}
@@ -658,12 +658,12 @@ export default function AlertsNotificationCenter({
                           <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px] font-mono">
                             {/* Fecha de Quiebre / Agotamiento */}
                             {alerta.stock_actual_kits === 0 || alerta.dias_cobertura <= 0 ? (
-                              <span className="px-2 py-0.5 rounded-md bg-rose-500/25 text-rose-700 border border-gray-200 font-bold flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-rose-500/25 text-rose-700 border border-slate-300 font-bold flex items-center gap-1">
                                 <AlertTriangle className="w-3 h-3 text-rose-700" />
                                 <span>Quiebre: INMEDIATO (Stock 0)</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-white text-amber-700 border border-gray-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-white text-amber-700 border border-slate-300 flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-amber-700" />
                                 <span>Agotamiento est: <strong>{formatFutureDate(alerta.dias_cobertura)}</strong> ({alerta.dias_cobertura}d)</span>
                               </span>
@@ -671,12 +671,12 @@ export default function AlertsNotificationCenter({
 
                             {/* Fecha Límite para Orden de Compra */}
                             {alerta.dias_cobertura <= 30 ? (
-                              <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-gray-200 font-bold flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-slate-300 font-bold flex items-center gap-1">
                                 <CalendarDays className="w-3 h-3 text-rose-700" />
                                 <span>Emitir Orden: YA (Lead Time 30d vencido)</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-white text-cyan-700 border border-gray-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-white text-cyan-700 border border-slate-300 flex items-center gap-1">
                                 <Calendar className="w-3 h-3 text-cyan-700" />
                                 <span>Emitir orden antes de: <strong>{formatFutureDate(alerta.dias_cobertura - 30)}</strong></span>
                               </span>
@@ -684,12 +684,12 @@ export default function AlertsNotificationCenter({
 
                             {/* Lote y Vencimiento FEFO */}
                             {alerta.lote_proximo ? (
-                              <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-gray-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-slate-300 flex items-center gap-1">
                                 <Tag className="w-3 h-3 text-purple-700" />
                                 <span>Lote: <strong className="text-gray-900">{alerta.lote_proximo.lote}</strong> • Vence: <strong>{alerta.lote_proximo.vence}</strong> ({alerta.lote_proximo.dias}d)</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-slate-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-white text-slate-700 border border-slate-300 flex items-center gap-1">
                                 <Package className="w-3 h-3 text-slate-500" />
                                 <span>Sin existencias físicas en bodega</span>
                               </span>
@@ -698,8 +698,8 @@ export default function AlertsNotificationCenter({
                         </div>
 
                         {/* Métricas de Balance: Stock Actual vs ROP vs Días Cobertura */}
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 text-center border-t lg:border-t-0 lg:border-l border-slate-200 pt-3 lg:pt-0 lg:pl-4">
-                          <div className="p-2 rounded-xl bg-white border border-gray-200">
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 text-center border-t lg:border-t-0 lg:border-l border-slate-300 pt-3 lg:pt-0 lg:pl-4">
+                          <div className="p-2 rounded-xl bg-white border border-slate-300">
                             <div className="text-[10px] font-semibold text-slate-700 uppercase">Stock Físico</div>
                             <div className="font-mono font-bold text-xs text-gray-900 mt-0.5">
                               {alerta.stock_actual_kits} <span className="text-cyan-700 text-[10px]">Kits</span>
@@ -707,7 +707,7 @@ export default function AlertsNotificationCenter({
                             <div className="text-[9.5px] font-mono text-emerald-700">{alerta.stock_actual_pruebas_u.toLocaleString()} U</div>
                           </div>
 
-                          <div className="p-2 rounded-xl bg-white border border-gray-200">
+                          <div className="p-2 rounded-xl bg-white border border-slate-300">
                             <div className="text-[10px] font-semibold text-slate-700 uppercase">Punto ROP</div>
                             <div className="font-mono font-bold text-xs text-amber-700 mt-0.5">
                               {alerta.rop_kits} <span className="text-slate-700 text-[10px]">Kits</span>
@@ -715,7 +715,7 @@ export default function AlertsNotificationCenter({
                             <div className="text-[9.5px] font-mono text-slate-700">SS: {alerta.stock_seguridad_kits}k</div>
                           </div>
 
-                          <div className="p-2 rounded-xl bg-white border border-gray-200">
+                          <div className="p-2 rounded-xl bg-white border border-slate-300">
                             <div className="text-[10px] font-semibold text-slate-700 uppercase">Cobertura</div>
                             <div
                               className={`font-mono font-black text-xs mt-0.5 ${
@@ -731,7 +731,7 @@ export default function AlertsNotificationCenter({
                             <div className="text-[9.5px] font-mono text-slate-700">{alerta.consumo_diario_kits} k/día</div>
                           </div>
 
-                          <div className="p-2 rounded-xl bg-emerald-50 border border-gray-200 col-span-3 sm:col-span-1">
+                          <div className="p-2 rounded-xl bg-emerald-50 border border-slate-300 col-span-3 sm:col-span-1">
                             <div className="text-[10px] font-bold text-emerald-700 uppercase">Sugerido Compra</div>
                             <div className="font-mono font-black text-sm text-emerald-700 mt-0.5">
                               +{alerta.sugerido_comprar_kits} <span className="text-[10px]">Kits</span>
@@ -749,7 +749,7 @@ export default function AlertsNotificationCenter({
             </div>
 
             {/* Footer con Resumen y Acciones */}
-            <div className="px-6 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs flex-shrink-0">
+            <div className="px-6 py-4 border-t border-slate-300 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs flex-shrink-0">
               <div className="text-slate-700 flex items-center gap-2 text-center sm:text-left">
                 <span>Mostrando <strong className="text-gray-900">{filteredAlertas.length}</strong> de <strong className="text-gray-900">{alertas.length}</strong> alertas activas</span>
               </div>
@@ -757,7 +757,7 @@ export default function AlertsNotificationCenter({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleExportCSV}
-                  className="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Descargar Orden de Compra Sugerida (.CSV)</span>

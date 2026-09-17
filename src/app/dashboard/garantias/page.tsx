@@ -147,7 +147,7 @@ export default function GarantiasPage() {
 
         <button
           onClick={loadGarantiasFromContratos}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-gray-200 transition"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-slate-300 transition"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Actualizar</span>
@@ -158,8 +158,8 @@ export default function GarantiasPage() {
       {notification && (
         <div className={`p-3 rounded-xl flex items-center justify-between text-xs font-medium border animate-fade-in ${
           notification.type === 'success'
-            ? 'bg-emerald-500/10 text-emerald-700 border-gray-200'
-            : 'bg-rose-500/10 text-rose-700 border-gray-200'
+            ? 'bg-emerald-500/10 text-emerald-700 border-slate-300'
+            : 'bg-rose-500/10 text-rose-700 border-slate-300'
         }`}>
           <div className="flex items-center gap-2">
             {notification.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-700" /> : <AlertCircle className="w-4 h-4 text-rose-700" />}
@@ -170,7 +170,7 @@ export default function GarantiasPage() {
       )}
 
       {/* Search & Filters */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white border border-slate-300 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
@@ -178,14 +178,14 @@ export default function GarantiasPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar por contrato, cliente o póliza..."
-            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
           />
         </div>
 
         <select
           value={filterEstado}
           onChange={e => setFilterEstado(e.target.value)}
-          className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-emerald-500"
+          className="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-emerald-500"
         >
           <option value="todos">Todos los Estados de Fianza</option>
           <option value="Entregada">Fianzas Entregadas / Aprobadas</option>
@@ -201,7 +201,7 @@ export default function GarantiasPage() {
             Cargando pólizas de contratos desde Supabase...
           </div>
         ) : filteredContratos.length === 0 ? (
-          <div className="col-span-2 p-12 text-center text-slate-500 bg-white border border-slate-200 rounded-2xl">
+          <div className="col-span-2 p-12 text-center text-slate-500 bg-white border border-slate-300 rounded-2xl">
             <p className="font-bold text-slate-700">No hay contratos registrados</p>
             <p className="text-xs text-slate-500 mt-1">Registra contratos en el módulo de Contratos o Tablas para gestionar sus fianzas.</p>
           </div>
@@ -209,7 +209,7 @@ export default function GarantiasPage() {
           filteredContratos.map(c => (
             <div
               key={c.contrato_id}
-              className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between"
+              className="bg-white border border-slate-300 rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
@@ -222,14 +222,14 @@ export default function GarantiasPage() {
                     </span>
                   </div>
                   {c.monto_total && (
-                    <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-gray-200">
+                    <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-slate-300">
                       ${Number(c.monto_total).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </span>
                   )}
                 </div>
 
                 {/* Fianza 1: Fiel Cumplimiento */}
-                <div className="p-3 rounded-xl bg-white border border-gray-200 space-y-1.5">
+                <div className="p-3 rounded-xl bg-white border border-slate-300 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                       <FileCheck2 className="w-3.5 h-3.5 text-indigo-700" />
@@ -237,8 +237,8 @@ export default function GarantiasPage() {
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-mono ${
                       c.fianza_cumplimiento_estado === 'Entregada'
-                        ? 'bg-emerald-500/20 text-emerald-700 border border-gray-200'
-                        : 'bg-amber-500/20 text-amber-700 border border-gray-200'
+                        ? 'bg-emerald-500/20 text-emerald-700 border border-slate-300'
+                        : 'bg-amber-500/20 text-amber-700 border border-slate-300'
                     }`}>
                       {c.fianza_cumplimiento_estado || 'Pendiente'}
                     </span>
@@ -249,7 +249,7 @@ export default function GarantiasPage() {
                 </div>
 
                 {/* Fianza 2: Buena Inversión */}
-                <div className="p-3 rounded-xl bg-white border border-gray-200 space-y-1.5">
+                <div className="p-3 rounded-xl bg-white border border-slate-300 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                       <FileCheck2 className="w-3.5 h-3.5 text-violet-700" />
@@ -257,8 +257,8 @@ export default function GarantiasPage() {
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-mono ${
                       c.fianza_buena_inversion_estado === 'Entregada'
-                        ? 'bg-emerald-500/20 text-emerald-700 border border-gray-200'
-                        : 'bg-amber-500/20 text-amber-700 border border-gray-200'
+                        ? 'bg-emerald-500/20 text-emerald-700 border border-slate-300'
+                        : 'bg-amber-500/20 text-amber-700 border border-slate-300'
                     }`}>
                       {c.fianza_buena_inversion_estado || 'Pendiente'}
                     </span>
@@ -269,10 +269,10 @@ export default function GarantiasPage() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex items-center justify-end">
+              <div className="pt-3 border-t border-slate-300 flex items-center justify-end">
                 <button
                   onClick={() => handleOpenEdit(c)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-gray-100 text-slate-700 hover:text-emerald-700 border border-slate-700 hover:border-gray-200 text-xs font-bold transition"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-gray-100 text-slate-700 hover:text-emerald-700 border border-slate-700 hover:border-slate-300 text-xs font-bold transition"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
                   <span>Editar Fianzas en Supabase</span>
@@ -286,8 +286,8 @@ export default function GarantiasPage() {
       {/* Edit Modal */}
       {editingContrato && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-sm animate-fade-in">
-          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-md shadow-sm overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+          <div className="bg-white border border-slate-300 rounded-2xl w-full max-w-md shadow-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-300 flex items-center justify-between bg-white">
               <h3 className="text-sm font-bold text-gray-900">
                 Editar Fianzas • {editingContrato.numero_contrato}
               </h3>
@@ -303,12 +303,12 @@ export default function GarantiasPage() {
                   value={formData.monto_total}
                   onChange={e => setFormData({ ...formData, monto_total: e.target.value })}
                   placeholder="0.00"
-                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900"
+                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900"
                 />
               </div>
 
               {/* Fianza Cumplimiento */}
-              <div className="p-3 bg-white border border-slate-200 rounded-xl space-y-2">
+              <div className="p-3 bg-white border border-slate-300 rounded-xl space-y-2">
                 <span className="text-xs font-bold text-indigo-700 block">Fianza de Fiel Cumplimiento</span>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -316,7 +316,7 @@ export default function GarantiasPage() {
                     <select
                       value={formData.fianza_cumplimiento_estado}
                       onChange={e => setFormData({ ...formData, fianza_cumplimiento_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-gray-900"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-gray-900"
                     >
                       <option value="Entregada">Entregada / Aprobada</option>
                       <option value="Pendiente">Pendiente de Entrega</option>
@@ -330,14 +330,14 @@ export default function GarantiasPage() {
                       value={formData.fianza_cumplimiento_poliza}
                       onChange={e => setFormData({ ...formData, fianza_cumplimiento_poliza: e.target.value })}
                       placeholder="ej: POL-2026-99"
-                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-gray-900"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-gray-900"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Fianza Buena Inversión */}
-              <div className="p-3 bg-white border border-slate-200 rounded-xl space-y-2">
+              <div className="p-3 bg-white border border-slate-300 rounded-xl space-y-2">
                 <span className="text-xs font-bold text-violet-700 block">Fianza de Buena Inversión</span>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
@@ -345,7 +345,7 @@ export default function GarantiasPage() {
                     <select
                       value={formData.fianza_buena_inversion_estado}
                       onChange={e => setFormData({ ...formData, fianza_buena_inversion_estado: e.target.value })}
-                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-gray-900"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-gray-900"
                     >
                       <option value="Pendiente">Pendiente</option>
                       <option value="Entregada">Entregada</option>
@@ -360,13 +360,13 @@ export default function GarantiasPage() {
                       value={formData.fianza_buena_inversion_poliza}
                       onChange={e => setFormData({ ...formData, fianza_buena_inversion_poliza: e.target.value })}
                       placeholder="ej: POL-BI-100"
-                      className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs text-gray-900"
+                      className="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-gray-900"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-slate-300 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingContrato(null)}
@@ -376,7 +376,7 @@ export default function GarantiasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition"
+                  className="px-5 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition"
                 >
                   Guardar en Supabase
                 </button>

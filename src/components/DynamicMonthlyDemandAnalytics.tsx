@@ -476,12 +476,12 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* ========================================================================= */}
       {/* 1. HEADER EJECUTIVO POWER BI: TÍTULO, SELECTOR DE VISTA & SLICERS */}
       {/* ========================================================================= */}
-      <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-sm backdrop-blur-xl space-y-4">
+      <div className="p-5 rounded-3xl bg-white border border-slate-300 shadow-sm backdrop-blur-xl space-y-4">
         
         {/* Fila Superior: Título & Selector de Modo */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-200/[0.06] pb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-300/[0.06] pb-4">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-2xl bg-cyan-500/15 border border-gray-200 text-cyan-700 shadow-sm">
+            <div className="p-3 rounded-2xl bg-cyan-500/15 border border-slate-300 text-cyan-700 shadow-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
@@ -489,7 +489,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 <h3 className="text-lg font-black text-gray-900 tracking-tight">
                   Demanda & Entregas por Producto
                 </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-700 border border-gray-200">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-700 border border-slate-300">
                   Power BI Official (176,681)
                 </span>
               </div>
@@ -500,12 +500,12 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
           </div>
 
           {/* Selector de Pestañas Unificadas */}
-          <div className="flex items-center bg-white p-1.5 rounded-2xl border border-slate-200 text-xs font-bold gap-1 self-start lg:self-auto shadow-inner">
+          <div className="flex items-center bg-white p-1.5 rounded-2xl border border-slate-300 text-xs font-bold gap-1 self-start lg:self-auto shadow-inner">
             <button
               onClick={() => setAnalyticsViewMode('entregas')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                 analyticsViewMode === 'entregas'
-                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                   : 'text-slate-700 hover:text-gray-900 hover:bg-white/[0.04]'
               }`}
             >
@@ -516,7 +516,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               onClick={() => setAnalyticsViewMode('catalogo_global')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition ${
                 analyticsViewMode === 'catalogo_global'
-                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                   : 'text-slate-700 hover:text-gray-900 hover:bg-white/[0.04]'
               }`}
             >
@@ -532,7 +532,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
           <div className="flex items-center gap-2.5 flex-wrap">
             {/* Slicer Año */}
             {analyticsViewMode === 'entregas' && (
-              <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+              <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-300 text-xs">
                 <Calendar className="w-3.5 h-3.5 text-cyan-700" />
                 <span className="text-[10px] text-slate-700 font-bold uppercase tracking-wider">Año:</span>
                 <select
@@ -551,7 +551,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
 
             {/* Slicer Mes */}
             {analyticsViewMode === 'entregas' && (
-              <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 text-xs">
+              <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-300 text-xs">
                 <span className="text-[10px] text-slate-700 font-bold uppercase tracking-wider">Mes:</span>
                 <select
                   value={selectedMes}
@@ -568,7 +568,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
             )}
 
             {/* Slicer Marca Global (Con Auto-Switch) */}
-            <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-gray-200 text-xs shadow-sm shadow-cyan-500/10">
+            <div className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-slate-300 text-xs shadow-sm shadow-cyan-500/10">
               <Tag className="w-3.5 h-3.5 text-cyan-700" />
               <span className="text-[10px] text-cyan-700 font-bold uppercase tracking-wider">Marca:</span>
               <select
@@ -594,7 +594,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 value={searchProduct}
                 onChange={e => setSearchProduct(e.target.value)}
                 placeholder="Buscar SKU, producto o descripción..."
-                className="w-full pl-9 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner"
+                className="w-full pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition shadow-inner"
               />
               {searchProduct && (
                 <button onClick={() => setSearchProduct('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-gray-900">
@@ -606,7 +606,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
             {/* Exportar CSV */}
             <button
               onClick={handleExportCSV}
-              className="px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer flex-shrink-0"
+              className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer flex-shrink-0"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Exportar</span>
@@ -621,7 +621,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* 2. NOTIFICACIÓN INFORMATIVA INTELIGENTE CUANDO SE SELECCIONA UNA MARCA */}
       {/* ========================================================================= */}
       {selectedMarca !== 'TODAS' && (
-        <div className="p-3.5 rounded-2xl bg-indigo-50 border border-gray-200 backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-in fade-in duration-200">
+        <div className="p-3.5 rounded-2xl bg-indigo-50 border border-slate-300 backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs animate-in fade-in duration-200">
           <div className="flex items-center gap-2.5 text-indigo-800">
             <Info className="w-4 h-4 text-indigo-700 flex-shrink-0" />
             <span>
@@ -661,8 +661,8 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* IZQUIERDA: TABLA JERÁRQUICA (Entregas por Producto) */}
-          <div className="lg:col-span-5 rounded-3xl bg-white border border-slate-200 shadow-sm p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
-            <div className="flex items-center justify-between border-b border-gray-200/[0.06] pb-3 flex-shrink-0">
+          <div className="lg:col-span-5 rounded-3xl bg-white border border-slate-300 shadow-sm p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
+            <div className="flex items-center justify-between border-b border-slate-300/[0.06] pb-3 flex-shrink-0">
               <div>
                 <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                   <TableIcon className="w-4 h-4 text-cyan-700" />
@@ -670,15 +670,15 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 </h4>
                 <p className="text-[11px] text-slate-700">Jerarquía: Año ➔ Mes ➔ Producto</p>
               </div>
-              <span className="font-mono text-xs font-black text-cyan-700 bg-cyan-50 px-3 py-1 rounded-xl border border-gray-200">
+              <span className="font-mono text-xs font-black text-cyan-700 bg-cyan-50 px-3 py-1 rounded-xl border border-slate-300">
                 Total: {grandTotalQTY.toLocaleString()}
               </span>
             </div>
 
             {/* Tabla con scroll interno */}
-            <div className="flex-1 overflow-y-auto pr-1 rounded-2xl border border-gray-200/[0.06] custom-scrollbar">
+            <div className="flex-1 overflow-y-auto pr-1 rounded-2xl border border-slate-300/[0.06] custom-scrollbar">
               <table className="w-full text-left text-xs">
-                <thead className="bg-white text-slate-700 uppercase font-bold text-[10px] sticky top-0 z-10 border-b border-gray-200/[0.08]">
+                <thead className="bg-white text-slate-700 uppercase font-bold text-[10px] sticky top-0 z-10 border-b border-slate-300/[0.08]">
                   <tr>
                     <th className="px-3 py-2.5 w-16">Año</th>
                     <th className="px-3 py-2.5 w-20">Mes</th>
@@ -745,7 +745,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                     ))
                   )}
                 </tbody>
-                <tfoot className="bg-white sticky bottom-0 border-t-2 border-gray-200 text-xs font-black text-gray-900">
+                <tfoot className="bg-white sticky bottom-0 border-t-2 border-slate-300 text-xs font-black text-gray-900">
                   <tr>
                     <td colSpan={3} className="px-3 py-2.5 text-cyan-700 uppercase tracking-wider">
                       Total
@@ -760,8 +760,8 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
           </div>
 
           {/* DERECHA: GRÁFICO DE BARRAS APILADAS (Demanda por Mes) */}
-          <div className="lg:col-span-7 rounded-3xl bg-white border border-slate-200 shadow-sm p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
-            <div className="flex items-center justify-between border-b border-gray-200/[0.06] pb-3 flex-shrink-0">
+          <div className="lg:col-span-7 rounded-3xl bg-white border border-slate-300 shadow-sm p-5 space-y-4 backdrop-blur-xl flex flex-col h-[580px]">
+            <div className="flex items-center justify-between border-b border-slate-300/[0.06] pb-3 flex-shrink-0">
               <div>
                 <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-emerald-700" />
@@ -769,7 +769,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 </h4>
                 <p className="text-[11px] text-slate-700">Volumen mensual apilado y distribuido por reactivo</p>
               </div>
-              <div className="text-[10px] font-mono text-slate-700 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+              <div className="text-[10px] font-mono text-slate-700 bg-white px-2.5 py-1 rounded-lg border border-slate-300">
                 {stackedBarData.buckets.length} Meses Graficados
               </div>
             </div>
@@ -777,22 +777,22 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
             {/* Gráfico SVG / CSS Grid con Tooltip Dinámico */}
             <div className="flex-1 flex gap-4 min-h-0">
               {/* Contenedor del Gráfico de Barras */}
-              <div className="flex-1 flex flex-col justify-between bg-white p-4 rounded-2xl border border-gray-200/[0.06] relative">
+              <div className="flex-1 flex flex-col justify-between bg-white p-4 rounded-2xl border border-slate-300/[0.06] relative">
                 {/* Eje Y Labels & Guías Horizontales */}
                 <div className="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between text-[9px] font-mono text-slate-600">
-                  <div className="border-b border-gray-200/[0.04] w-full flex justify-between">
+                  <div className="border-b border-slate-300/[0.04] w-full flex justify-between">
                     <span>{(stackedBarData.yAxisMax / 1000).toFixed(0)} mil</span>
                   </div>
-                  <div className="border-b border-gray-200/[0.04] w-full flex justify-between">
+                  <div className="border-b border-slate-300/[0.04] w-full flex justify-between">
                     <span>{(stackedBarData.yAxisMax * 0.75 / 1000).toFixed(0)} mil</span>
                   </div>
-                  <div className="border-b border-gray-200/[0.04] w-full flex justify-between">
+                  <div className="border-b border-slate-300/[0.04] w-full flex justify-between">
                     <span>{(stackedBarData.yAxisMax * 0.50 / 1000).toFixed(0)} mil</span>
                   </div>
-                  <div className="border-b border-gray-200/[0.04] w-full flex justify-between">
+                  <div className="border-b border-slate-300/[0.04] w-full flex justify-between">
                     <span>{(stackedBarData.yAxisMax * 0.25 / 1000).toFixed(0)} mil</span>
                   </div>
-                  <div className="border-b border-gray-200/[0.04] w-full flex justify-between">
+                  <div className="border-b border-slate-300/[0.04] w-full flex justify-between">
                     <span>0 mil</span>
                   </div>
                 </div>
@@ -832,7 +832,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                                     backgroundColor: item.color,
                                     opacity: isHighlighted ? 1 : 0.25
                                   }}
-                                  className="w-full transition-opacity duration-200 border-b border-gray-200"
+                                  className="w-full transition-opacity duration-200 border-b border-slate-300"
                                   title={`${item.producto}: ${item.qty.toLocaleString()} QTY`}
                                 />
                               )
@@ -856,8 +856,8 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
 
                 {/* Floating Tooltip cuando se pasa el cursor sobre una barra */}
                 {hoveredBarDetail && (
-                  <div className="absolute top-3 left-3 bg-white border border-gray-200 rounded-xl p-3 shadow-sm z-20 pointer-events-none max-w-xs text-xs backdrop-blur-md animate-in fade-in duration-150">
-                    <div className="font-bold text-gray-900 border-b border-slate-200 pb-1 flex items-center justify-between gap-4">
+                  <div className="absolute top-3 left-3 bg-white border border-slate-300 rounded-xl p-3 shadow-sm z-20 pointer-events-none max-w-xs text-xs backdrop-blur-md animate-in fade-in duration-150">
+                    <div className="font-bold text-gray-900 border-b border-slate-300 pb-1 flex items-center justify-between gap-4">
                       <span>{hoveredBarDetail.label}</span>
                       <span className="font-mono text-cyan-700">{hoveredBarDetail.total.toLocaleString()} QTY</span>
                     </div>
@@ -877,8 +877,8 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               </div>
 
               {/* Leyenda Interactiva a la Derecha */}
-              <div className="w-48 flex-shrink-0 flex flex-col justify-between bg-white p-3 rounded-2xl border border-gray-200/[0.06] overflow-hidden">
-                <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2 border-b border-gray-200/[0.06] pb-1 flex items-center justify-between">
+              <div className="w-48 flex-shrink-0 flex flex-col justify-between bg-white p-3 rounded-2xl border border-slate-300/[0.06] overflow-hidden">
+                <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2 border-b border-slate-300/[0.06] pb-1 flex items-center justify-between">
                   <span>Producto</span>
                   <span className="text-[9px] font-mono text-cyan-700">{uniqueProductsLegend.length} SKUs</span>
                 </div>
@@ -909,7 +909,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                   })}
                 </div>
 
-                <div className="pt-2 border-t border-gray-200/[0.06] text-[9.5px] font-mono text-slate-500 text-center">
+                <div className="pt-2 border-t border-slate-300/[0.06] text-[9.5px] font-mono text-slate-500 text-center">
                   Pasa el cursor para aislar
                 </div>
               </div>
@@ -923,16 +923,16 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
       {/* 4. VISTA B: CATÁLOGO MAESTRO & SKUs (1,496 PRODUCTOS & 51 MARCAS) */}
       {/* ========================================================================= */}
       {analyticsViewMode === 'catalogo_global' && (
-        <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-5 space-y-4 backdrop-blur-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200/[0.06] pb-3">
+        <div className="rounded-3xl bg-white border border-slate-300 shadow-sm p-5 space-y-4 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-300/[0.06] pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-indigo-500/15 border border-gray-200 text-indigo-700">
+              <div className="p-2 rounded-xl bg-indigo-500/15 border border-slate-300 text-indigo-700">
                 <Database className="w-4 h-4" />
               </div>
               <div>
                 <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                   <span>Catálogo Maestro de Productos & Equipos</span>
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-50 border border-gray-200 text-indigo-700 font-bold">
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-50 border border-slate-300 text-indigo-700 font-bold">
                     {filteredCatalog.length} Productos
                   </span>
                 </h4>
@@ -951,14 +951,14 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                 <button
                   disabled={catalogPage <= 1}
                   onClick={() => setCatalogPage(p => Math.max(1, p - 1))}
-                  className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition"
+                  className="p-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   disabled={catalogPage >= totalCatalogPages}
                   onClick={() => setCatalogPage(p => Math.min(totalCatalogPages, p + 1))}
-                  className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition"
+                  className="p-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -967,9 +967,9 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
           </div>
 
           {/* Tabla de Productos del Catálogo Maestro */}
-          <div className="overflow-x-auto rounded-2xl border border-gray-200/[0.06]">
+          <div className="overflow-x-auto rounded-2xl border border-slate-300/[0.06]">
             <table className="w-full text-left text-xs">
-              <thead className="bg-white text-slate-700 uppercase font-bold text-[10px] border-b border-gray-200/[0.08]">
+              <thead className="bg-white text-slate-700 uppercase font-bold text-[10px] border-b border-slate-300/[0.08]">
                 <tr>
                   <th className="px-4 py-3 w-28">SKU</th>
                   <th className="px-4 py-3 w-44">Marca</th>
@@ -1001,7 +1001,7 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                         {prod.codigo_sku}
                       </td>
                       <td className="px-4 py-2.5 font-semibold text-slate-800">
-                        <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px]">
+                        <span className="px-2 py-0.5 rounded-md bg-white border border-slate-300 text-[11px]">
                           {prod.marca_nombre}
                         </span>
                       </td>
@@ -1010,11 +1010,11 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
                       </td>
                       <td className="px-4 py-2.5">
                         {prod.es_equipo ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-700 border border-gray-200">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-700 border border-slate-300">
                             <Cpu className="w-3 h-3" /> Equipo
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-700 border border-gray-200">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-700 border border-slate-300">
                             <Tag className="w-3 h-3" /> Reactivo
                           </span>
                         )}
@@ -1050,31 +1050,31 @@ export default function DynamicMonthlyDemandAnalytics({ className = '', customDa
               <button
                 disabled={catalogPage <= 1}
                 onClick={() => setCatalogPage(1)}
-                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
               >
                 Primera
               </button>
               <button
                 disabled={catalogPage <= 1}
                 onClick={() => setCatalogPage(p => Math.max(1, p - 1))}
-                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
               >
                 Anterior
               </button>
-              <span className="px-2.5 py-1 rounded-lg bg-indigo-50 border border-gray-200 text-indigo-700 font-mono font-bold">
+              <span className="px-2.5 py-1 rounded-lg bg-indigo-50 border border-slate-300 text-indigo-700 font-mono font-bold">
                 {catalogPage} / {totalCatalogPages}
               </span>
               <button
                 disabled={catalogPage >= totalCatalogPages}
                 onClick={() => setCatalogPage(p => Math.min(totalCatalogPages, p + 1))}
-                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
               >
                 Siguiente
               </button>
               <button
                 disabled={catalogPage >= totalCatalogPages}
                 onClick={() => setCatalogPage(totalCatalogPages)}
-                className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
+                className="px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-slate-700 hover:text-gray-900 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-[11px]"
               >
                 Última
               </button>

@@ -113,7 +113,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
         ) : (
           <div className="space-y-4">
             {/* Destinatario */}
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-gray-200 flex items-center justify-between">
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-slate-300 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-bold text-gray-500">Destinatario Asignado:</span>
                 <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -148,7 +148,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
                           : lvl === 'URGENTE'
                           ? 'bg-amber-600 border-amber-500 text-gray-900 shadow-sm'
                           : 'bg-indigo-600 border-indigo-500 text-gray-900 shadow-sm'
-                        : 'bg-slate-50 border-slate-200 text-gray-500 hover:text-gray-900'
+                        : 'bg-slate-50 border-slate-300 text-gray-500 hover:text-gray-900'
                     }`}
                   >
                     {lvl}
@@ -196,7 +196,7 @@ Planner Estratégico — COMPRASAL / LAB&MED
                 className="btn-primary !bg-red-600 hover:!bg-red-500 flex-1 text-xs flex items-center justify-center gap-2 shadow-sm"
               >
                 {enviando ? (
-                  <div className="w-4 h-4 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-slate-300 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
                     <Send className="w-3.5 h-3.5" />

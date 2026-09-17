@@ -144,12 +144,12 @@ export default function NeoChartPieDonut({
   const isMultiItem = slices.length > 4
 
   return (
-    <div className="relative rounded-3xl bg-white border border-slate-200 p-5 md:p-6 shadow-sm backdrop-blur-xl flex flex-col justify-between space-y-4 hover:border-gray-200 transition-all duration-300">
+    <div className="relative rounded-3xl bg-white border border-slate-300 p-5 md:p-6 shadow-sm backdrop-blur-xl flex flex-col justify-between space-y-4 hover:border-slate-300 transition-all duration-300">
       {/* 1. Header con Título Amplio y Badge */}
-      <div className="flex items-start justify-between border-b border-gray-200/[0.08] pb-3.5">
+      <div className="flex items-start justify-between border-b border-slate-300/[0.08] pb-3.5">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-gray-200 flex items-center justify-center text-indigo-700 shadow">
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-slate-300 flex items-center justify-center text-indigo-700 shadow">
               <PieIcon className="w-4 h-4" />
             </div>
             <div>
@@ -160,7 +160,7 @@ export default function NeoChartPieDonut({
         </div>
 
         {badge && (
-          <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-white text-cyan-700 border border-gray-200 shadow-inner">
+          <span className="text-xs font-mono font-bold px-3 py-1 rounded-xl bg-white text-cyan-700 border border-slate-300 shadow-inner">
             {badge}
           </span>
         )}
@@ -299,7 +299,7 @@ export default function NeoChartPieDonut({
 
             {/* Tooltip flotante al pasar sobre el pastel */}
             {type === 'pie' && activeItem && (
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white border border-gray-200 px-3.5 py-1.5 rounded-2xl shadow-sm backdrop-blur-md pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white border border-slate-300 px-3.5 py-1.5 rounded-2xl shadow-sm backdrop-blur-md pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: activeItem.color }} />
                 <span className="text-xs font-bold text-gray-900 truncate max-w-[140px]">{activeItem.label}</span>
                 <span className="text-xs font-mono font-black text-cyan-700">{activeItem.percent.toFixed(1)}%</span>
@@ -324,8 +324,8 @@ export default function NeoChartPieDonut({
                     onClick={() => onSelectSlice && onSelectSlice(item)}
                     className={`p-2 rounded-2xl transition-all duration-200 cursor-pointer border ${
                       isHovered
-                        ? 'bg-white/[0.12] border-gray-200 shadow-sm scale-[1.01]'
-                        : 'bg-slate-500 hover:bg-gray-100 border-gray-200/[0.06]'
+                        ? 'bg-white/[0.12] border-slate-300 shadow-sm scale-[1.01]'
+                        : 'bg-slate-500 hover:bg-gray-100 border-slate-300/[0.06]'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2 mb-1">
@@ -380,14 +380,14 @@ export default function NeoChartPieDonut({
 
       {/* 4. Recuadro de Insight Ejecutivo / Comprensión Rápida */}
       {insight && (
-        <div className="bg-white p-3 rounded-2xl border border-gray-200 text-xs text-gray-600 flex items-start gap-2.5">
+        <div className="bg-white p-3 rounded-2xl border border-slate-300 text-xs text-gray-600 flex items-start gap-2.5">
           <Info className="w-4 h-4 text-indigo-700 shrink-0 mt-0.5" />
           <div className="leading-relaxed text-[11px]">{insight}</div>
         </div>
       )}
 
       {/* 5. Footer con Métricas Totales */}
-      <div className="pt-2.5 border-t border-gray-200/[0.06] flex items-center justify-between text-xs text-slate-700 font-mono">
+      <div className="pt-2.5 border-t border-slate-300/[0.06] flex items-center justify-between text-xs text-slate-700 font-mono">
         <span className="flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-cyan-700" /> {slices.length} Categorías Analizadas
         </span>

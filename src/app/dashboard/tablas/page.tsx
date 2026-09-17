@@ -554,8 +554,8 @@ export default function GestionTablasPage() {
   if (isRestrictedGerente) {
     return (
       <div className="p-6 max-w-xl mx-auto mt-16 text-center space-y-6">
-        <div className="glass-card p-10 rounded-3xl border border-slate-200 shadow-sm space-y-5 bg-white">
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center mx-auto border border-gray-200">
+        <div className="glass-card p-10 rounded-3xl border border-slate-300 shadow-sm space-y-5 bg-white">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-700 flex items-center justify-center mx-auto border border-slate-300">
             <ShieldAlert className="w-8 h-8" />
           </div>
           <h2 className="text-xl font-bold text-gray-900">Módulo Operativo Restringido</h2>
@@ -596,14 +596,14 @@ export default function GestionTablasPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => { loadTableData(selectedTable); loadCatalogs(); }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-gray-200 transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-700 text-slate-700 text-xs font-medium border border-slate-300 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Actualizar</span>
           </button>
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>Nuevo Registro en {config.label}</span>
@@ -615,8 +615,8 @@ export default function GestionTablasPage() {
       {notification && (
         <div className={`p-3 rounded-xl flex items-center justify-between text-xs font-medium border animate-fade-in ${
           notification.type === 'success'
-            ? 'bg-emerald-500/10 text-emerald-700 border-gray-200'
-            : 'bg-rose-500/10 text-rose-700 border-gray-200'
+            ? 'bg-emerald-500/10 text-emerald-700 border-slate-300'
+            : 'bg-rose-500/10 text-rose-700 border-slate-300'
         }`}>
           <div className="flex items-center gap-2">
             {notification.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-700" /> : <AlertCircle className="w-4 h-4 text-rose-700" />}
@@ -629,7 +629,7 @@ export default function GestionTablasPage() {
       {/* 4 Logical Groups Tab Selector */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {TABLE_GROUPS.map((group, gIdx) => (
-          <div key={gIdx} className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col space-y-2">
+          <div key={gIdx} className="bg-white border border-slate-300 rounded-2xl p-3.5 flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-slate-700 truncate">{group.groupName}</span>
               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-700 font-mono font-bold">
@@ -646,7 +646,7 @@ export default function GestionTablasPage() {
                     onClick={() => setSelectedTable(t.id)}
                     className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs flex items-center justify-between transition ${
                       isSelected
-                        ? 'bg-white border border-gray-200 text-indigo-800 font-bold border border-gray-200 shadow-sm'
+                        ? 'bg-white border border-slate-300 text-indigo-800 font-bold border border-slate-300 shadow-sm'
                         : 'text-slate-700 hover:text-slate-800 hover:bg-gray-100'
                     }`}
                   >
@@ -664,9 +664,9 @@ export default function GestionTablasPage() {
       </div>
 
       {/* Table Content & Search */}
-      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-300 rounded-2xl overflow-hidden shadow-sm">
         {/* Table Header toolbar */}
-        <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 border-b border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
               <Database className="w-4 h-4 text-indigo-700" />
@@ -685,7 +685,7 @@ export default function GestionTablasPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder={`Buscar en ${config.label}...`}
-              className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+              className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
         </div>
@@ -693,7 +693,7 @@ export default function GestionTablasPage() {
         {/* Dynamic Table */}
         <div className="overflow-x-auto max-h-[500px]">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-200 text-slate-700 font-semibold z-10">
+            <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-300 text-slate-700 font-semibold z-10">
               <tr>
                 <th className="p-3 w-16">PK</th>
                 {config.fields.map(f => (
@@ -748,17 +748,17 @@ export default function GestionTablasPage() {
                               {f.type === 'boolean' ? (
                                 f.key === 'es_adjudicado' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-slate-300">
                                       🟢 Adjudicada
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-slate-300">
                                       🔴 Perdida
                                     </span>
                                   )
                                 ) : f.key === 'activo' ? (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-slate-300">
                                       🟢 Activo
                                     </span>
                                   ) : (
@@ -768,7 +768,7 @@ export default function GestionTablasPage() {
                                   )
                                 ) : (
                                   rawVal ? (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-slate-300">
                                       🟢 Sí
                                     </span>
                                   ) : (
@@ -796,7 +796,7 @@ export default function GestionTablasPage() {
                             {isLicitacionesTable && (
                               <button
                                 onClick={() => toggleExpandOffer(String(pkVal))}
-                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-gray-100 text-indigo-700 text-[11px] font-bold transition flex items-center gap-1 border border-gray-200"
+                                className="px-2 py-1 rounded-lg bg-indigo-600/20 hover:bg-gray-100 text-indigo-700 text-[11px] font-bold transition flex items-center gap-1 border border-slate-300"
                               >
                                 {isExpanded ? 'Ocultar Items' : 'Ver Renglones'}
                               </button>
@@ -821,9 +821,9 @@ export default function GestionTablasPage() {
 
                       {/* Sub-tabla Expandible de Renglones / Ítems */}
                       {isLicitacionesTable && isExpanded && (
-                        <tr className="bg-white border-b border-gray-200">
+                        <tr className="bg-white border-b border-slate-300">
                           <td colSpan={config.fields.length + 2} className="p-4 bg-white">
-                            <div className="space-y-3 p-3 bg-white rounded-2xl border border-gray-200 shadow-inner">
+                            <div className="space-y-3 p-3 bg-white rounded-2xl border border-slate-300 shadow-inner">
                               <div className="flex items-center justify-between">
                                 <h4 className="text-xs font-bold text-indigo-700 flex items-center gap-2">
                                   <Boxes className="w-4 h-4 text-indigo-700" />
@@ -844,7 +844,7 @@ export default function GestionTablasPage() {
                               ) : (
                                 <div className="overflow-x-auto">
                                   <table className="w-full text-left text-[11px]">
-                                    <thead className="bg-white text-slate-700 border-b border-slate-200">
+                                    <thead className="bg-white text-slate-700 border-b border-slate-300">
                                       <tr>
                                         <th className="p-2">Renglón</th>
                                         <th className="p-2">Cliente Institucional</th>
@@ -909,15 +909,15 @@ export default function GestionTablasPage() {
                                             </td>
                                             <td className="p-2 text-center">
                                               {isAdjudicada ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 border border-slate-300">
                                                   🟢 ADJUDICADA
                                                 </span>
                                               ) : isDesierta ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 border border-slate-300">
                                                   🟡 DESIERTA
                                                 </span>
                                               ) : (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-gray-200">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-700 border border-slate-300">
                                                   🔴 PERDIDA
                                                 </span>
                                               )}
@@ -959,9 +959,9 @@ export default function GestionTablasPage() {
       {/* Modal Form for Create / Edit */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-sm animate-fade-in">
-          <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-xl shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white border border-slate-300 rounded-2xl w-full max-w-xl shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+            <div className="p-4 border-b border-slate-300 flex items-center justify-between bg-white">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-700 flex items-center justify-center font-bold">
                   {editingId ? <Edit2 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -996,7 +996,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       >
                         <option value="">-- Seleccionar {f.label} --</option>
                         {(relCatalogs[f.relation || ''] || []).map(item => {
@@ -1015,7 +1015,7 @@ export default function GestionTablasPage() {
                           type="checkbox"
                           checked={Boolean(val)}
                           onChange={e => setFormData({ ...formData, [f.key]: e.target.checked })}
-                          className="w-4 h-4 rounded text-indigo-600 bg-white border-slate-200 focus:ring-0"
+                          className="w-4 h-4 rounded text-indigo-600 bg-white border-slate-300 focus:ring-0"
                         />
                         <span className="text-xs text-slate-700">Habilitado / Activo</span>
                       </label>
@@ -1025,7 +1025,7 @@ export default function GestionTablasPage() {
                         value={val || ''}
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : f.type === 'number' ? (
                       <input
@@ -1035,7 +1035,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     ) : (
                       <input
@@ -1044,7 +1044,7 @@ export default function GestionTablasPage() {
                         onChange={e => setFormData({ ...formData, [f.key]: e.target.value })}
                         required={f.required}
                         placeholder={`Ingresar ${f.label}...`}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 focus:outline-none focus:border-indigo-500 transition"
                       />
                     )}
                   </div>
@@ -1052,7 +1052,7 @@ export default function GestionTablasPage() {
               })}
 
               {/* Modal Footer */}
-              <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-2">
+              <div className="pt-4 border-t border-slate-300 flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
@@ -1063,7 +1063,7 @@ export default function GestionTablasPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition disabled:opacity-50"
                 >
                   {loading ? 'Guardando...' : editingId ? 'Guardar Cambios' : 'Crear Registro'}
                 </button>

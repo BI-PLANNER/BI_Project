@@ -128,11 +128,11 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white border border-slate-200 w-full max-w-xl rounded-2xl shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white border border-slate-300 w-full max-w-xl rounded-2xl shadow-sm overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-500">
+        <div className="flex items-center justify-between p-5 border-b border-slate-300 bg-slate-500">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-700 flex items-center justify-center border border-gray-200">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-700 flex items-center justify-center border border-slate-300">
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
@@ -156,7 +156,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition flex flex-col items-center justify-center gap-3 ${
-              file ? 'border-gray-200 bg-emerald-50' : 'border-slate-700 hover:border-indigo-500 bg-white hover:bg-gray-100'
+              file ? 'border-slate-300 bg-emerald-50' : 'border-slate-700 hover:border-indigo-500 bg-white hover:bg-gray-100'
             }`}
           >
             <input
@@ -192,9 +192,9 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           {/* Status Message */}
           {statusMsg && (
             <div className={`p-4 rounded-xl text-xs font-medium flex items-start gap-2.5 border ${
-              statusMsg.type === 'success' ? 'bg-emerald-50 border-gray-200 text-emerald-700' :
-              statusMsg.type === 'error' ? 'bg-rose-50 border-gray-200 text-rose-700' :
-              'bg-indigo-50 border-gray-200 text-indigo-700'
+              statusMsg.type === 'success' ? 'bg-emerald-50 border-slate-300 text-emerald-700' :
+              statusMsg.type === 'error' ? 'bg-rose-50 border-slate-300 text-rose-700' :
+              'bg-indigo-50 border-slate-300 text-indigo-700'
             }`}>
               {statusMsg.type === 'success' && <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-700 mt-0.5" />}
               {statusMsg.type === 'error' && <AlertCircle className="w-4 h-4 shrink-0 text-rose-700 mt-0.5" />}
@@ -204,12 +204,12 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           )}
 
           {stats && (
-            <div className="grid grid-cols-2 gap-3 bg-white p-3.5 rounded-xl border border-slate-200">
+            <div className="grid grid-cols-2 gap-3 bg-white p-3.5 rounded-xl border border-slate-300">
               <div className="text-center">
                 <span className="text-[10px] text-slate-700 uppercase font-semibold">Licitaciones Procesadas</span>
                 <p className="text-lg font-black text-gray-900 font-mono">{stats.licsCount}</p>
               </div>
-              <div className="text-center border-l border-slate-200">
+              <div className="text-center border-l border-slate-300">
                 <span className="text-[10px] text-slate-700 uppercase font-semibold">Renglones Guardados</span>
                 <p className="text-lg font-black text-emerald-700 font-mono">{stats.rowsCount}</p>
               </div>
@@ -218,7 +218,7 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 bg-slate-500 flex items-center justify-end gap-3">
+        <div className="p-4 border-t border-slate-300 bg-slate-500 flex items-center justify-end gap-3">
           <button
             onClick={onClose}
             disabled={uploading}

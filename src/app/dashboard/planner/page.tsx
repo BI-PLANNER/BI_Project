@@ -489,16 +489,16 @@ const DAY_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábad
 
 // Temas y Paletas Visuales por Cliente
 const CONTRATO_THEMES: Record<string, { bg: string, border: string, text: string, badge: string, dot: string }> = {
-  'ISSS': { bg: 'bg-blue-50', border: 'border-gray-200', text: 'text-blue-800', badge: 'bg-blue-500/20 text-blue-700 border-gray-200', dot: 'bg-blue-400' },
-  'ISBM': { bg: 'bg-purple-50', border: 'border-gray-200', text: 'text-purple-800', badge: 'bg-purple-500/20 text-purple-700 border-gray-200', dot: 'bg-purple-400' },
-  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-50', border: 'border-gray-200', text: 'text-amber-800', badge: 'bg-amber-500/20 text-amber-700 border-gray-200', dot: 'bg-amber-400' },
-  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-50', border: 'border-gray-200', text: 'text-amber-800', badge: 'bg-amber-500/20 text-amber-700 border-gray-200', dot: 'bg-amber-400' },
-  'HOSPITAL MILITAR': { bg: 'bg-emerald-50', border: 'border-gray-200', text: 'text-emerald-800', badge: 'bg-emerald-500/20 text-emerald-700 border-gray-200', dot: 'bg-emerald-400' },
-  'HOSPITAL BLOOM': { bg: 'bg-pink-50', border: 'border-gray-200', text: 'text-pink-800', badge: 'bg-pink-500/20 text-pink-700 border-gray-200', dot: 'bg-pink-400' },
-  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-50', border: 'border-gray-200', text: 'text-cyan-800', badge: 'bg-cyan-500/20 text-cyan-700 border-gray-200', dot: 'bg-cyan-400' }
+  'ISSS': { bg: 'bg-blue-50', border: 'border-slate-300', text: 'text-blue-800', badge: 'bg-blue-500/20 text-blue-700 border-slate-300', dot: 'bg-blue-400' },
+  'ISBM': { bg: 'bg-purple-50', border: 'border-slate-300', text: 'text-purple-800', badge: 'bg-purple-500/20 text-purple-700 border-slate-300', dot: 'bg-purple-400' },
+  'SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-50', border: 'border-slate-300', text: 'text-amber-800', badge: 'bg-amber-500/20 text-amber-700 border-slate-300', dot: 'bg-amber-400' },
+  'HOSPITAL SAN JUAN DE DIOS DE SANTA ANA': { bg: 'bg-amber-50', border: 'border-slate-300', text: 'text-amber-800', badge: 'bg-amber-500/20 text-amber-700 border-slate-300', dot: 'bg-amber-400' },
+  'HOSPITAL MILITAR': { bg: 'bg-emerald-50', border: 'border-slate-300', text: 'text-emerald-800', badge: 'bg-emerald-500/20 text-emerald-700 border-slate-300', dot: 'bg-emerald-400' },
+  'HOSPITAL BLOOM': { bg: 'bg-pink-50', border: 'border-slate-300', text: 'text-pink-800', badge: 'bg-pink-500/20 text-pink-700 border-slate-300', dot: 'bg-pink-400' },
+  'HOSPITAL SALDAÑA': { bg: 'bg-cyan-50', border: 'border-slate-300', text: 'text-cyan-800', badge: 'bg-cyan-500/20 text-cyan-700 border-slate-300', dot: 'bg-cyan-400' }
 }
 
-const DEFAULT_THEME = { bg: 'bg-white', border: 'border-gray-200', text: 'text-indigo-800', badge: 'bg-indigo-500/20 text-indigo-700 border-gray-200', dot: 'bg-indigo-400' }
+const DEFAULT_THEME = { bg: 'bg-white', border: 'border-slate-300', text: 'text-indigo-800', badge: 'bg-indigo-500/20 text-indigo-700 border-slate-300', dot: 'bg-indigo-400' }
 
 export default function PlannerCalendarPage() {
   const supabase = createClient()
@@ -630,7 +630,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'completado',
         label: 'Completado',
-        badgeClass: 'bg-emerald-500/20 text-emerald-700 border border-gray-200',
+        badgeClass: 'bg-emerald-500/20 text-emerald-700 border border-slate-300',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -639,7 +639,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'rojo',
         label: 'Crítico / Vencido',
-        badgeClass: 'bg-red-500/25 text-red-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-red-500/25 text-red-700 border border-slate-300 font-bold',
         dotClass: 'bg-red-400 animate-pulse'
       }
     }
@@ -648,7 +648,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'naranja',
         label: 'Próximo',
-        badgeClass: 'bg-amber-500/25 text-amber-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-amber-500/25 text-amber-700 border border-slate-300 font-bold',
         dotClass: 'bg-amber-400'
       }
     }
@@ -657,7 +657,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'verde',
         label: 'En Plazo',
-        badgeClass: 'bg-emerald-500/25 text-emerald-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-emerald-500/25 text-emerald-700 border border-slate-300 font-bold',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -666,7 +666,7 @@ export default function PlannerCalendarPage() {
       return {
         color: 'gris',
         label: 'Sin fecha',
-        badgeClass: 'bg-slate-50 text-gray-500 border border-slate-200',
+        badgeClass: 'bg-slate-50 text-gray-500 border border-slate-300',
         dotClass: 'bg-gray-400'
       }
     }
@@ -680,21 +680,21 @@ export default function PlannerCalendarPage() {
       return {
         color: 'rojo',
         label: diff < 0 ? `Vencido (${Math.abs(diff)}d)` : diff === 0 ? 'Vence hoy' : '1 día (<2d)',
-        badgeClass: 'bg-red-500/25 text-red-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-red-500/25 text-red-700 border border-slate-300 font-bold',
         dotClass: 'bg-red-400 animate-pulse'
       }
     } else if (diff <= 6) {
       return {
         color: 'naranja',
         label: `${diff} días`,
-        badgeClass: 'bg-amber-500/25 text-amber-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-amber-500/25 text-amber-700 border border-slate-300 font-bold',
         dotClass: 'bg-amber-400'
       }
     } else {
       return {
         color: 'verde',
         label: `${diff} días`,
-        badgeClass: 'bg-emerald-500/25 text-emerald-700 border border-gray-200 font-bold',
+        badgeClass: 'bg-emerald-500/25 text-emerald-700 border border-slate-300 font-bold',
         dotClass: 'bg-emerald-400'
       }
     }
@@ -805,7 +805,7 @@ export default function PlannerCalendarPage() {
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-white border border-gray-200 text-indigo-700 border border-gray-200 shadow-sm">
+            <div className="p-3 rounded-2xl bg-white border border-slate-300 text-indigo-700 border border-slate-300 shadow-sm">
               <CalendarDays className="w-7 h-7" />
             </div>
             <div>
@@ -823,7 +823,7 @@ export default function PlannerCalendarPage() {
         {/* View Switcher and Month Navigation */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Quick Month Jumper (Agosto / Septiembre 2026) */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white border border-slate-200 text-xs">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white border border-slate-300 text-xs">
             <button
               onClick={() => setCurrentDate(new Date(2026, 7, 1))}
               className={`px-3 py-1.5 rounded-xl font-bold transition cursor-pointer ${
@@ -837,7 +837,7 @@ export default function PlannerCalendarPage() {
               className={`px-3 py-1.5 rounded-xl font-bold text-xs transition border cursor-pointer ${
                 month === 8 && year === 2026
                   ? 'bg-indigo-600 text-gray-900 border-indigo-400 shadow-sm shadow-indigo-600/30'
-                  : 'bg-slate-50 text-gray-600 border-slate-200 hover:bg-slate-100'
+                  : 'bg-slate-50 text-gray-600 border-slate-300 hover:bg-slate-100'
               }`}
             >
               📅 Septiembre 2026
@@ -846,7 +846,7 @@ export default function PlannerCalendarPage() {
             {/* Botón de Acceso Directo al Reporte Detallado con Gráficas de Pastel */}
             <button
               onClick={() => setActiveTab('REPORTE')}
-              className="px-3.5 py-1.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-900 font-black border border-gray-200 text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ml-1 animate-pulse hover:animate-none"
+              className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 font-black border border-slate-300 text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ml-1 animate-pulse hover:animate-none"
               title="Abrir Informe Ejecutivo con Gráficas de Pastel y Reporte Completo"
             >
               <PieIcon className="w-3.5 h-3.5 text-emerald-800" />
@@ -855,7 +855,7 @@ export default function PlannerCalendarPage() {
           </div>
 
           {/* Month / Year Controller */}
-          <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border border-slate-300 shadow-sm">
             <button
               onClick={() => setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
               className="p-1.5 rounded-xl bg-slate-50 hover:bg-indigo-600 text-gray-600 hover:text-gray-900 transition cursor-pointer"
@@ -867,7 +867,7 @@ export default function PlannerCalendarPage() {
             <select
               value={month}
               onChange={(e) => setCurrentDate(new Date(year, parseInt(e.target.value, 10), 1))}
-              className="bg-white text-gray-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-slate-200 outline-none cursor-pointer"
+              className="bg-white text-gray-900 font-bold text-xs rounded-xl px-2.5 py-1.5 border border-slate-300 outline-none cursor-pointer"
             >
               {MONTH_NAMES.map((m, idx) => (
                 <option key={m} value={idx}>{m}</option>
@@ -877,7 +877,7 @@ export default function PlannerCalendarPage() {
             <select
               value={year}
               onChange={(e) => setCurrentDate(new Date(parseInt(e.target.value, 10), month, 1))}
-              className="bg-white text-yellow-700 font-mono font-black text-xs rounded-xl px-2 py-1.5 border border-slate-200 outline-none cursor-pointer"
+              className="bg-white text-yellow-700 font-mono font-black text-xs rounded-xl px-2 py-1.5 border border-slate-300 outline-none cursor-pointer"
             >
               {[2025, 2026, 2027].map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -894,12 +894,12 @@ export default function PlannerCalendarPage() {
           </div>
 
           {/* View Tab Selector */}
-          <div className="flex rounded-2xl bg-slate-50 p-1 border border-slate-200 text-xs font-bold">
+          <div className="flex rounded-2xl bg-slate-50 p-1 border border-slate-300 text-xs font-bold">
             <button
               onClick={() => setActiveTab('CALENDARIO')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'CALENDARIO'
-                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -910,7 +910,7 @@ export default function PlannerCalendarPage() {
               onClick={() => setActiveTab('MATRIZ_PLAZOS')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'MATRIZ_PLAZOS'
-                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -921,7 +921,7 @@ export default function PlannerCalendarPage() {
               onClick={() => setActiveTab('REPORTE')}
               className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeTab === 'REPORTE'
-                  ? 'bg-white border border-gray-200 text-gray-900 shadow-sm'
+                  ? 'bg-white border border-slate-300 text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -939,7 +939,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'rojo'
               ? 'bg-red-500/20 border-red-500 ring-2 ring-red-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -957,7 +957,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'naranja'
               ? 'bg-amber-500/20 border-amber-500 ring-2 ring-amber-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -975,7 +975,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedSemaforo === 'verde'
               ? 'bg-emerald-500/20 border-emerald-500 ring-2 ring-emerald-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -993,7 +993,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'APLICACIONES'
               ? 'bg-cyan-500/20 border-cyan-500 ring-2 ring-cyan-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1011,7 +1011,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'PM'
               ? 'bg-violet-500/20 border-violet-500 ring-2 ring-violet-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1029,7 +1029,7 @@ export default function PlannerCalendarPage() {
           className={`glass-card p-3 rounded-2xl border text-left transition-all cursor-pointer ${
             selectedArea === 'LOGISTICA'
               ? 'bg-blue-500/20 border-blue-500 ring-2 ring-blue-500/50'
-              : 'border-gray-200 hover:bg-gray-100'
+              : 'border-slate-300 hover:bg-gray-100'
           }`}
         >
           <div className="flex items-center justify-between">
@@ -1044,7 +1044,7 @@ export default function PlannerCalendarPage() {
       </div>
 
       {/* Slicers and Filter Controls Bar */}
-      <div className="glass-card p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+      <div className="glass-card p-4 rounded-2xl border border-slate-300 space-y-3 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-indigo-700" />
@@ -1073,7 +1073,7 @@ export default function PlannerCalendarPage() {
             <select
               value={selectedArea}
               onChange={(e) => setSelectedArea(e.target.value)}
-              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-300 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todas las Áreas</option>
               {uniqueAreas.map(a => (
@@ -1088,7 +1088,7 @@ export default function PlannerCalendarPage() {
             <select
               value={selectedResponsable}
               onChange={(e) => setSelectedResponsable(e.target.value)}
-              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-300 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Responsables</option>
               {uniqueResponsables.map(r => (
@@ -1103,7 +1103,7 @@ export default function PlannerCalendarPage() {
             <select
               value={selectedContrato}
               onChange={(e) => setSelectedContrato(e.target.value)}
-              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-300 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todas las Instituciones</option>
               {uniqueClientes.map(c => (
@@ -1118,7 +1118,7 @@ export default function PlannerCalendarPage() {
             <select
               value={selectedTipoPendiente}
               onChange={(e) => setSelectedTipoPendiente(e.target.value)}
-              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-300 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Tipos</option>
               <option value="CONTRATO">📄 CONTRATO</option>
@@ -1132,7 +1132,7 @@ export default function PlannerCalendarPage() {
             <select
               value={selectedSemaforo}
               onChange={(e) => setSelectedSemaforo(e.target.value)}
-              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer"
+              className="w-full bg-white text-gray-900 text-xs rounded-xl p-2 border border-slate-300 focus:border-indigo-500 outline-none cursor-pointer"
             >
               <option value="todos">Todos los Semáforos</option>
               <option value="rojo">🔴 Críticos ({countRojo})</option>
@@ -1144,7 +1144,7 @@ export default function PlannerCalendarPage() {
 
         {/* Active Filter Badges */}
         {(selectedArea !== 'todos' || selectedContrato !== 'todos' || selectedTipoPendiente !== 'todos' || selectedResponsable !== 'todos' || selectedSemaforo !== 'todos' || searchQuery) && (
-          <div className="flex items-center gap-2 pt-2 border-t border-gray-200 flex-wrap">
+          <div className="flex items-center gap-2 pt-2 border-t border-slate-300 flex-wrap">
             <span className="text-[10px] text-gray-500 font-bold">Filtros Activos:</span>
             {selectedArea !== 'todos' && (
               <span className="badge bg-cyan-500/20 text-cyan-700 text-[10px] flex items-center gap-1">
@@ -1195,9 +1195,9 @@ export default function PlannerCalendarPage() {
 
       {/* 1. VISTA CALENDARIO MENSUAL */}
       {activeTab === 'CALENDARIO' && (
-        <div className="glass-card rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="glass-card rounded-2xl border border-slate-300 overflow-hidden shadow-sm">
           {/* Day of Week Headers */}
-          <div className="grid grid-cols-7 bg-white border-b border-slate-200 text-center py-2.5 text-xs font-bold text-gray-600">
+          <div className="grid grid-cols-7 bg-white border-b border-slate-300 text-center py-2.5 text-xs font-bold text-gray-600">
             {DAY_NAMES.map((d) => (
               <div key={d} className="uppercase tracking-wider text-[11px] text-gray-500">
                 {d}
@@ -1230,7 +1230,7 @@ export default function PlannerCalendarPage() {
                     </span>
 
                     {hasEvents && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-700 font-bold border border-gray-200">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-700 font-bold border border-slate-300">
                         {day.events.length} {day.events.length === 1 ? 'pendiente' : 'pendientes'}
                       </span>
                     )}
@@ -1282,8 +1282,8 @@ export default function PlannerCalendarPage() {
 
       {/* 2. VISTA MATRIZ DE LICITACIONES (TABLA EXACTA DEL PLANNER CON ÁREA Y RESPONSABLE) */}
       {activeTab === 'MATRIZ_PLAZOS' && (
-        <div className="glass-card rounded-2xl border border-slate-200 overflow-hidden shadow-sm animate-fade-in">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-white">
+        <div className="glass-card rounded-2xl border border-slate-300 overflow-hidden shadow-sm animate-fade-in">
+          <div className="p-4 border-b border-slate-300 flex items-center justify-between bg-white">
             <div>
               <h3 className="text-base font-black text-gray-900">Matriz Oficial de Pendientes de Licitaciones</h3>
               <p className="text-xs text-gray-500">Total mostrados: {filteredEvents.length} de {incidencias.length} registros clasificados por Área y Responsable</p>
@@ -1295,7 +1295,7 @@ export default function PlannerCalendarPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-white border-b border-slate-200 text-gray-500 uppercase text-[10px] font-bold">
+              <thead className="bg-white border-b border-slate-300 text-gray-500 uppercase text-[10px] font-bold">
                 <tr>
                   <th className="p-3 w-10 text-center">N°</th>
                   <th className="p-3">CLIENTE</th>
@@ -1324,8 +1324,8 @@ export default function PlannerCalendarPage() {
                       <td className="p-3 whitespace-nowrap">
                         <span className={`badge text-[10px] font-bold ${
                           isVisita
-                            ? 'bg-purple-500/20 text-purple-700 border border-gray-200'
-                            : 'bg-blue-500/20 text-blue-700 border border-gray-200'
+                            ? 'bg-purple-500/20 text-purple-700 border border-slate-300'
+                            : 'bg-blue-500/20 text-blue-700 border border-slate-300'
                         }`}>
                           {row.tipo_pendiente}
                         </span>
@@ -1333,13 +1333,13 @@ export default function PlannerCalendarPage() {
                       <td className="p-3 font-semibold text-gray-800 max-w-xs">{row.situacion}</td>
                       <td className="p-3 whitespace-nowrap">
                         <span className={`badge text-[10px] font-bold ${
-                          row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-700 border border-gray-200' :
-                          row.area === 'PM' ? 'bg-violet-500/20 text-violet-700 border border-gray-200' :
-                          row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-700 border border-gray-200' :
-                          row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-700 border border-gray-200' :
-                          row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-700 border border-gray-200' :
-                          row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-700 border border-gray-200' :
-                          'bg-purple-500/20 text-purple-700 border border-gray-200'
+                          row.area === 'APLICACIONES' ? 'bg-cyan-500/20 text-cyan-700 border border-slate-300' :
+                          row.area === 'PM' ? 'bg-violet-500/20 text-violet-700 border border-slate-300' :
+                          row.area === 'LOGISTICA' ? 'bg-blue-500/20 text-blue-700 border border-slate-300' :
+                          row.area === 'IT' ? 'bg-emerald-500/20 text-emerald-700 border border-slate-300' :
+                          row.area === 'LICITACIONES' ? 'bg-pink-500/20 text-pink-700 border border-slate-300' :
+                          row.area === 'SOPORTE' ? 'bg-amber-500/20 text-amber-700 border border-slate-300' :
+                          'bg-purple-500/20 text-purple-700 border border-slate-300'
                         }`}>
                           {row.area}
                         </span>
@@ -1357,7 +1357,7 @@ export default function PlannerCalendarPage() {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenEdit(row)}
-                            className="p-1 px-2 rounded-lg bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 font-bold border border-gray-200 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
+                            className="p-1 px-2 rounded-lg bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 font-bold border border-slate-300 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
                             title="Editar detalles y reasignar responsable"
                           >
                             <ArrowRightLeft className="w-3 h-3" />
@@ -1365,7 +1365,7 @@ export default function PlannerCalendarPage() {
                           </button>
                           <button
                             onClick={() => handleOpenPresion(row)}
-                            className="p-1 px-2 rounded-lg bg-amber-500/20 hover:bg-gray-100 text-amber-700 font-bold border border-gray-200 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
+                            className="p-1 px-2 rounded-lg bg-amber-500/20 hover:bg-gray-100 text-amber-700 font-bold border border-slate-300 text-[10px] flex items-center gap-1 transition shadow-sm cursor-pointer"
                             title="Presionar por correo institucional"
                           >
                             <Zap className="w-3 h-3 fill-amber-400" />
@@ -1402,8 +1402,8 @@ export default function PlannerCalendarPage() {
       {/* Modal: Detalle del Día */}
       {selectedDayEvents && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 backdrop-blur-sm p-4">
-          <div className="glass-card w-full max-w-2xl p-6 rounded-2xl border border-slate-200 animate-scale-in max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+          <div className="glass-card w-full max-w-2xl p-6 rounded-2xl border border-slate-300 animate-scale-in max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-300 mb-4">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-5 h-5 text-indigo-700" />
                 <h3 className="text-base font-bold text-gray-900">
@@ -1422,7 +1422,7 @@ export default function PlannerCalendarPage() {
               {selectedDayEvents.events.map((ev) => {
                 const sem = getSemaforoInfo(ev.fecha_cumplimiento, ev.estatus)
                 return (
-                  <div key={ev.id} className="p-4 rounded-xl bg-white border border-slate-200 space-y-2">
+                  <div key={ev.id} className="p-4 rounded-xl bg-white border border-slate-300 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-gray-900 text-sm">{ev.situacion}</span>
                       <span className={`badge text-xs ${sem.badgeClass}`}>{ev.estatus}</span>
@@ -1436,7 +1436,7 @@ export default function PlannerCalendarPage() {
                       <div><span className="text-gray-500 font-bold">Ubicación:</span> {ev.ubicacion || '-'}</div>
                     </div>
                     {ev.comentario && (
-                      <p className="text-xs text-gray-500 bg-slate-50 p-2.5 rounded-lg border border-gray-200">
+                      <p className="text-xs text-gray-500 bg-slate-50 p-2.5 rounded-lg border border-slate-300">
                         {ev.comentario}
                       </p>
                     )}
@@ -1446,7 +1446,7 @@ export default function PlannerCalendarPage() {
                           setSelectedDayEvents(null)
                           handleOpenEdit(ev)
                         }}
-                        className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 font-bold border border-gray-200 text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 font-bold border border-slate-300 text-xs flex items-center gap-1.5 transition cursor-pointer"
                       >
                         <ArrowRightLeft className="w-3.5 h-3.5" />
                         Reasignar / Editar
@@ -1473,8 +1473,8 @@ export default function PlannerCalendarPage() {
       {/* Modal: Detalle Individual */}
       {selectedDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-50 backdrop-blur-sm p-4">
-          <div className="glass-card w-full max-w-lg p-6 rounded-2xl border border-slate-200 animate-scale-in">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+          <div className="glass-card w-full max-w-lg p-6 rounded-2xl border border-slate-300 animate-scale-in">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-300 mb-4">
               <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
                 <Tag className="w-4 h-4 text-indigo-700" />
                 Ficha de Obligación #{selectedDetail.item_num || selectedDetail.id}
@@ -1488,52 +1488,52 @@ export default function PlannerCalendarPage() {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1.5">
+              <div className="p-3 rounded-xl bg-white border border-slate-300 space-y-1.5">
                 <div className="text-gray-500 uppercase font-bold text-[10px]">Situación:</div>
                 <div className="text-sm font-bold text-gray-900">{selectedDetail.situacion}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Área:</span>
                   <span className="font-bold text-cyan-700">{selectedDetail.area}</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Responsable:</span>
                   <span className="font-bold text-gray-900">{selectedDetail.responsable}</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Cliente:</span>
                   <span className="font-bold text-gray-900">{selectedDetail.cliente}</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Contrato:</span>
                   <span className="font-mono font-bold text-yellow-700">{selectedDetail.numero_contrato}</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Tipo de Pendiente:</span>
                   <span className="font-bold text-purple-700">{selectedDetail.tipo_pendiente}</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-white border border-gray-200">
+                <div className="p-2.5 rounded-xl bg-white border border-slate-300">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Ubicación:</span>
                   <span className="font-bold text-pink-700">{selectedDetail.ubicacion || '-'}</span>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-white border border-gray-200 space-y-1">
+              <div className="p-3 rounded-xl bg-white border border-slate-300 space-y-1">
                 <span className="text-gray-500 block text-[10px] font-bold uppercase">Fecha de Cumplimiento:</span>
                 <span className="font-mono font-bold text-emerald-700 text-sm">{selectedDetail.fecha_cumplimiento}</span>
               </div>
 
               {selectedDetail.comentario && (
-                <div className="p-3 rounded-xl bg-slate-50 border border-gray-200 space-y-1">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-300 space-y-1">
                   <span className="text-gray-500 block text-[10px] font-bold uppercase">Comentario del Planner:</span>
                   <p className="text-gray-700 text-xs">{selectedDetail.comentario}</p>
                 </div>
               )}
             </div>
 
-            <div className="pt-4 mt-4 border-t border-slate-200 flex justify-end gap-2">
+            <div className="pt-4 mt-4 border-t border-slate-300 flex justify-end gap-2">
               <button
                 onClick={() => setSelectedDetail(null)}
                 className="px-4 py-2 rounded-xl bg-slate-100 text-gray-600 text-xs font-bold hover:bg-slate-700 cursor-pointer"
@@ -1546,7 +1546,7 @@ export default function PlannerCalendarPage() {
                   setSelectedDetail(null)
                   handleOpenEdit(detail)
                 }}
-                className="px-4 py-2 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 text-xs font-bold border border-gray-200 flex items-center gap-1.5 transition cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-indigo-500/20 hover:bg-gray-100 text-indigo-700 text-xs font-bold border border-slate-300 flex items-center gap-1.5 transition cursor-pointer"
               >
                 <ArrowRightLeft className="w-3.5 h-3.5" />
                 Reasignar / Editar
@@ -1594,7 +1594,7 @@ export default function PlannerCalendarPage() {
 
       {/* Toast Notification Flotante */}
       {successToast && (
-        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-emerald-50 border border-gray-200 text-gray-900 text-xs font-bold shadow-sm flex items-center gap-3 animate-slide-up backdrop-blur-md">
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-emerald-50 border border-slate-300 text-gray-900 text-xs font-bold shadow-sm flex items-center gap-3 animate-slide-up backdrop-blur-md">
           <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-700">
             <CheckCircle2 className="w-5 h-5" />
           </div>

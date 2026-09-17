@@ -62,7 +62,7 @@ export default function LoginPage() {
         {/* Logo Hub */}
         <div className="text-center mb-8 animate-fade-in flex flex-col items-center">
           <LabMedLogo size={76} showText={false} glowing={true} className="mb-4" />
-          <h1 className="text-3xl font-black bg-white border border-gray-200 bg-clip-text text-transparent tracking-wide font-sans">
+          <h1 className="text-3xl font-black bg-white border border-slate-300 bg-clip-text text-transparent tracking-wide font-sans">
             LAB & MED
           </h1>
           <p className="text-xs font-mono font-bold text-cyan-700 mt-1 uppercase tracking-widest">
@@ -77,7 +77,7 @@ export default function LoginPage() {
           </h2>
 
           {error && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-gray-200 mb-4">
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-slate-300 mb-4">
               <AlertCircle className="w-4 h-4 text-red-700 flex-shrink-0" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
           <form onSubmit={handleAuth} className="space-y-4">
             {/* Quick Profile Switcher */}
             {!isRegister && (
-              <div className="space-y-1.5 pb-2 border-b border-slate-200">
+              <div className="space-y-1.5 pb-2 border-b border-slate-300">
                 <label className="block text-[10px] font-mono uppercase font-bold text-gray-500">
                   Acceso Rápido por Perfil:
                 </label>
@@ -99,15 +99,15 @@ export default function LoginPage() {
                     }}
                     className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
                       email.includes('orellana')
-                        ? 'bg-teal-500/20 border-gray-200 text-teal-700 font-bold'
-                        : 'bg-white/[0.03] border-slate-200 text-gray-600 hover:bg-white/[0.08]'
+                        ? 'bg-teal-500/20 border-slate-300 text-teal-700 font-bold'
+                        : 'bg-white/[0.03] border-slate-300 text-gray-600 hover:bg-white/[0.08]'
                     }`}
                   >
                     <div>
                       <span className="font-bold block">🎯 Luis Orellana</span>
                       <span className="text-[10px] text-gray-500">Gerencia de Integración · Jefatura</span>
                     </div>
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-700 border border-gray-200">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-teal-500/20 text-teal-700 border border-slate-300">
                       Reporte BI
                     </span>
                   </button>
@@ -120,15 +120,15 @@ export default function LoginPage() {
                     }}
                     className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
                       email.includes('jose.gomez')
-                        ? 'bg-indigo-500/20 border-gray-200 text-indigo-700 font-bold'
-                        : 'bg-white/[0.03] border-slate-200 text-gray-600 hover:bg-white/[0.08]'
+                        ? 'bg-indigo-500/20 border-slate-300 text-indigo-700 font-bold'
+                        : 'bg-white/[0.03] border-slate-300 text-gray-600 hover:bg-white/[0.08]'
                     }`}
                   >
                     <div>
                       <span className="font-bold block">👤 José Lenny Gómez</span>
                       <span className="text-[10px] text-gray-500">Planificación Estratégica & BI</span>
                     </div>
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-700 border border-gray-200">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-700 border border-slate-300">
                       Control Total
                     </span>
                   </button>
@@ -141,15 +141,15 @@ export default function LoginPage() {
                     }}
                     className={`p-2 rounded-xl text-left border transition text-xs flex items-center justify-between ${
                       email.includes('aaltunaher')
-                        ? 'bg-amber-500/20 border-gray-200 text-amber-700 font-bold'
-                        : 'bg-white/[0.03] border-slate-200 text-gray-600 hover:bg-white/[0.08]'
+                        ? 'bg-amber-500/20 border-slate-300 text-amber-700 font-bold'
+                        : 'bg-white/[0.03] border-slate-300 text-gray-600 hover:bg-white/[0.08]'
                     }`}
                   >
                     <div>
                       <span className="font-bold block">👔 Antonio Altuna</span>
                       <span className="text-[10px] text-gray-500">Gerente General</span>
                     </div>
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 border border-gray-200">
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 border border-slate-300">
                       Gerencia
                     </span>
                   </button>
@@ -221,7 +221,7 @@ export default function LoginPage() {
               className="btn-primary w-full flex items-center justify-center gap-2 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-gray-200 border-t-white rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-slate-300 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
                   <LogIn className="w-4 h-4" />
