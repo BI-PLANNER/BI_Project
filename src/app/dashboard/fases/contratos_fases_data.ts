@@ -5,23 +5,26 @@ export interface EntregaItem {
   fechaApp: string
 }
 
-export interface HospitalEntregaItem {
+export interface ProductoMatriz {
+  codigo_producto: string
+  nombre_producto: string
+  entregas: EntregaItem[]
+}
+
+export interface HospitalEntregaItemMulti {
   nombre: string
-  cantidades: number[]
-  total: number
-  fechaInstalacion: string
-  contacto: string
-  persona: string
-  horario: string
+  cantidades_por_producto: number[][] 
+  fechaInstalacion?: string
+  contacto?: string
+  persona?: string
+  horario?: string
 }
 
 export interface MatrizEntregasData {
   licitacion_ref: string
   objeto: string
-  codigo_producto: string
-  nombre_producto: string
-  entregas: EntregaItem[]
-  hospitales: HospitalEntregaItem[]
+  productos: ProductoMatriz[]
+  hospitales: HospitalEntregaItemMulti[]
 }
 
 export interface ContratoFilaItem {
@@ -513,69 +516,86 @@ export const CONTRATOS_FASES_INICIALES: ContratoFaseData[] = [
     "matrizEntregas": {
       "licitacion_ref": "REF. LICITACIÓN COMPETITIVA No. LC26DM0050",
       "objeto": "\"SUMINISTRO DE LABORATORIO CLINICO PARA DIFERENTES CENTROS DE ATENCION DEL ISSS PARTE 2 NECESIDAD 2026\"",
-      "codigo_producto": "500100026",
-      "nombre_producto": "PRUEBA PARA DETECCIÓN DE Pro-BNP",
-      "entregas": [
-        { "num": 1, "dias": 30, "fechaLimite": "31/8/2026", "fechaApp": "26/8/2026" },
-        { "num": 2, "dias": 60, "fechaLimite": "30/9/2026", "fechaApp": "22/9/2026" },
-        { "num": 3, "dias": 90, "fechaLimite": "30/10/2026", "fechaApp": "20/10/2026" },
-        { "num": 4, "dias": 120, "fechaLimite": "29/11/2026", "fechaApp": "17/11/2026" },
-        { "num": 5, "dias": 150, "fechaLimite": "29/12/2026", "fechaApp": "1/12/2026" }
+      "productos": [
+        {
+          "codigo_producto": "500100007",
+          "nombre_producto": "Sangre oculta heces (rapid Test)",
+          "entregas": [
+            { "num": 1, "dias": 30, "fechaLimite": "31/8/2026", "fechaApp": "26/8/2026" },
+            { "num": 2, "dias": 60, "fechaLimite": "30/9/2026", "fechaApp": "22/9/2026" },
+            { "num": 3, "dias": 90, "fechaLimite": "30/10/2026", "fechaApp": "20/10/2026" },
+            { "num": 4, "dias": 120, "fechaLimite": "29/11/2026", "fechaApp": "17/11/2026" }
+          ]
+        },
+        {
+          "codigo_producto": "500100017",
+          "nombre_producto": "Prueba cuantitativa PCT",
+          "entregas": [
+            { "num": 1, "dias": 30, "fechaLimite": "31/8/2026", "fechaApp": "26/8/2026" },
+            { "num": 2, "dias": 60, "fechaLimite": "30/9/2026", "fechaApp": "22/9/2026" },
+            { "num": 3, "dias": 90, "fechaLimite": "30/10/2026", "fechaApp": "20/10/2026" },
+            { "num": 4, "dias": 120, "fechaLimite": "29/11/2026", "fechaApp": "17/11/2026" }
+          ]
+        },
+        {
+          "codigo_producto": "500100027",
+          "nombre_producto": "Prueba antidoping multidroga",
+          "entregas": [
+            { "num": 1, "dias": 30, "fechaLimite": "31/8/2026", "fechaApp": "26/8/2026" },
+            { "num": 2, "dias": 60, "fechaLimite": "30/9/2026", "fechaApp": "22/9/2026" },
+            { "num": 3, "dias": 90, "fechaLimite": "30/10/2026", "fechaApp": "20/10/2026" },
+            { "num": 4, "dias": 120, "fechaLimite": "29/11/2026", "fechaApp": "17/11/2026" }
+          ]
+        }
       ],
       "hospitales": [
         {
-          "nombre": "HOSP. REG. STA ANA",
-          "cantidades": [134, 134, 134, 134, 134],
-          "total": 670,
-          "fechaInstalacion": "27/8/2026",
-          "contacto": "7829-7884",
-          "persona": "Lic Roxana",
-          "horario": "9:00 a. m. JUEVES"
+          "nombre": "ISSS SANTA ANA",
+          "cantidades_por_producto": [
+            [550, 550, 550, 550],
+            [120, 120, 120, 120],
+            [60, 60, 60, 60]
+          ]
         },
         {
-          "nombre": "HOSP. REG. SONSONATE",
-          "cantidades": [10, 10, 10, 10, 10],
-          "total": 50,
-          "fechaInstalacion": "27/8/2026",
-          "contacto": "7987-1756",
-          "persona": "Lic. Rosa",
-          "horario": "11:00 a. m. (correo de reprogramacion)"
+          "nombre": "ISSS DE SONSONATE",
+          "cantidades_por_producto": [
+            [181, 181, 181, 182],
+            [0, 0, 0, 0],
+            [120, 120, 120, 120]
+          ]
         },
         {
-          "nombre": "HOSP. AMATEPEC",
-          "cantidades": [42, 42, 42, 42, 42],
-          "total": 210,
-          "fechaInstalacion": "20/8/2026",
-          "contacto": "2591-5751",
-          "persona": "Lic Leiva",
-          "horario": "Normal"
+          "nombre": "ISSS SAN MIGUEL",
+          "cantidades_por_producto": [
+            [150, 150, 150, 150],
+            [20, 20, 20, 20],
+            [900, 900, 900, 900]
+          ]
         },
         {
-          "nombre": "HOSP. MQ",
-          "cantidades": [130, 130, 130, 130, 130],
-          "total": 650,
-          "fechaInstalacion": "26/8/2026",
-          "contacto": "7129-2293",
-          "persona": "Lic. Huezo",
-          "horario": "01:30 area de emergencia"
+          "nombre": "ISSS ROMA",
+          "cantidades_por_producto": [
+            [10, 10, 10, 10],
+            [0, 0, 0, 0],
+            [11, 11, 11, 11]
+          ]
         },
         {
-          "nombre": "HOSP. GENERAL",
-          "cantidades": [130, 130, 130, 130, 130],
-          "total": 650,
-          "fechaInstalacion": "19/8/2026",
-          "contacto": "7180-1820",
-          "persona": "Lic. Dora",
-          "horario": "MIERCOLES 10:30 a. m."
+          "nombre": "ISSS AMATEPEC",
+          "cantidades_por_producto": [
+            [80, 80, 80, 80],
+            [200, 200, 200, 200],
+            [60, 60, 60, 60]
+          ]
         },
         {
-          "nombre": "HOSP. POL. ZACAMIL",
-          "cantidades": [50, 50, 50, 50, 50],
-          "total": 250,
-          "fechaInstalacion": "26/8/2026",
-          "contacto": "7160-4961",
-          "persona": "Lic. Morales",
-          "horario": "Solo entregar producto"
+          "nombre": "ISSS MQ",
+          "cantidades_por_producto": [
+            [213, 213, 213, 211],
+            [840, 840, 840, 840],
+            [520, 520, 520, 520]
+          ]
         }
       ]
     }

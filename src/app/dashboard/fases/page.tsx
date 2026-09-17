@@ -750,11 +750,11 @@ export default function FasesPage() {
             {contratos.map(c => (
               <button
                 key={c.id}
-                onClick={() => setSelectedContratoId(c.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
-                  c.id === currentContrato.id
-                    ? 'bg-emerald-600 text-gray-900 shadow-sm'
-                    : 'bg-slate-50 text-gray-500 hover:text-gray-900'
+                onClick={() => setCurrentContratoId(c.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all ${
+                  currentContratoId === c.id 
+                  ? 'bg-amber-100 text-amber-900 font-bold border border-amber-300 shadow-sm'
+                  : 'bg-white text-gray-600 border border-slate-300 hover:bg-slate-100'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -764,7 +764,7 @@ export default function FasesPage() {
             ))}
           </div>
 
-          <div className="glass-card overflow-hidden border border-slate-300 shadow-sm">
+          <div className="glass-card overflow-hidden border border-slate-300 shadow-sm overflow-x-auto">
             <div className="bg-emerald-50 px-6 py-4 border-b border-slate-300 flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs uppercase font-extrabold tracking-widest text-emerald-700">
@@ -777,131 +777,138 @@ export default function FasesPage() {
                   {currentContrato.matrizEntregas.objeto}
                 </p>
               </div>
-
-              <div className="text-right">
-                <span className="badge bg-emerald-500/20 text-emerald-700 font-mono text-xs font-bold px-3 py-1">
-                  CÓDIGO: {currentContrato.matrizEntregas.codigo_producto}
-                </span>
-                <p className="text-xs font-bold text-gray-900 mt-1">
-                  {currentContrato.matrizEntregas.nombre_producto}
-                </p>
-              </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left border-collapse">
+            <div className="min-w-max">
+              <table className="w-full text-xs text-center border-collapse">
                 <thead>
-                  <tr className="bg-emerald-50 text-gray-900 font-bold text-center border-b border-slate-300">
-                    <th className="py-2.5 px-3 border-r border-slate-300 w-16" rowSpan={2}>ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-slate-300 w-16" rowSpan={2}>DÍAS</th>
-                    <th className="py-2 px-3 border-r border-slate-300" colSpan={currentContrato.matrizEntregas.hospitales.length}>
-                      CENTROS DE ATENCIÓN (HOSPITALES Y BANCO DE SANGRE)
-                    </th>
-                    <th className="py-2.5 px-3 border-r border-slate-300 w-24 bg-emerald-800/80" rowSpan={2}>TOTAL POR ENTREGA</th>
-                    <th className="py-2.5 px-3 border-r border-slate-300 w-28 bg-amber-50 text-amber-700" rowSpan={2}>FECHA LÍMITE DE ENTREGA</th>
-                    <th className="py-2.5 px-3 w-28 bg-orange-50 text-orange-700" rowSpan={2}>FECHAS PARA PONER EN LA APP</th>
+                  <tr className="bg-slate-50 text-gray-900 font-bold border-b border-slate-300">
+                    <th className="py-2.5 px-4 border-r border-slate-300 bg-white" rowSpan={4}>No.</th>
+                    <th className="py-2.5 px-4 border-r border-slate-300 bg-white min-w-[220px] text-left" rowSpan={4}>CENTROS DE ATENCIÓN</th>
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => (
+                      <th key={pIdx} colSpan={p.entregas.length} className="py-1.5 px-2 border-r border-slate-300 border-b border-slate-300 text-xs font-mono bg-emerald-50 text-emerald-800">
+                        CÓDIGO: {p.codigo_producto}
+                      </th>
+                    ))}
+                    <th className="py-2.5 px-4 bg-amber-50 text-amber-800" rowSpan={4}>TOTAL HOSPITAL</th>
                   </tr>
-                  <tr className="bg-emerald-50 text-emerald-800 font-semibold text-center border-b border-slate-300">
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <th key={idx} className="py-2 px-3 border-r border-slate-300 text-[11px] whitespace-nowrap">
-                        {h.nombre}
+                  <tr className="bg-emerald-100/50 font-bold border-b border-slate-300">
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => (
+                      <th key={pIdx} colSpan={p.entregas.length} className="py-1.5 px-2 border-r border-slate-300 text-xs text-emerald-900">
+                        {p.nombre_producto}
                       </th>
                     ))}
                   </tr>
-                </thead>
-
-                <tbody className="divide-y divide-emerald-900/30 text-gray-700">
-                  {currentContrato.matrizEntregas.entregas.map((ent, eIdx) => {
-                    const totalFila = currentContrato.matrizEntregas!.hospitales.reduce(
-                      (acc, curr) => acc + (curr.cantidades[eIdx] || 0), 0
-                    )
-                    return (
-                      <tr key={eIdx} className="hover:bg-slate-100 text-center font-mono">
-                        <td className="py-2.5 px-3 font-bold text-gray-900 bg-white/[0.02] border-r border-slate-300">
-                          {ent.num}
-                        </td>
-                        <td className="py-2.5 px-3 text-emerald-700 font-bold border-r border-slate-300">
+                  <tr className="bg-slate-100 font-bold border-b border-slate-300">
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => (
+                      <th key={pIdx} colSpan={p.entregas.length} className="py-1 px-2 border-r border-slate-300 text-[10px] text-gray-600 tracking-wider">
+                        DÍAS CALEN.
+                      </th>
+                    ))}
+                  </tr>
+                  <tr className="bg-slate-50 font-bold border-b border-slate-300 shadow-sm">
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => (
+                      p.entregas.map((ent, eIdx) => (
+                        <th key={`${pIdx}-${eIdx}`} className="py-2 px-3 border-r border-slate-300 text-indigo-700 w-16">
                           {ent.dias}
+                        </th>
+                      ))
+                    ))}
+                  </tr>
+                </thead>
+                
+                <tbody className="divide-y divide-slate-300 text-gray-700">
+                  {currentContrato.matrizEntregas.hospitales.map((h, hIdx) => {
+                    let totalHospital = 0;
+                    currentContrato.matrizEntregas!.productos.forEach((p, pIdx) => {
+                       p.entregas.forEach((ent, eIdx) => {
+                         if (h.cantidades_por_producto && h.cantidades_por_producto[pIdx]) {
+                           totalHospital += h.cantidades_por_producto[pIdx][eIdx] || 0;
+                         }
+                       })
+                    });
+
+                    return (
+                      <tr key={hIdx} className="hover:bg-slate-100 font-mono transition-colors">
+                        <td className="py-2.5 px-4 border-r border-slate-300 font-bold bg-white text-gray-500">{hIdx + 1}</td>
+                        <td className="py-2.5 px-4 border-r border-slate-300 text-left font-semibold text-gray-900 bg-white">
+                          {h.nombre}
                         </td>
-                        {currentContrato.matrizEntregas!.hospitales.map((h, hIdx) => (
-                          <td key={hIdx} className="py-2.5 px-3 border-r border-slate-300 text-gray-800">
-                            {h.cantidades[eIdx]}
-                          </td>
+                        {currentContrato.matrizEntregas!.productos.map((p, pIdx) => (
+                          p.entregas.map((ent, eIdx) => (
+                            <td key={`val-${hIdx}-${pIdx}-${eIdx}`} className="py-2.5 px-3 border-r border-slate-300 bg-white/[0.2]">
+                              {h.cantidades_por_producto && h.cantidades_por_producto[pIdx] && h.cantidades_por_producto[pIdx][eIdx] > 0 
+                                ? h.cantidades_por_producto[pIdx][eIdx].toLocaleString()
+                                : ''}
+                            </td>
+                          ))
                         ))}
-                        <td className="py-2.5 px-3 font-bold text-emerald-700 bg-emerald-500/10 border-r border-slate-300">
-                          {totalFila.toLocaleString()}
-                        </td>
-                        <td className="py-2.5 px-3 text-amber-700 font-semibold bg-amber-500/5 border-r border-slate-300">
-                          {ent.fechaLimite}
-                        </td>
-                        <td className="py-2.5 px-3 text-orange-700 font-semibold bg-orange-500/5">
-                          {ent.fechaApp}
+                        <td className="py-2.5 px-4 font-bold text-amber-700 bg-amber-50">
+                           {totalHospital.toLocaleString()}
                         </td>
                       </tr>
                     )
                   })}
-
-                  <tr className="bg-emerald-50 font-bold text-center border-t-2 border-emerald-500">
-                    <td colSpan={2} className="py-3 px-3 text-right uppercase text-emerald-700 tracking-wider border-r border-slate-300">
-                      TOTAL GENERAL:
+                  
+                  {/* Fila de Totales por Entrega */}
+                  <tr className="bg-slate-100 font-bold border-t border-slate-300 text-sm">
+                    <td colSpan={2} className="py-3 px-4 text-right uppercase text-slate-700 border-r border-slate-300">
+                      Total por Entrega
                     </td>
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-3 px-3 text-gray-900 border-r border-slate-300 text-sm">
-                        {h.total.toLocaleString()}
-                      </td>
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => (
+                      p.entregas.map((ent, eIdx) => {
+                        let sum = 0;
+                        currentContrato.matrizEntregas!.hospitales.forEach(h => {
+                          if (h.cantidades_por_producto && h.cantidades_por_producto[pIdx]) {
+                            sum += h.cantidades_por_producto[pIdx][eIdx] || 0;
+                          }
+                        });
+                        return (
+                          <td key={`sum-${pIdx}-${eIdx}`} className="py-3 px-3 border-r border-slate-300 text-gray-900 font-mono">
+                            {sum > 0 ? sum.toLocaleString() : ''}
+                          </td>
+                        );
+                      })
                     ))}
-                    <td className="py-3 px-3 text-base text-emerald-700 bg-emerald-600/30 border-r border-slate-300 font-black">
-                      {currentContrato.matrizEntregas.hospitales.reduce((a, b) => a + b.total, 0).toLocaleString()}
-                    </td>
-                    <td colSpan={2} className="bg-slate-50"></td>
+                    <td className="bg-slate-200 border-r border-slate-300"></td>
                   </tr>
-
-                  <tr className="bg-emerald-50 text-center font-semibold">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-emerald-700 border-r border-slate-300">
-                      📅 INSTALACIÓN:
+                  
+                  {/* Fila de Total Global por Producto */}
+                  <tr className="bg-emerald-50 font-black border-t-2 border-emerald-300 text-base">
+                    <td colSpan={2} className="py-4 px-4 text-right uppercase text-emerald-900 border-r border-slate-300">
+                      Total General
                     </td>
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-emerald-700 bg-emerald-500/20 font-bold border-r border-slate-300">
-                        {h.fechaInstalacion}
-                      </td>
-                    ))}
-                    <td colSpan={3} className="bg-slate-50"></td>
-                  </tr>
-
-                  <tr className="bg-slate-50 text-center font-mono">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-500 border-r border-slate-300">
-                      📞 CONTACTO:
+                    {currentContrato.matrizEntregas.productos.map((p, pIdx) => {
+                      let globalSum = 0;
+                      p.entregas.forEach((ent, eIdx) => {
+                        currentContrato.matrizEntregas!.hospitales.forEach(h => {
+                          if (h.cantidades_por_producto && h.cantidades_por_producto[pIdx]) {
+                            globalSum += h.cantidades_por_producto[pIdx][eIdx] || 0;
+                          }
+                        });
+                      });
+                      return (
+                        <td key={`global-${pIdx}`} colSpan={p.entregas.length} className="py-4 px-3 border-r border-slate-300 text-emerald-800 text-center font-mono">
+                          {globalSum.toLocaleString()}
+                        </td>
+                      );
+                    })}
+                    <td className="bg-emerald-100 border-r border-slate-300 text-emerald-900 text-center font-mono py-4">
+                       {/* Gran Total */}
+                       {(() => {
+                         let granTotal = 0;
+                         currentContrato.matrizEntregas!.hospitales.forEach(h => {
+                           currentContrato.matrizEntregas!.productos.forEach((p, pIdx) => {
+                             p.entregas.forEach((ent, eIdx) => {
+                               if (h.cantidades_por_producto && h.cantidades_por_producto[pIdx]) {
+                                 granTotal += h.cantidades_por_producto[pIdx][eIdx] || 0;
+                               }
+                             });
+                           });
+                         });
+                         return granTotal.toLocaleString();
+                       })()}
                     </td>
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-cyan-700 border-r border-slate-300">
-                        {h.contacto}
-                      </td>
-                    ))}
-                    <td colSpan={3} className="bg-slate-50"></td>
-                  </tr>
-
-                  <tr className="bg-slate-50 text-center">
-                    <td colSpan={2} className="py-2.5 px-3 text-right uppercase text-gray-500 border-r border-slate-300">
-                      👤 PERSONA:
-                    </td>
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2.5 px-3 text-gray-900 font-medium border-r border-slate-300">
-                        {h.persona}
-                      </td>
-                    ))}
-                    <td colSpan={3} className="bg-slate-50"></td>
-                  </tr>
-
-                  <tr className="bg-white/[0.01] text-center text-[10px]">
-                    <td colSpan={2} className="py-2 px-3 text-right uppercase text-gray-500 border-r border-slate-300">
-                      ⏰ CONDICIÓN:
-                    </td>
-                    {currentContrato.matrizEntregas.hospitales.map((h, idx) => (
-                      <td key={idx} className="py-2 px-3 text-yellow-700 italic border-r border-slate-300">
-                        {h.horario}
-                      </td>
-                    ))}
-                    <td colSpan={3} className="bg-slate-50"></td>
                   </tr>
                 </tbody>
               </table>
