@@ -295,6 +295,7 @@ export async function POST(req: NextRequest) {
 
         const rawStatus = (lic.estatus_item || lic['Estatus'] || lic['ESTADO'] || '').toString().toLowerCase()
         const esAdjudicado = rawStatus.includes('adjudicad') || rawStatus.includes('ganad')
+        const razonText = (lic.razon || lic['Razon'] || lic['Razón'] || lic.observaciones || lic['Observaciones'] || '').toString().trim()
 
         itemsToInsert.push({
           licitacion_oferta_id: licId,
@@ -302,7 +303,8 @@ export async function POST(req: NextRequest) {
           renglon_numero: currentRenglon,
           cantidad: Math.max(1, cleanQty),
           precio_unitario: Math.max(0, cleanPrice),
-          es_adjudicado: esAdjudicado
+          es_adjudicado: esAdjudicado,
+          descripcion: razonText ? `Razón: ${razonText}` : undefined
         })
       }
 
@@ -325,6 +327,7 @@ export async function POST(req: NextRequest) {
             const rawPrice = itemContext.lic.precio_unitario || itemContext.lic['Precio (unitario)'] || 0
             const cleanPrice = typeof rawPrice === 'number' ? rawPrice : (parseFloat(String(rawPrice).replace(/[^0-9.-]+/g, '')) || 0)
             const rawStatus = (itemContext.lic.estatus_item || itemContext.lic['Estatus'] || '').toString().toLowerCase()
+            const extraRazon = (itemContext.lic.razon || itemContext.lic['Razon'] || itemContext.lic['Razón'] || itemContext.lic.observaciones || '').toString().trim()
 
             itemsToInsert.push({
               licitacion_oferta_id: itemContext.licId,
@@ -332,7 +335,8 @@ export async function POST(req: NextRequest) {
               renglon_numero: itemContext.currentRenglon,
               cantidad: Math.max(1, cleanQty),
               precio_unitario: Math.max(0, cleanPrice),
-              es_adjudicado: rawStatus.includes('adjudicad') || rawStatus.includes('ganad')
+              es_adjudicado: rawStatus.includes('adjudicad') || rawStatus.includes('ganad'),
+              descripcion: extraRazon ? `Razón: ${extraRazon}` : undefined
             })
           })
         }
