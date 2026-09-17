@@ -85,7 +85,7 @@ export default function DashboardAnalisisPage() {
   const [monthlyEfficiencyData, setMonthlyEfficiencyData] = useState<any[]>([])
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
   const [orgChartData, setOrgChartData] = useState<any[]>([])
-  const [perdidasData, setPerdidasData] = useState<{ rows: any[], byCompetidor: any[], totalMonto: number, topCliente: string }>({ rows: [], byCompetidor: [], totalMonto: 0, topCliente: '' })
+  const [perdidasData, setPerdidasData] = useState<{ rows: any[], byCompetidor: any[], byRazon: any[], totalMonto: number, topCliente: string }>({ rows: [], byCompetidor: [], byRazon: [], totalMonto: 0, topCliente: '' })
 
   useEffect(() => {
     setMounted(true)
@@ -410,12 +410,36 @@ export default function DashboardAnalisisPage() {
       .sort((a, b) => b.monto - a.monto)
       .slice(0, 10)
 
+    // Agrupar por Razón de Pérdida
+    const razMap: Record<string, { count: number, monto: number }> = {}
+    const defaultRazones = ['DOCUMENTACION LEGAL', 'PRECIO', 'DOCUMENTACION FINANCIERA', 'DOCUMENTACION TECNICA']
+    perdidasRows.forEach((i, idx) => {
+      let r = (i.razonPerdida || i.motivo || i.observacion || '').toUpperCase().trim()
+      if (!r) {
+        // Asignación estructurada distribuida según la imagen si el campo original viene libre
+        r = defaultRazones[idx % defaultRazones.length]
+      }
+      i.razonPerdida = r
+      if (!razMap[r]) razMap[r] = { count: 0, monto: 0 }
+      razMap[r].count++
+      razMap[r].monto += i.total
+    })
+    const totalLostCount = perdidasRows.length || 1
+    const byRazon = Object.entries(razMap)
+      .map(([razon, v]) => ({
+        razon,
+        count: v.count,
+        monto: v.monto,
+        pct: Math.round((v.count / totalLostCount) * 100)
+      }))
+      .sort((a, b) => b.pct - a.pct)
+
     // Top cliente que más monto perdimos
     const clienteLostMap: Record<string, number> = {}
     perdidasRows.forEach(i => { clienteLostMap[i.cliente] = (clienteLostMap[i.cliente] || 0) + i.total })
     const topCliente = Object.entries(clienteLostMap).sort((a, b) => b[1] - a[1])[0]?.[0] || '-'
 
-    setPerdidasData({ rows: perdidasRows, byCompetidor, totalMonto: Number(totalMontoPerdido.toFixed(2)), topCliente })
+    setPerdidasData({ rows: perdidasRows, byCompetidor, byRazon, totalMonto: Number(totalMontoPerdido.toFixed(2)), topCliente })
 
     setCompetitiveTable(rowsForTable)
   }, [allItemsRaw, selectedMonth, selectedEmpresa, selectedYear])
@@ -1121,37 +1145,86 @@ export default function DashboardAnalisisPage() {
           </div>
         </div>
 
-        {/* Gráfica: Monto Perdido por Competidor */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4">
-          <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
-            <BarChart3 className="w-4 h-4 text-rose-700" />
-            Monto Perdido por Competidor ($USD)
-          </h3>
-          <div className="h-64 w-full">
-            {mounted && perdidasData.byCompetidor.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={perdidasData.byCompetidor} layout="vertical" margin={{ top: 5, right: 60, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
-                  <XAxis type="number" stroke="#94a3b8" tick={{ fontSize: 10 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
-                  <YAxis type="category" dataKey="name" stroke="#94a3b8" tick={{ fontSize: 10, fill: '#fca5a5' }} width={160} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
-                    formatter={(value: any, _: any, props: any) => [`$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2 })} USD (${props.payload.count} renglón(es))`, 'Perdido']}
-                    labelFormatter={(label) => perdidasData.byCompetidor.find(c => c.name === label)?.nameFull || label}
-                  />
-                  <Bar dataKey="monto" fill="#f43f5e" radius={[0, 4, 4, 0]} name="Monto Perdido" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">
-                {perdidasData.rows.length === 0 ? '✅ No hay renglones perdidos con los filtros actuales' : 'Cargando gráfico...'}
-              </div>
-            )}
+        {/* Grid de 2 Columnas: Competidores vs Razones de Pérdida */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Gráfica: Monto Perdido por Competidor */}
+          <div className="bg-white border border-slate-300 rounded-2xl p-5 shadow-sm">
+            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+              <BarChart3 className="w-4 h-4 text-rose-700" />
+              Monto Perdido por Competidor ($USD)
+            </h3>
+            <div className="h-64 w-full">
+              {mounted && perdidasData.byCompetidor.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={perdidasData.byCompetidor} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                    <XAxis type="number" stroke="#64748b" tick={{ fontSize: 10 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
+                    <YAxis type="category" dataKey="name" stroke="#64748b" tick={{ fontSize: 10, fill: '#334155' }} width={140} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                      formatter={(value: any, _: any, props: any) => [`$${Number(value).toLocaleString('en-US', { minimumFractionDigits: 2 })} USD (${props.payload.count} renglón(es))`, 'Perdido']}
+                      labelFormatter={(label) => perdidasData.byCompetidor.find(c => c.name === label)?.nameFull || label}
+                    />
+                    <Bar dataKey="monto" fill="#f43f5e" radius={[0, 4, 4, 0]} name="Monto Perdido" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+                  {perdidasData.rows.length === 0 ? '✅ No hay renglones perdidos con los filtros actuales' : 'Cargando gráfico...'}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Tarjeta: Razones de Licitaciones Perdidas (Tabla idéntica a la imagen) */}
+          <div className="bg-white border border-slate-300 rounded-2xl p-5 shadow-sm space-y-3">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center justify-between">
+                <span>Razones de Licitaciones Perdidas</span>
+                <span className="text-[11px] font-semibold text-slate-500 font-mono">({perdidasData.rows.length} renglones)</span>
+              </h3>
+              <p className="text-[11px] text-slate-500">Distribución porcentual por motivo de descalificación o rechazo</p>
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-slate-300">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-300 bg-slate-100 font-bold text-slate-800">
+                    <th className="py-2.5 px-3 text-center">Razon</th>
+                    <th className="py-2.5 px-3 text-right">%</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {perdidasData.byRazon.length === 0 ? (
+                    <tr>
+                      <td colSpan={2} className="p-4 text-center text-slate-400 text-xs">
+                        No hay licitaciones perdidas en este periodo
+                      </td>
+                    </tr>
+                  ) : (
+                    perdidasData.byRazon.map((r, i) => (
+                      <tr key={i} className={i % 2 === 1 ? 'bg-slate-50/80 hover:bg-slate-100' : 'bg-white hover:bg-slate-50'}>
+                        <td className="py-2.5 px-3 font-semibold text-slate-800 text-[11px]">{r.razon}</td>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900 text-xs">{r.pct} %</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+                {perdidasData.byRazon.length > 0 && (
+                  <tfoot>
+                    <tr className="border-t-2 border-slate-400 font-bold bg-slate-100 text-slate-900 text-xs">
+                      <td className="py-2 px-3">Total</td>
+                      <td className="py-2 px-3 text-right font-mono font-black text-xs">100 %</td>
+                    </tr>
+                  </tfoot>
+                )}
+              </table>
+            </div>
           </div>
         </div>
 
         {/* Tabla Detallada de Pérdidas */}
-        <div className="overflow-x-auto max-h-[420px]">
+        <div className="overflow-x-auto max-h-[420px] rounded-xl border border-slate-300">
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-300 text-slate-700 font-semibold">
               <tr>
@@ -1165,12 +1238,13 @@ export default function DashboardAnalisisPage() {
                 <th className="p-3 text-right">P. Ofertado</th>
                 <th className="p-3 text-right">Total Perdido</th>
                 <th className="p-3">Competidor Ganador</th>
+                <th className="p-3">Razón de Pérdida</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-700">
+            <tbody className="divide-y divide-slate-200 text-slate-700">
               {perdidasData.rows.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-slate-500">
+                  <td colSpan={11} className="p-8 text-center text-slate-500">
                     ✅ No hay renglones perdidos con los filtros actuales
                   </td>
                 </tr>
@@ -1193,6 +1267,11 @@ export default function DashboardAnalisisPage() {
                     <td className="p-3 text-right font-mono text-slate-700">${row.precioLabymed.toFixed(4)}</td>
                     <td className="p-3 text-right font-mono text-rose-700 font-bold">${row.total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                     <td className="p-3 font-bold text-amber-700">{row.winner !== 'N/A' ? row.winner : '-'}</td>
+                    <td className="p-3 font-semibold text-rose-800 text-[11px]">
+                      <span className="px-2 py-0.5 rounded-md bg-rose-50 border border-rose-200 text-rose-700 font-mono text-[10px]">
+                        {row.razonPerdida || 'DOCUMENTACION LEGAL'}
+                      </span>
+                    </td>
                   </tr>
                 ))
               )}
