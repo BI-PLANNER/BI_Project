@@ -913,7 +913,7 @@ export default function DashboardObligacionesPage() {
                     <th className="py-3 px-3 text-right">Acción</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-gray-700">
+                <tbody className="divide-y divide-slate-300 text-gray-700">
                   {filtered.length === 0 ? (
                     <tr>
                       <td colSpan={10} className="py-8 text-center text-gray-500 text-xs">
@@ -1287,7 +1287,7 @@ export default function DashboardObligacionesPage() {
                       <th className="py-3 px-3 text-center">Estado</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5 text-gray-700">
+                  <tbody className="divide-y divide-slate-300 text-gray-700">
                     {reporteCumplimiento.map((resp, idx) => {
                       const pct = resp.pctCumplimiento
                       const AREA_COL: Record<string, string> = {

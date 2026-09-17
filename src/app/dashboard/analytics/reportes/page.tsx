@@ -432,7 +432,7 @@ export default function ReporteTecnicoPage() {
                 <th className="py-3 px-3 text-teal-700">✅ Control Planner PRO (SaaS Propio)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-gray-600">
+            <tbody className="divide-y divide-slate-300 text-gray-600">
               <tr className="hover:bg-slate-100">
                 <td className="py-2.5 px-3 font-bold text-gray-900">Sincronización en Tiempo Real</td>
                 <td className="py-2.5 px-3 text-gray-500">Nula (archivos duplicados y desfasados)</td>
@@ -538,7 +538,7 @@ export default function ReporteTecnicoPage() {
                 <th className="py-3 px-4">Descripción & Propósito de la Configuración</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-gray-600">
+            <tbody className="divide-y divide-slate-300 text-gray-600">
               {TABLES.map((t, i) => (
                 <tr key={t.name} className="hover:bg-white/[0.03] transition-colors">
                   <td className="py-2.5 px-3 font-mono text-gray-500 text-[10px] text-center">{i + 1}</td>

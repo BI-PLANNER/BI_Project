@@ -596,7 +596,7 @@ export default function ReporteDetalladoLicitaciones({
                 <th className="p-3">COMENTARIO / BITÁCORA</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 bg-white">
+            <tbody className="divide-y divide-slate-300 bg-white">
               {filtered.map((row, idx) => {
                 const isRojo = (row.estatus || '').toLowerCase().includes('rojo')
                 const isVerde = (row.estatus || '').toLowerCase().includes('verde')

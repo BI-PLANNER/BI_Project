@@ -586,7 +586,7 @@ export default function FasesPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-slate-300">
                   {[
                     { no: 1, etapa: 'Revisión de Bases y Adjudicación de Contrato', luis: 'A', planners: 'C', pm: 'R', soporte: 'C', apps: 'C', it: 'C', log: 'I', com: 'R' },
                     { no: 2, etapa: 'Planificación Inversa y Fijación de Fechas Máximas', luis: 'I', planners: 'A', pm: 'R', soporte: 'C', apps: 'C', it: 'C', log: 'C', com: 'I' },
@@ -696,7 +696,7 @@ export default function FasesPage() {
                     <th className="py-3 px-3 w-16 text-center"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10 text-sm">
+                <tbody className="divide-y divide-slate-300 text-sm">
                   {problematicas.map((item, idx) => (
                     <tr
                       key={item.id}
@@ -959,7 +959,7 @@ export default function FasesPage() {
                         <th className="py-2.5 px-4">Comentario</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-xs">
+                    <tbody className="divide-y divide-slate-300 text-xs">
                       {filasSeccion.map((fila) => {
                         let comentarioBg = 'text-gray-600'
                         const comStr = (fila.comentario || '').toLowerCase()

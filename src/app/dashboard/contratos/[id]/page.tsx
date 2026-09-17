@@ -1216,7 +1216,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                   <th className="py-2.5 px-2 w-16 text-center"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-slate-300">
                 {filtered.length === 0 ? (
                   <tr>
                     <td colSpan={13} className="text-center py-12">
@@ -1935,7 +1935,7 @@ export default function ContratoDetallePage({ params }: { params: Promise<{ id: 
                                 <th className="p-2">Anotación a Lapicero</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/5">
+                            <tbody className="divide-y divide-slate-300">
                               {ocrItems.map((item, idx) => (
                                 <tr key={item.id} className="hover:bg-slate-100">
                                   <td className="p-2 text-center font-mono font-bold text-yellow-700">

@@ -661,7 +661,7 @@ export default function EntregasYPedidosPage() {
                     <th className="p-3.5 text-center">POD (Comprobante)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 font-sans">
+                <tbody className="divide-y divide-slate-300 font-sans">
                   {filteredPedidosLive.map((p, idx) => (
                     <tr key={idx} className="hover:bg-slate-100 transition">
                       <td className="p-3.5 font-mono font-bold text-cyan-700">{p.id}</td>

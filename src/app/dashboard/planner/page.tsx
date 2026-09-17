@@ -1206,7 +1206,7 @@ export default function PlannerCalendarPage() {
           </div>
 
           {/* Calendar Day Cells */}
-          <div className="grid grid-cols-7 divide-x divide-y divide-white/10 bg-white">
+          <div className="grid grid-cols-7 divide-x divide-y divide-slate-300 bg-white">
             {calendarDays.map((day, idx) => {
               const isToday = new Date().toISOString().split('T')[0] === day.dateStr
               const hasEvents = day.events.length > 0
@@ -1311,7 +1311,7 @@ export default function PlannerCalendarPage() {
                   <th className="p-3 text-right w-28">ACCIONES</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 bg-white">
+              <tbody className="divide-y divide-slate-300 bg-white">
                 {filteredEvents.map((row) => {
                   const sem = getSemaforoInfo(row.fecha_cumplimiento, row.estatus)
                   const isVisita = row.tipo_pendiente === 'VISITA - LUIS'
