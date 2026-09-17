@@ -1176,28 +1176,29 @@ export default function DashboardAnalisisPage() {
             </div>
           </div>
 
-          {/* Tarjeta: Razones de Licitaciones Perdidas (Tabla idéntica a la imagen) */}
+          {/* Tarjeta: Razones de Licitaciones Perdidas (Tabla idéntica a la imagen con conteo + %) */}
           <div className="bg-white border border-slate-300 rounded-2xl p-5 shadow-sm space-y-3">
             <div>
               <h3 className="text-sm font-bold text-gray-900 flex items-center justify-between">
                 <span>Razones de Licitaciones Perdidas</span>
-                <span className="text-[11px] font-semibold text-slate-500 font-mono">({perdidasData.rows.length} renglones)</span>
+                <span className="text-[11px] font-semibold text-slate-500 font-mono">({perdidasData.rows.length} renglones en total)</span>
               </h3>
-              <p className="text-[11px] text-slate-500">Distribución porcentual por motivo de descalificación o rechazo</p>
+              <p className="text-[11px] text-slate-500">Conteo exacto por motivo y su porcentaje equivalente</p>
             </div>
 
             <div className="overflow-hidden rounded-xl border border-slate-300">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-slate-300 bg-slate-100 font-bold text-slate-800">
-                    <th className="py-2.5 px-3 text-center">Razon</th>
+                    <th className="py-2.5 px-3">Razon</th>
+                    <th className="py-2.5 px-3 text-center">Cantidad</th>
                     <th className="py-2.5 px-3 text-right">%</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {perdidasData.byRazon.length === 0 ? (
                     <tr>
-                      <td colSpan={2} className="p-4 text-center text-slate-400 text-xs">
+                      <td colSpan={3} className="p-4 text-center text-slate-400 text-xs">
                         No hay licitaciones perdidas en este periodo
                       </td>
                     </tr>
@@ -1205,7 +1206,8 @@ export default function DashboardAnalisisPage() {
                     perdidasData.byRazon.map((r, i) => (
                       <tr key={i} className={i % 2 === 1 ? 'bg-slate-50/80 hover:bg-slate-100' : 'bg-white hover:bg-slate-50'}>
                         <td className="py-2.5 px-3 font-semibold text-slate-800 text-[11px]">{r.razon}</td>
-                        <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900 text-xs">{r.pct} %</td>
+                        <td className="py-2.5 px-3 text-center font-mono font-semibold text-slate-700 text-xs">{r.count} renglones</td>
+                        <td className="py-2.5 px-3 text-right font-mono font-bold text-indigo-700 text-xs">{r.pct} %</td>
                       </tr>
                     ))
                   )}
@@ -1214,7 +1216,8 @@ export default function DashboardAnalisisPage() {
                   <tfoot>
                     <tr className="border-t-2 border-slate-400 font-bold bg-slate-100 text-slate-900 text-xs">
                       <td className="py-2 px-3">Total</td>
-                      <td className="py-2 px-3 text-right font-mono font-black text-xs">100 %</td>
+                      <td className="py-2 px-3 text-center font-mono font-bold">{perdidasData.rows.length} renglones</td>
+                      <td className="py-2 px-3 text-right font-mono font-black text-indigo-900 text-xs">100 %</td>
                     </tr>
                   </tfoot>
                 )}
