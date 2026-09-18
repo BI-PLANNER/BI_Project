@@ -43,3 +43,5 @@ next-env.d.ts
 # temporary scratch & test scripts
 scratch/
 /scratch
+scripts/*.json
+
