@@ -154,7 +154,7 @@ export default function DashboardObligacionesPage() {
             situacion: d.situacion?.nombre_situacion || matchingMaster?.situacion || 'Obligación Contractual',
             responsable: d.persona?.nombre_completo || matchingMaster?.responsable || 'Sin Asignar',
             responsableEmail: d.persona?.email || matchingMaster?.responsableEmail || 'responsable@lm-sv.com',
-            area: matchingMaster?.area || d.persona?.area?.nombre_area || 'PM',
+            area: d.persona?.area?.nombre_area || matchingMaster?.area || 'PM',
             estatus: d.estatus?.nombre_estatus || matchingMaster?.estatus || 'Rojo',
             comentario: d.comentario || matchingMaster?.comentario || ''
           }
