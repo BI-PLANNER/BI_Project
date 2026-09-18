@@ -617,6 +617,13 @@ export default function GestionTablasPage() {
             <span>Actualizar</span>
           </button>
           <button
+            onClick={() => setIsUploadOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm shadow-emerald-950/20 transition active:scale-95"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span>Cargar Excel 📊</span>
+          </button>
+          <button
             onClick={handleOpenCreate}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-gray-100 text-gray-900 text-xs font-bold shadow-sm transition active:scale-95"
           >
@@ -1125,6 +1132,18 @@ export default function GestionTablasPage() {
         userId={passwordTargetUser?.id}
         userEmail={passwordTargetUser?.email}
         userName={passwordTargetUser?.name}
+      />
+
+      {/* Excel Upload Modal */}
+      <ExcelUploadModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+        defaultTargetTable={selectedTable === 'incidencias_seguimiento' ? 'incidencias_seguimiento' : 'licitaciones_ofertas'}
+        onSuccess={() => {
+          setIsUploadOpen(false)
+          loadTableData(selectedTable)
+          loadCatalogs()
+        }}
       />
     </div>
   )

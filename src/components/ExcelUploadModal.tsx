@@ -8,13 +8,15 @@ interface ExcelUploadModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess?: () => void
+  defaultTargetTable?: 'licitaciones_ofertas' | 'incidencias_seguimiento'
 }
 
-export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUploadModalProps) {
+export default function ExcelUploadModal({ isOpen, onClose, onSuccess, defaultTargetTable = 'incidencias_seguimiento' }: ExcelUploadModalProps) {
   const [file, setFile] = useState<File | null>(null)
+  const [targetTable, setTargetTable] = useState<'licitaciones_ofertas' | 'incidencias_seguimiento'>(defaultTargetTable)
   const [uploading, setUploading] = useState(false)
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error' | 'info', text: string } | null>(null)
-  const [stats, setStats] = useState<{ rowsCount: number, licsCount: number } | null>(null)
+  const [stats, setStats] = useState<{ rowsCount: number, mainCount: number, labelMain: string } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (!isOpen) return null
@@ -56,59 +58,101 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
         throw new Error('El archivo Excel está vacío o no contiene filas de datos.')
       }
 
-      setStatusMsg({ type: 'info', text: `Normalizando ${rawRows.length} renglones e insertando en Supabase...` })
+      setStatusMsg({ type: 'info', text: `Normalizando ${rawRows.length} filas e insertando en la tabla ${targetTable}...` })
 
-      // Mapear campos desde las celdas del Excel
-      const licitaciones = rawRows.map((r: any) => ({
-        no_oferta: String(r['No. Oferta'] || r['No Oferta'] || r['Oferta'] || r['NO. OFERTA'] || '').trim(),
-        nombre_oferta: String(r['Nombre Oferta'] || r['Nombre de Oferta'] || r['NOMBRE OFERTA'] || '').trim(),
-        cliente: String(r['Cliente'] || r['CLIENTE'] || '').trim(),
-        institucion: String(r['INST.'] || r['INST'] || r['INSTITUCION'] || 'MINSAL').trim(),
-        empresa: String(r['EMPR'] || r['EMPRESA'] || r['Empresa'] || 'LABYMED').trim(),
-        tipo_proceso: String(r['TIPO DE PROCESO '] || r['TIPO DE PROCESO'] || 'LICITACION COMPETITIVA').trim(),
-        anio: String(r['AÑO'] || r['ANO'] || '2025').trim(),
-        mes: String(r['Mes'] || r['MES'] || 'ENERO').trim().toUpperCase(),
-        presentacion: r['Presentación de oferta (Fecha)'] || r['Presentación'] || r['PRESENTACION'] || '',
-        producto: String(r['Producto'] || r['PRODUCTO'] || '').trim(),
-        marca: String(r['Marca'] || r['MARCA'] || '').trim(),
-        precio_unitario: r['Precio (unitario)'] !== undefined ? r['Precio (unitario)'] : (r['Precio'] || 0),
-        cantidad: r['Cantidad (unitaria)'] !== undefined ? r['Cantidad (unitaria)'] : (r['Cantidad'] || 1),
-        total_ofertado: r['Total Ofertado'] !== undefined ? r['Total Ofertado'] : 0,
-        estatus_item: String(r['Estatus'] || r['ESTADO'] || r['ESTATUS'] || '').trim(),
-        precio_adjudicado: r['Precio adjudicado '] !== undefined ? r['Precio adjudicado '] : (r['Precio adjudicado'] || 0),
-        empresa_adjudicada: String(r['Empresa adjudicada'] || r['Empresa adjudicada '] || '').trim(),
-        razon: String(r['Razon'] || r['Razon '] || '').trim(),
-        no_contrato: String(r['No. De Contrato'] || r['No. Contrato'] || '').trim(),
-        observaciones: String(r['Observaciones'] || r['OBSERVACIONES'] || '').trim()
-      })).filter(i => i.no_oferta || i.nombre_oferta || i.producto)
+      if (targetTable === 'incidencias_seguimiento') {
+        // Mapear filas para incidencias_seguimiento
+        const incidencias = rawRows.map((r: any) => ({
+          cliente: String(r['Cliente'] || r['CLIENTE'] || r['Institución'] || r['INSTITUCION'] || r['Hospital'] || r['INS'] || '').trim(),
+          contrato: String(r['Contrato'] || r['CONTRATO'] || r['No. Contrato'] || r['NO. CONTRATO'] || r['Numero Contrato'] || '').trim(),
+          situacion: String(r['Situación'] || r['SITUACION'] || r['Situacion'] || r['Problemática'] || r['PROBLEMATICA'] || r['Falla'] || r['FALLA'] || r['Incidencia'] || r['INCIDENCIA'] || '').trim(),
+          persona: String(r['Responsable'] || r['RESPONSABLE'] || r['Persona'] || r['PERSONA'] || r['Encargado'] || r['ENCARGADO'] || '').trim(),
+          estatus: String(r['Estatus'] || r['ESTATUS'] || r['Estado'] || r['ESTADO'] || 'PENDIENTE').trim(),
+          comentario: String(r['Comentario'] || r['COMENTARIO'] || r['Observaciones'] || r['OBSERVACIONES'] || r['Detalle'] || r['DETALLE'] || r['Detalle Falla'] || '').trim(),
+          fecha_registro: r['Fecha Registro'] || r['FECHA REGISTRO'] || r['Fecha'] || r['FECHA'] || '',
+          fecha_cumplimiento: r['Fecha Cumplimiento'] || r['FECHA CUMPLIMIENTO'] || r['Fecha Límite'] || r['FECHA LIMITE'] || r['Vencimiento'] || ''
+        })).filter(i => i.cliente || i.situacion || i.comentario)
 
-      const uniqueLics = new Set(licitaciones.map(i => i.no_oferta || i.nombre_oferta))
+        if (incidencias.length === 0) {
+          throw new Error('No se pudieron extraer columnas válidas para la tabla incidencias_seguimiento. Revisa la fila de encabezados en tu Excel.')
+        }
 
-      // Enviar payload al backend /api/db para upsert idempotente
-      const res = await fetch('/api/db', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'sync_excel_licitaciones',
-          licitaciones
+        const res = await fetch('/api/db', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'sync_excel_incidencias',
+            incidencias
+          })
         })
-      })
 
-      const resData = await res.json()
+        const resData = await res.json()
+        if (!res.ok || !resData.success) {
+          throw new Error(resData.error || resData.message || 'Error al guardar incidencias en Supabase')
+        }
 
-      if (!res.ok || !resData.success) {
-        throw new Error(resData.error || resData.message || 'Error al guardar en Supabase')
+        setStats({
+          rowsCount: incidencias.length,
+          mainCount: resData.total_incidencias_sincronizadas || incidencias.length,
+          labelMain: 'Incidencias Insertadas'
+        })
+
+        setStatusMsg({
+          type: 'success',
+          text: `¡Éxito! Se actualizaron e insertaron ${resData.total_incidencias_sincronizadas || incidencias.length} registros en la tabla incidencias_seguimiento.`
+        })
+      } else {
+        // Mapear campos para licitaciones_ofertas
+        const licitaciones = rawRows.map((r: any) => ({
+          no_oferta: String(r['No. Oferta'] || r['No Oferta'] || r['Oferta'] || r['NO. OFERTA'] || '').trim(),
+          nombre_oferta: String(r['Nombre Oferta'] || r['Nombre de Oferta'] || r['NOMBRE OFERTA'] || '').trim(),
+          cliente: String(r['Cliente'] || r['CLIENTE'] || '').trim(),
+          institucion: String(r['INST.'] || r['INST'] || r['INSTITUCION'] || 'MINSAL').trim(),
+          empresa: String(r['EMPR'] || r['EMPRESA'] || r['Empresa'] || 'LABYMED').trim(),
+          tipo_proceso: String(r['TIPO DE PROCESO '] || r['TIPO DE PROCESO'] || 'LICITACION COMPETITIVA').trim(),
+          anio: String(r['AÑO'] || r['ANO'] || '2025').trim(),
+          mes: String(r['Mes'] || r['MES'] || 'ENERO').trim().toUpperCase(),
+          presentacion: r['Presentación de oferta (Fecha)'] || r['Presentación'] || r['PRESENTACION'] || '',
+          producto: String(r['Producto'] || r['PRODUCTO'] || '').trim(),
+          marca: String(r['Marca'] || r['MARCA'] || '').trim(),
+          precio_unitario: r['Precio (unitario)'] !== undefined ? r['Precio (unitario)'] : (r['Precio'] || 0),
+          cantidad: r['Cantidad (unitaria)'] !== undefined ? r['Cantidad (unitaria)'] : (r['Cantidad'] || 1),
+          total_ofertado: r['Total Ofertado'] !== undefined ? r['Total Ofertado'] : 0,
+          estatus_item: String(r['Estatus'] || r['ESTADO'] || r['ESTATUS'] || '').trim(),
+          precio_adjudicado: r['Precio adjudicado '] !== undefined ? r['Precio adjudicado '] : (r['Precio adjudicado'] || 0),
+          empresa_adjudicada: String(r['Empresa adjudicada'] || r['Empresa adjudicada '] || '').trim(),
+          razon: String(r['Razon'] || r['Razon '] || '').trim(),
+          no_contrato: String(r['No. De Contrato'] || r['No. Contrato'] || '').trim(),
+          observaciones: String(r['Observaciones'] || r['OBSERVACIONES'] || '').trim()
+        })).filter(i => i.no_oferta || i.nombre_oferta || i.producto)
+
+        const uniqueLics = new Set(licitaciones.map(i => i.no_oferta || i.nombre_oferta))
+
+        const res = await fetch('/api/db', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'sync_excel_licitaciones',
+            licitaciones
+          })
+        })
+
+        const resData = await res.json()
+        if (!res.ok || !resData.success) {
+          throw new Error(resData.error || resData.message || 'Error al guardar en Supabase')
+        }
+
+        setStats({
+          rowsCount: licitaciones.length,
+          mainCount: uniqueLics.size,
+          labelMain: 'Licitaciones Procesadas'
+        })
+
+        setStatusMsg({
+          type: 'success',
+          text: `¡Éxito! Se sincronizaron ${licitaciones.length} renglones y ${uniqueLics.size} licitaciones directamente en Supabase.`
+        })
       }
-
-      setStats({
-        rowsCount: licitaciones.length,
-        licsCount: uniqueLics.size
-      })
-
-      setStatusMsg({
-        type: 'success',
-        text: `¡Éxito! Se sincronizaron ${licitaciones.length} renglones y ${uniqueLics.size} licitaciones directamente en Supabase.`
-      })
 
       if (onSuccess) {
         setTimeout(() => {
@@ -150,6 +194,37 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
 
         {/* Body */}
         <div className="p-6 space-y-5">
+          {/* Target Table Selector */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              Tabla / Módulo de Destino en Supabase:
+            </label>
+            <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl border border-slate-300">
+              <button
+                type="button"
+                onClick={() => { setTargetTable('incidencias_seguimiento'); setStatusMsg(null); setStats(null); }}
+                className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  targetTable === 'incidencias_seguimiento'
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <span>🚨 Incidencias de Seguimiento</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { setTargetTable('licitaciones_ofertas'); setStatusMsg(null); setStats(null); }}
+                className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                  targetTable === 'licitaciones_ofertas'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <span>📋 Licitaciones & Ofertas</span>
+              </button>
+            </div>
+          </div>
+
           {/* Dropzone */}
           <div
             onDragOver={e => e.preventDefault()}
@@ -182,7 +257,9 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
                   <Upload className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-900">Arrastra aquí tu archivo Excel (.xlsx) o CSV</p>
+                  <p className="text-sm font-bold text-gray-900">
+                    Arrastra aquí tu archivo Excel (.xlsx) o CSV con datos de {targetTable === 'incidencias_seguimiento' ? 'Incidencias' : 'Licitaciones'}
+                  </p>
                   <p className="text-xs text-slate-700 mt-1">O haz clic para explorar en tus carpetas locales</p>
                 </div>
               </>
@@ -206,12 +283,12 @@ export default function ExcelUploadModal({ isOpen, onClose, onSuccess }: ExcelUp
           {stats && (
             <div className="grid grid-cols-2 gap-3 bg-white p-3.5 rounded-xl border border-slate-300">
               <div className="text-center">
-                <span className="text-[10px] text-slate-700 uppercase font-semibold">Licitaciones Procesadas</span>
-                <p className="text-lg font-black text-gray-900 font-mono">{stats.licsCount}</p>
+                <span className="text-[10px] text-slate-700 uppercase font-semibold">Filas Procesadas</span>
+                <p className="text-lg font-black text-gray-900 font-mono">{stats.rowsCount}</p>
               </div>
               <div className="text-center border-l border-slate-300">
-                <span className="text-[10px] text-slate-700 uppercase font-semibold">Renglones Guardados</span>
-                <p className="text-lg font-black text-emerald-700 font-mono">{stats.rowsCount}</p>
+                <span className="text-[10px] text-slate-700 uppercase font-semibold">{stats.labelMain}</span>
+                <p className="text-lg font-black text-emerald-700 font-mono">{stats.mainCount}</p>
               </div>
             </div>
           )}

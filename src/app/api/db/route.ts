@@ -367,6 +367,152 @@ export async function POST(req: NextRequest) {
       }, { status: 200 })
     }
 
+    // Handler Especial para Sincronización de Incidencias de Seguimiento desde Microsoft Excel
+    if (act === 'sync_excel_incidencias' || table === 'sync_excel_incidencias' || table === 'incidencias_seguimiento_sync') {
+      const itemsToSync = body.incidencias || body.items || payload || licitaciones || []
+      if (!Array.isArray(itemsToSync) || itemsToSync.length === 0) {
+        return NextResponse.json({ success: true, message: 'No hay incidencias para sincronizar', synced: 0 })
+      }
+
+      // 1. Obtener Catálogos Maestros para Foreign Keys
+      const [clientesRes, contratosRes, situacionesRes, personasRes, estatusRes, ubicacionesRes] = await Promise.all([
+        admin.from('clientes').select('cliente_id, nombre_cliente'),
+        admin.from('contratos').select('contrato_id, numero_contrato, nombre_contrato'),
+        admin.from('situaciones').select('situacion_id, nombre_situacion'),
+        admin.from('personas').select('persona_id, nombre_completo'),
+        admin.from('estatus').select('estatus_id, nombre_estatus'),
+        admin.from('ubicaciones').select('ubicacion_id, nombre_ubicacion')
+      ])
+
+      const clientesMap = new Map<string, number>()
+      clientesRes.data?.forEach((c: any) => clientesMap.set(c.nombre_cliente.toLowerCase().trim(), c.cliente_id))
+
+      const contratosMap = new Map<string, number>()
+      contratosRes.data?.forEach((ct: any) => {
+        if (ct.numero_contrato) contratosMap.set(ct.numero_contrato.toLowerCase().trim(), ct.contrato_id)
+        if (ct.nombre_contrato) contratosMap.set(ct.nombre_contrato.toLowerCase().trim(), ct.contrato_id)
+      })
+
+      const situacionesMap = new Map<string, number>()
+      situacionesRes.data?.forEach((s: any) => situacionesMap.set(s.nombre_situacion.toLowerCase().trim(), s.situacion_id))
+
+      const personasMap = new Map<string, number>()
+      personasRes.data?.forEach((p: any) => personasMap.set(p.nombre_completo.toLowerCase().trim(), p.persona_id))
+
+      const estatusMap = new Map<string, number>()
+      estatusRes.data?.forEach((e: any) => estatusMap.set(e.nombre_estatus.toLowerCase().trim(), e.estatus_id))
+
+      const defaultClienteId = clientesRes.data?.[0]?.cliente_id || 1
+      const defaultContratoId = contratosRes.data?.[0]?.contrato_id || 1
+      const defaultSituacionId = situacionesRes.data?.[0]?.situacion_id || 1
+      const defaultPersonaId = personasRes.data?.[0]?.persona_id || 1
+      const defaultEstatusId = estatusRes.data?.find((e: any) => e.nombre_estatus.toLowerCase().includes('pendiente'))?.estatus_id || 5
+      const defaultUbicacionId = ubicacionesRes.data?.[0]?.ubicacion_id || 1
+
+      const toInsert: any[] = []
+
+      for (const inc of itemsToSync) {
+        const rawCli = (inc.cliente || inc.institucion || inc.hospital || inc['Cliente'] || inc['Institución'] || '').toString().trim()
+        const rawCon = (inc.contrato || inc.no_contrato || inc['Contrato'] || inc['No. Contrato'] || '').toString().trim()
+        const rawSit = (inc.situacion || inc.problematica || inc.falla || inc['Situación'] || inc['Problemática'] || '').toString().trim()
+        const rawPer = (inc.persona || inc.responsable || inc.encargado || inc['Responsable'] || '').toString().trim()
+        const rawEst = (inc.estatus || inc.estado || inc['Estatus'] || inc['Estado'] || 'PENDIENTE').toString().trim()
+        const rawCom = (inc.comentario || inc.observaciones || inc.detalle || inc['Comentario'] || inc['Observaciones'] || '').toString().trim()
+        const rawFReg = (inc.fecha_registro || inc.fecha || inc['Fecha Registro'] || inc['Fecha'] || new Date().toISOString().split('T')[0]).toString().trim()
+        const rawFCum = (inc.fecha_cumplimiento || inc.fecha_limite || inc.vencimiento || inc['Fecha Cumplimiento'] || inc['Fecha Límite'] || new Date(Date.now() + 15*86400000).toISOString().split('T')[0]).toString().trim()
+
+        if (!rawCli && !rawSit && !rawCom) continue
+
+        let clienteId = clientesMap.get(rawCli.toLowerCase())
+        if (!clienteId) {
+          for (const [name, id] of clientesMap.entries()) {
+            if (rawCli.toLowerCase().includes(name) || name.includes(rawCli.toLowerCase())) {
+              clienteId = id
+              break
+            }
+          }
+          if (!clienteId) clienteId = defaultClienteId
+        }
+
+        let contratoId = contratosMap.get(rawCon.toLowerCase())
+        if (!contratoId) {
+          for (const [name, id] of contratosMap.entries()) {
+            if (rawCon.toLowerCase().includes(name) || name.includes(rawCon.toLowerCase())) {
+              contratoId = id
+              break
+            }
+          }
+          if (!contratoId) contratoId = defaultContratoId
+        }
+
+        let situacionId = situacionesMap.get(rawSit.toLowerCase())
+        if (!situacionId) {
+          for (const [name, id] of situacionesMap.entries()) {
+            if (rawSit.toLowerCase().includes(name) || name.includes(rawSit.toLowerCase())) {
+              situacionId = id
+              break
+            }
+          }
+          if (!situacionId) situacionId = defaultSituacionId
+        }
+
+        let personaId = personasMap.get(rawPer.toLowerCase())
+        if (!personaId) {
+          for (const [name, id] of personasMap.entries()) {
+            if (rawPer.toLowerCase().includes(name) || name.includes(rawPer.toLowerCase())) {
+              personaId = id
+              break
+            }
+          }
+          if (!personaId) personaId = defaultPersonaId
+        }
+
+        let estatusId = estatusMap.get(rawEst.toLowerCase())
+        if (!estatusId) {
+          for (const [name, id] of estatusMap.entries()) {
+            if (rawEst.toLowerCase().includes(name) || name.includes(rawEst.toLowerCase())) {
+              estatusId = id
+              break
+            }
+          }
+          if (!estatusId) estatusId = defaultEstatusId
+        }
+
+        toInsert.push({
+          cliente_id: clienteId,
+          contrato_id: contratoId,
+          situacion_id: situacionId,
+          persona_id: personaId,
+          ubicacion_id: defaultUbicacionId,
+          estatus_id: estatusId,
+          fecha_registro: rawFReg.slice(0, 10),
+          fecha_cumplimiento: rawFCum.slice(0, 10),
+          comentario: rawCom || `Incidencia importada desde Excel (${rawSit || 'Seguimiento Operativo'})`
+        })
+      }
+
+      let insertedCount = 0
+      if (toInsert.length > 0) {
+        for (let i = 0; i < toInsert.length; i += 100) {
+          const chunk = toInsert.slice(i, i + 100)
+          const { error: insErr } = await admin.from('incidencias_seguimiento').insert(chunk)
+          if (!insErr) {
+            insertedCount += chunk.length
+          } else {
+            console.error('Error insertando incidencias_seguimiento:', insErr)
+          }
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Incidencias de seguimiento sincronizadas exitosamente en Supabase',
+        tabla: 'incidencias_seguimiento',
+        total_incidencias_sincronizadas: insertedCount,
+        timestamp: new Date().toISOString()
+      }, { status: 200 })
+    }
+
     if (!table) {
       return NextResponse.json({ error: 'Falta especificar la tabla' }, { status: 400 })
     }
