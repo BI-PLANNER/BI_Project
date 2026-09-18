@@ -1,12 +1,40 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { PieChart, BarChart3, FileText, CheckCircle, Boxes, AlertTriangle } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { PieChart, BarChart3, CheckCircle, Boxes, AlertTriangle } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function AnalyticsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
+  const [isPersonaGlobal, setIsPersonaGlobal] = useState(false)
+
+  useEffect(() => {
+    async function checkUser() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user && user.email) {
+          const email = user.email.toLowerCase()
+          if (email.includes('personaglobal') || email.includes('persona.global')) {
+            setIsPersonaGlobal(true)
+          }
+        }
+      } catch (err) {
+        console.warn('Error checking user in AnalyticsLayout:', err)
+      }
+    }
+    checkUser()
+  }, [supabase])
+
+  // Redirigir a PersonaGlobal si intenta acceder a otra pestaña de analítica
+  useEffect(() => {
+    if (isPersonaGlobal && pathname !== '/dashboard/analytics/gerencia') {
+      router.replace('/dashboard/analytics/gerencia')
+    }
+  }, [isPersonaGlobal, pathname, router])
 
   const tabs = [
     { name: 'Dashboard Analítica', href: '/dashboard/analytics/gerencia', icon: PieChart, color: 'text-indigo-700', activeBg: 'bg-indigo-500/20' },
@@ -15,6 +43,10 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
     { name: 'Ofertas vs Demanda', href: '/dashboard/analytics/demanda', icon: AlertTriangle, color: 'text-amber-700', activeBg: 'bg-amber-500/20' },
     { name: 'Cumplimiento', href: '/dashboard/analytics/cumplimiento', icon: CheckCircle, color: 'text-blue-700', activeBg: 'bg-blue-500/20' }
   ]
+
+  const visibleTabs = isPersonaGlobal
+    ? tabs.filter(t => t.href === '/dashboard/analytics/gerencia')
+    : tabs
 
   return (
     <div className="flex flex-col h-full bg-transparent overflow-hidden w-full">
@@ -28,7 +60,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
         </h1>
         
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10">
-          {tabs.map(tab => {
+          {visibleTabs.map(tab => {
             const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/')
             const Icon = tab.icon
             return (
