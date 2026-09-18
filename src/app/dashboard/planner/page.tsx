@@ -475,6 +475,8 @@ export const MASTER_LICITACIONES_PENDIENTES: IncidenciaEvento[] = [
     responsableEmail: 'edgar.figueroa@lm-sv.com',
     ubicacion: 'HOSPITAL',
     fecha_cumplimiento: '2029-09-16',
+    comentario: 'Guía de usuario para capacitación de personal',
+    estatus: 'Verde'
   },
   // --- INYECCIÓN AUTOMÁTICA DE ENTREGAS MATRIZ (30, 60, 90, 120 DÍAS) ---
   {
