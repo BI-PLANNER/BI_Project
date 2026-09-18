@@ -166,10 +166,10 @@ export default function NeoChartPieDonut({
         )}
       </div>
 
-      {/* 2. Cuerpo Principal: Gráfica + Panel de Leyenda TODO VISIBLE (SIN SCROLL) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+      {/* 2. Cuerpo Principal: Gráfica + Panel de Leyenda TODO VISIBLE */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
         {/* SVG Graphic */}
-        <div className={`${isMultiItem ? 'md:col-span-5' : 'md:col-span-5'} flex items-center justify-center relative select-none py-2`}>
+        <div className="lg:col-span-5 flex items-center justify-center relative select-none py-2">
           <div className="relative flex items-center justify-center" style={{ width: size, height: size, maxWidth: '100%' }}>
             <svg
               viewBox="0 0 200 200"
@@ -188,7 +188,7 @@ export default function NeoChartPieDonut({
                 cy="100"
                 r={outerRadius}
                 fill="none"
-                stroke="rgba(255,255,255,0.05)"
+                stroke="rgba(203, 213, 225, 0.25)"
                 strokeWidth={outerRadius - effectiveInnerRadius}
               />
 
@@ -231,7 +231,7 @@ export default function NeoChartPieDonut({
                     <path
                       d={slice.path}
                       fill={slice.color}
-                      stroke="rgba(15, 23, 42, 0.95)"
+                      stroke="#ffffff"
                       strokeWidth="2"
                       strokeLinejoin="round"
                       style={{
@@ -257,7 +257,7 @@ export default function NeoChartPieDonut({
                           fontSize={slice.percent >= 20 ? '11' : '9.5'}
                           fontWeight="900"
                           fontFamily="monospace"
-                          className="drop-shadow-[0_2px_4px_rgba(0,0,0,1)]"
+                          className="drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.8)]"
                         >
                           {slice.percent.toFixed(1)}%
                         </text>
@@ -279,7 +279,7 @@ export default function NeoChartPieDonut({
                     <span className="text-xl font-black text-gray-900 font-mono block leading-none">
                       {activeItem.percent.toFixed(1)}%
                     </span>
-                    <span className="text-xs font-mono font-bold text-cyan-700 block mt-1">
+                    <span className="text-xs font-mono font-bold text-indigo-700 block mt-1">
                       {formatValue(activeItem.value)}
                     </span>
                   </div>
@@ -299,81 +299,81 @@ export default function NeoChartPieDonut({
 
             {/* Tooltip flotante al pasar sobre el pastel */}
             {type === 'pie' && activeItem && (
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white border border-slate-300 px-3.5 py-1.5 rounded-2xl shadow-sm backdrop-blur-md pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white border border-slate-300 px-3.5 py-1.5 rounded-2xl shadow-lg pointer-events-none whitespace-nowrap z-30 animate-fade-in flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: activeItem.color }} />
-                <span className="text-xs font-bold text-gray-900 truncate max-w-[140px]">{activeItem.label}</span>
-                <span className="text-xs font-mono font-black text-cyan-700">{activeItem.percent.toFixed(1)}%</span>
-                <span className="text-[11px] font-mono text-slate-700">({formatValue(activeItem.value)})</span>
+                <span className="text-xs font-bold text-gray-900 max-w-[160px] truncate">{activeItem.label}</span>
+                <span className="text-xs font-mono font-black text-indigo-700">{activeItem.percent.toFixed(1)}%</span>
+                <span className="text-[11px] font-mono text-slate-600">({formatValue(activeItem.value)})</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* 3. Panel de Leyenda Espaciosa TODO VISIBLE (SIN CORTAR NOMBRES) */}
+        {/* 3. Panel de Leyenda Espaciosa (Filas Completas y Horizontalidad Sin Deformar Texto) */}
         {showLegend && (
-          <div className="md:col-span-7">
-            <div className={`gap-2.5 ${isMultiItem ? 'grid grid-cols-1 sm:grid-cols-2' : 'grid grid-cols-1'}`}>
-              {slices.map((item, idx) => {
-                const isHovered = hoveredIndex === idx
+          <div className="lg:col-span-7 flex flex-col space-y-2">
+            {slices.map((item, idx) => {
+              const isHovered = hoveredIndex === idx
 
-                return (
-                  <div
-                    key={idx}
-                    onMouseEnter={() => setHoveredIndex(idx)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                    onClick={() => onSelectSlice && onSelectSlice(item)}
-                    className={`p-2.5 rounded-2xl transition-all duration-200 cursor-pointer border ${
-                      isHovered
-                        ? 'bg-indigo-50 border-indigo-300 shadow-sm scale-[1.01]'
-                        : 'bg-slate-50/90 hover:bg-white border-slate-200'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-3 mb-1.5">
-                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                        <span
-                          className="w-3.5 h-3.5 rounded-lg flex-shrink-0 mt-0.5 shadow-sm transition-transform duration-200"
-                          style={{
-                            backgroundColor: item.color,
-                            transform: isHovered ? 'scale(1.25)' : 'scale(1)',
-                            boxShadow: isHovered ? `0 0 10px ${item.color}` : 'none'
-                          }}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="text-xs font-bold text-slate-800 leading-snug whitespace-normal break-words" title={item.label}>
-                            {item.label}
-                          </div>
-                          {item.sublabel && (
-                            <div className="text-[10px] text-slate-500 leading-normal whitespace-normal break-words mt-0.5" title={item.sublabel}>
-                              {item.sublabel}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="text-right flex-shrink-0 font-mono pl-2">
-                        <div className="text-xs font-black text-slate-900">
-                          {item.percent.toFixed(1)}%
-                        </div>
-                        <div className="text-[10px] font-bold text-indigo-600">
-                          {formatValue(item.value)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Micro Progress Bar de distribución */}
-                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
+              return (
+                <div
+                  key={idx}
+                  onMouseEnter={() => setHoveredIndex(idx)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => onSelectSlice && onSelectSlice(item)}
+                  className={`p-2.5 rounded-2xl transition-all duration-200 cursor-pointer border ${
+                    isHovered
+                      ? 'bg-indigo-50/90 border-indigo-300 shadow-sm scale-[1.01]'
+                      : 'bg-slate-50/80 hover:bg-white border-slate-200/90 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <span
+                        className="w-3.5 h-3.5 rounded-full flex-shrink-0 shadow-sm transition-transform duration-200"
                         style={{
-                          width: `${item.percent}%`,
-                          backgroundColor: item.color
+                          backgroundColor: item.color,
+                          transform: isHovered ? 'scale(1.25)' : 'scale(1)',
+                          boxShadow: isHovered ? `0 0 8px ${item.color}` : 'none'
                         }}
                       />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-bold text-slate-800 leading-snug truncate" title={item.label}>
+                          {item.label}
+                        </div>
+                        {item.sublabel && (
+                          <div className="text-[10px] text-slate-500 leading-normal truncate" title={item.sublabel}>
+                            {item.sublabel}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <div className="text-right font-mono">
+                        <span className="text-xs font-black text-slate-900 block">
+                          {item.percent.toFixed(1)}%
+                        </span>
+                        <span className="text-[10px] font-bold text-indigo-600 block">
+                          {formatValue(item.value)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
+
+                  {/* Micro Progress Bar de distribución */}
+                  <div className="w-full bg-slate-200/80 h-1.5 rounded-full overflow-hidden mt-1.5">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${item.percent}%`,
+                        backgroundColor: item.color
+                      }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
