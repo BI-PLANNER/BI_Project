@@ -34,10 +34,12 @@ import {
   Bookmark,
   PieChart as PieIcon,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  KeyRound
 } from 'lucide-react'
 import PresionEmailModal from '@/components/PresionEmailModal'
 import ExcelUploadModal from '@/components/ExcelUploadModal'
+import CambiarPasswordModal from '@/components/CambiarPasswordModal'
 import { dbInsert, dbUpdate, dbDelete, dbSelect } from '@/lib/api_3fn'
 
 // Definition of 21 Tables organized into 4 logical groups
@@ -342,6 +344,19 @@ export default function GestionTablasPage() {
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [isRestrictedGerente, setIsRestrictedGerente] = useState(false)
   const [isUploadOpen, setIsUploadOpen] = useState(false)
+
+  // Password Change Modal state
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false)
+  const [passwordTargetUser, setPasswordTargetUser] = useState<{ id?: string, email?: string, name?: string } | null>(null)
+
+  const handleOpenChangePassword = (row: any) => {
+    setPasswordTargetUser({
+      id: String(row.id || row.persona_id || ''),
+      email: row.email,
+      name: row.nombre_completo || `${row.nombre || ''} ${row.apellido || ''}`.trim() || 'Colaborador'
+    })
+    setPasswordModalOpen(true)
+  }
 
   // Presion Email Modal state
   const [presionModalOpen, setPresionModalOpen] = useState(false)
@@ -819,6 +834,16 @@ export default function GestionTablasPage() {
                               <Edit2 className="w-3 h-3" />
                               <span>Editar</span>
                             </button>
+                            {(selectedTable === 'users' || selectedTable === 'personas') && (
+                              <button
+                                onClick={() => handleOpenChangePassword(row)}
+                                title="Cambiar Contraseña (Encriptación Hash Bcrypt - Exclusivo Lenny Gómez)"
+                                className="px-2.5 py-1 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold text-xs flex items-center gap-1 border border-cyan-200 shadow-sm transition"
+                              >
+                                <KeyRound className="w-3.5 h-3.5 text-cyan-700" />
+                                <span>Contraseña 🔒</span>
+                              </button>
+                            )}
                             <button
                               onClick={() => handleDelete(pkVal)}
                               title="Eliminar"
@@ -1092,6 +1117,15 @@ export default function GestionTablasPage() {
           task={selectedTaskForPressure}
         />
       )}
+
+      {/* Cambiar Password Modal (Exclusivo Lenny Gómez / Hash Bcrypt) */}
+      <CambiarPasswordModal
+        isOpen={passwordModalOpen}
+        onClose={() => setPasswordModalOpen(false)}
+        userId={passwordTargetUser?.id}
+        userEmail={passwordTargetUser?.email}
+        userName={passwordTargetUser?.name}
+      />
     </div>
   )
 }
