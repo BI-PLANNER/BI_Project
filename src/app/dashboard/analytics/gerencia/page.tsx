@@ -722,15 +722,15 @@ export default function DashboardObligacionesPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
               {/* Gráfica 1: Semáforo & Cumplimiento */}
               <NeoChartPieDonut
                 data={pieDataSemaforo}
                 title="Semáforo & Estado de Cumplimiento"
                 subtitle="Monitoreo de criticidad y urgencia de las 26 obligaciones"
                 type={chartType}
-                size={280}
-                outerRadius={92}
+                size={310}
+                outerRadius={105}
                 centerLabel="Hitos"
                 centerValue={total}
                 accentColor="emerald"
@@ -749,17 +749,17 @@ export default function DashboardObligacionesPage() {
               {/* Gráfica 2: Carga por Área Operativa */}
               <NeoChartPieDonut
                 data={pieDataArea}
-                title="Carga de Trabajo por Área"
-                subtitle="Distribución operativa entre los 7 departamentos de la empresa"
+                title="Carga de Trabajo por Área Operativa"
+                subtitle="Distribución de compromisos entre las 7 áreas de la empresa"
                 type={chartType}
-                size={280}
-                outerRadius={92}
+                size={310}
+                outerRadius={105}
                 centerLabel="Áreas"
                 centerValue={areas.length}
                 accentColor="cyan"
                 badge="7 Áreas"
                 formatValue={v => `${v} Obligaciones`}
-                insight="📌 RECURSOS: Aplicaciones concentra el 34.6% (9 hitos) bajo Edgar Figuero, seguido por Project Management (PM) con 6 hitos (23.1%) e IT / Logística con 3 hitos cada uno."
+                insight="📌 RECURSOS: Aplicaciones concentra el 34.6% (9 hitos) bajo Edgar Figueroa, seguido por Project Management (PM) con 6 hitos (23.1%) e IT / Logística con 3 hitos cada uno."
                 onSelectSlice={(slice) => {
                   const rawArea = slice.label.replace('📁 ', '').trim()
                   setFilterArea(filterArea === rawArea ? 'todos' : rawArea)
@@ -772,8 +772,8 @@ export default function DashboardObligacionesPage() {
                 title="Distribución por Hospital / Cliente"
                 subtitle="Concentración de obligaciones por institución de salud pública"
                 type={chartType}
-                size={280}
-                outerRadius={92}
+                size={310}
+                outerRadius={105}
                 centerLabel="Hospitales"
                 centerValue={clientes.length}
                 accentColor="amber"
@@ -794,8 +794,8 @@ export default function DashboardObligacionesPage() {
                 title="Tipo de Obligación (Legal vs Terreno)"
                 subtitle="Clasificación según marco contractual COMPRASAL o visitas de adecuación"
                 type={chartType}
-                size={280}
-                outerRadius={92}
+                size={310}
+                outerRadius={105}
                 centerLabel="Total"
                 centerValue={total}
                 accentColor="purple"

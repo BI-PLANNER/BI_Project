@@ -17,9 +17,9 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
   ]
 
   return (
-    <div className="flex flex-col h-full bg-transparent overflow-hidden">
+    <div className="flex flex-col h-full bg-transparent overflow-hidden w-full">
       {/* Tab Navigation Header */}
-      <div className="px-6 pt-6 pb-2 border-b border-slate-300 flex-shrink-0">
+      <div className="px-4 md:px-8 pt-6 pb-2 border-b border-slate-300 flex-shrink-0 w-full max-w-[1800px] mx-auto">
         <h1 className="text-2xl font-black text-gray-900 tracking-wide flex items-center gap-3 mb-6">
           <span className="w-8 h-8 rounded-lg bg-white border border-slate-300 flex items-center justify-center shadow-sm">
             <BarChart3 size={18} className="text-gray-900" />
@@ -53,7 +53,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 w-full max-w-[1800px] mx-auto">
         {children}
       </div>
     </div>

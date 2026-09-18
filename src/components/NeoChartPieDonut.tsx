@@ -309,10 +309,10 @@ export default function NeoChartPieDonut({
           </div>
         </div>
 
-        {/* 3. Panel de Leyenda Espaciosa TODO VISIBLE (SIN SCROLLBAR) */}
+        {/* 3. Panel de Leyenda Espaciosa TODO VISIBLE (SIN CORTAR NOMBRES) */}
         {showLegend && (
           <div className="md:col-span-7">
-            <div className={`gap-2 ${isMultiItem ? 'grid grid-cols-1 sm:grid-cols-2' : 'space-y-2'}`}>
+            <div className={`gap-2.5 ${isMultiItem ? 'grid grid-cols-1 sm:grid-cols-2' : 'grid grid-cols-1'}`}>
               {slices.map((item, idx) => {
                 const isHovered = hoveredIndex === idx
 
@@ -322,46 +322,46 @@ export default function NeoChartPieDonut({
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
                     onClick={() => onSelectSlice && onSelectSlice(item)}
-                    className={`p-2 rounded-2xl transition-all duration-200 cursor-pointer border ${
+                    className={`p-2.5 rounded-2xl transition-all duration-200 cursor-pointer border ${
                       isHovered
-                        ? 'bg-white/[0.12] border-slate-300 shadow-sm scale-[1.01]'
-                        : 'bg-slate-500 hover:bg-gray-100 border-slate-300/[0.06]'
+                        ? 'bg-indigo-50 border-indigo-300 shadow-sm scale-[1.01]'
+                        : 'bg-slate-50/90 hover:bg-white border-slate-200'
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex items-start justify-between gap-3 mb-1.5">
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
                         <span
-                          className="w-3 h-3 rounded-lg flex-shrink-0 shadow-sm transition-transform duration-200"
+                          className="w-3.5 h-3.5 rounded-lg flex-shrink-0 mt-0.5 shadow-sm transition-transform duration-200"
                           style={{
                             backgroundColor: item.color,
                             transform: isHovered ? 'scale(1.25)' : 'scale(1)',
                             boxShadow: isHovered ? `0 0 10px ${item.color}` : 'none'
                           }}
                         />
-                        <div className="min-w-0 truncate">
-                          <div className="text-xs font-bold text-gray-900 leading-tight truncate" title={item.label}>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-slate-800 leading-snug whitespace-normal break-words" title={item.label}>
                             {item.label}
                           </div>
                           {item.sublabel && (
-                            <div className="text-[9.5px] text-slate-700 leading-tight truncate" title={item.sublabel}>
+                            <div className="text-[10px] text-slate-500 leading-normal whitespace-normal break-words mt-0.5" title={item.sublabel}>
                               {item.sublabel}
                             </div>
                           )}
                         </div>
                       </div>
 
-                      <div className="text-right flex-shrink-0 font-mono">
-                        <div className="text-xs font-black text-gray-900">
+                      <div className="text-right flex-shrink-0 font-mono pl-2">
+                        <div className="text-xs font-black text-slate-900">
                           {item.percent.toFixed(1)}%
                         </div>
-                        <div className="text-[9.5px] font-bold text-cyan-700">
+                        <div className="text-[10px] font-bold text-indigo-600">
                           {formatValue(item.value)}
                         </div>
                       </div>
                     </div>
 
                     {/* Micro Progress Bar de distribución */}
-                    <div className="w-full bg-slate-50 h-1 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{
