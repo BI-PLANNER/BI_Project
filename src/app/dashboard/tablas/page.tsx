@@ -677,16 +677,26 @@ export default function GestionTablasPage() {
             </span>
           </div>
 
-          {/* Search box */}
-          <div className="relative w-full sm:w-72">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder={`Buscar en ${config.label}...`}
-              className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
-            />
+          {/* Action & Search box */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              onClick={handleOpenCreate}
+              className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-indigo-200 transition active:scale-95 whitespace-nowrap"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Agregar Registro</span>
+            </button>
+
+            <div className="relative w-full sm:w-64">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder={`Buscar en ${config.label}...`}
+                className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs text-gray-900 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition"
+              />
+            </div>
           </div>
         </div>
 
@@ -803,10 +813,11 @@ export default function GestionTablasPage() {
                             )}
                             <button
                               onClick={() => handleOpenEdit(row)}
-                              title="Editar"
-                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-gray-100 text-slate-700 hover:text-indigo-700 transition"
+                              title="Editar Registro"
+                              className="px-2.5 py-1 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center gap-1 border border-indigo-200 shadow-sm transition"
                             >
-                              <Edit2 className="w-3.5 h-3.5" />
+                              <Edit2 className="w-3 h-3" />
+                              <span>Editar</span>
                             </button>
                             <button
                               onClick={() => handleDelete(pkVal)}
