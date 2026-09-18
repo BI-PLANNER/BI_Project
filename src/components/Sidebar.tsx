@@ -36,6 +36,7 @@ export default function Sidebar() {
     isGerenteGeneral: boolean
     isLuisOrellana: boolean
     isJoseLenny: boolean
+    isPersonaGlobal: boolean
     canViewReporte: boolean
   }>({
     email: '',
@@ -45,6 +46,7 @@ export default function Sidebar() {
     isGerenteGeneral: false,
     isLuisOrellana: false,
     isJoseLenny: false,
+    isPersonaGlobal: false,
     canViewReporte: false
   })
 
@@ -55,9 +57,10 @@ export default function Sidebar() {
         if (!user || !user.email) return
 
         const userEmail = user.email.toLowerCase()
+        const isPersonaGlobal = userEmail.includes('personaglobal') || userEmail.includes('persona.global')
         const isGG = userEmail.includes('aaltunaher') || userEmail.includes('antonio')
         const isLuis = userEmail.includes('lorellana') || userEmail.includes('luis.orellana') || userEmail.includes('orellana')
-        const isLenny = userEmail.includes('jose.gomez') || userEmail.includes('lenny') || (!isGG && !isLuis)
+        const isLenny = userEmail.includes('jose.gomez') || userEmail.includes('lenny') || (!isGG && !isLuis && !isPersonaGlobal)
 
         // Fetch public user row
         const { data: dbUser } = await supabase
@@ -70,7 +73,11 @@ export default function Sidebar() {
         let defaultApellido = ''
         let defaultDepto = 'Colaborador'
 
-        if (isLuis) {
+        if (isPersonaGlobal) {
+          defaultNombre = 'PersonaGlobal'
+          defaultApellido = 'Global'
+          defaultDepto = 'Global / General'
+        } else if (isLuis) {
           defaultNombre = 'Luis'
           defaultApellido = 'Orellana'
           defaultDepto = 'Gerencia de Integración'
@@ -96,7 +103,8 @@ export default function Sidebar() {
           isGerenteGeneral: isGG,
           isLuisOrellana: isLuis,
           isJoseLenny: isLenny,
-          canViewReporte: isLuis || isLenny
+          isPersonaGlobal,
+          canViewReporte: isLuis || isLenny || isPersonaGlobal
         })
       } catch (err) {
         console.warn('Error loading user in sidebar:', err)
@@ -104,6 +112,16 @@ export default function Sidebar() {
     }
     loadUserProfile()
   }, [supabase])
+
+  // Route guard para PersonaGlobal: Solo puede ver el Dashboard de Analítica Gerencial
+  useEffect(() => {
+    if (userProfile.isPersonaGlobal) {
+      const allowedPaths = ['/dashboard/analytics', '/dashboard/analytics/gerencia', '/dashboard/analytics/reportes']
+      if (!allowedPaths.some(p => pathname.startsWith(p))) {
+        router.replace('/dashboard/analytics/gerencia')
+      }
+    }
+  }, [userProfile.isPersonaGlobal, pathname, router])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -122,15 +140,17 @@ export default function Sidebar() {
     { href: '/dashboard/planner', label: 'Panel Planner', icon: CalendarClock },
     { href: '/dashboard/garantias', label: 'Garantías', icon: ShieldCheck },
     ...(userProfile.canViewReporte ? [{
-      href: '/dashboard/analytics/reportes',
+      href: '/dashboard/analytics/gerencia',
       label: 'Centro de Analítica BI',
       icon: PieIcon
     }] : []),
     { href: '/dashboard/tablas', label: 'Gestión por Tablas (21)', icon: Database }
   ]
 
-  // Filtrar para Luis Orellana: solo sus secciones permitidas
-  const navItems = userProfile.isLuisOrellana
+  // Filtrar navegación según rol de usuario
+  const navItems = userProfile.isPersonaGlobal
+    ? [{ href: '/dashboard/analytics/gerencia', label: 'Centro de Analítica BI', icon: PieIcon }]
+    : userProfile.isLuisOrellana
     ? allNavItems.filter(item => LUIS_ALLOWED_HREFS.includes(item.href))
     : allNavItems
 
@@ -184,18 +204,22 @@ export default function Sidebar() {
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-bold text-gray-500">Usuario Activo</span>
             <span className={`badge ${
-              userProfile.isLuisOrellana
+              userProfile.isPersonaGlobal
+                ? 'bg-purple-500/20 text-purple-700 border border-slate-300'
+                : userProfile.isLuisOrellana
                 ? 'bg-teal-500/20 text-teal-700 border border-slate-300'
                 : userProfile.isGerenteGeneral
                 ? 'bg-amber-500/20 text-amber-700 border border-slate-300'
                 : 'bg-indigo-500/20 text-indigo-700'
             } text-[9px] px-1.5 font-mono`}>
-              {userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
+              {userProfile.isPersonaGlobal ? 'Global' : userProfile.isLuisOrellana ? 'Jefatura' : userProfile.isGerenteGeneral ? 'Gerencia' : 'Control Total'}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <div className={`w-7 h-7 rounded-md ${
-              userProfile.isLuisOrellana
+              userProfile.isPersonaGlobal
+                ? 'bg-purple-600 text-white'
+                : userProfile.isLuisOrellana
                 ? 'bg-[#34d399] text-black'
                 : userProfile.isGerenteGeneral
                 ? 'bg-[#fbbf24] text-black'
@@ -208,7 +232,9 @@ export default function Sidebar() {
                 {userProfile.nombre} {userProfile.apellido}
               </p>
               <p className={`text-[10px] ${
-                userProfile.isLuisOrellana
+                userProfile.isPersonaGlobal
+                  ? 'text-purple-700'
+                  : userProfile.isLuisOrellana
                   ? 'text-teal-700'
                   : userProfile.isGerenteGeneral
                   ? 'text-amber-700'
