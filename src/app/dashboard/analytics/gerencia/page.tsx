@@ -195,6 +195,11 @@ export default function DashboardObligacionesPage() {
     'admin@lm-sv.com'
   ], [])
 
+  const isPersonaGlobal = useMemo(() => {
+    const email = (currentUserEmail || '').toLowerCase()
+    return email.includes('personaglobal') || email.includes('persona.global')
+  }, [currentUserEmail])
+
   // Acceso abierto para todos los usuarios autenticados del dashboard.
   // La seguridad real está garantizada por Supabase Auth en el layout.
   // El bloque de email anterior bloqueaba al propio administrador del sistema.
@@ -477,11 +482,17 @@ export default function DashboardObligacionesPage() {
             </div>
 
             <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-              <PieIcon className="w-8 h-8 text-amber-700 animate-pulse" />
-              Dashboard de Obligaciones — Gerencia General
+              <PieIcon className="w-8 h-8 text-indigo-600 animate-pulse" />
+              {isPersonaGlobal ? 'Dashboard de Obligaciones' : 'Dashboard de Obligaciones — Gerencia General'}
             </h1>
             <p className="text-xs text-gray-500 mt-1 max-w-2xl">
-              Panel directivo de alto nivel exclusivo para la <strong className="text-amber-700">Gerencia General (José Lenny Gómez)</strong>. Monitoreo estratégico de licitaciones, semáforo de cumplimiento y auditoría de los 26 hitos con análisis de gráficas de pastel.
+              {isPersonaGlobal ? (
+                'Panel directivo de monitoreo estratégico de licitaciones, semáforo de cumplimiento y auditoría de los hitos con análisis de gráficas de pastel.'
+              ) : (
+                <>
+                  Panel directivo de alto nivel exclusivo para la <strong className="text-amber-700">Gerencia General (José Lenny Gómez)</strong>. Monitoreo estratégico de licitaciones, semáforo de cumplimiento y auditoría de los 26 hitos con análisis de gráficas de pastel.
+                </>
+              )}
             </p>
           </div>
 
@@ -489,29 +500,31 @@ export default function DashboardObligacionesPage() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-white p-3 rounded-2xl border border-slate-300 shrink-0 shadow-sm">
             <div className="flex items-center gap-2.5 pr-2">
               <div className="w-9 h-9 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-gray-900 shadow">
-                <ShieldCheck className="w-5 h-5" />
+                <ShieldCheck className="w-5 h-5 text-indigo-700" />
               </div>
               <div>
-                <span className="text-[10px] text-amber-700 uppercase font-bold block">
-                  Perfil Directivo Autorizado:
+                <span className="text-[10px] text-indigo-700 uppercase font-bold block">
+                  {isPersonaGlobal ? 'Perfil Autorizado:' : 'Perfil Directivo Autorizado:'}
                 </span>
                 <span className="text-xs font-mono font-bold text-gray-900 block truncate max-w-[210px]">
-                  Gerente General ({assignedUserEmail})
+                  {isPersonaGlobal ? 'Global / General' : `Gerente General (${assignedUserEmail})`}
                 </span>
               </div>
             </div>
 
-            <button
-              onClick={() => {
-                setTempUserEmail(assignedUserEmail)
-                setIsConfiguringUser(!isConfiguringUser)
-              }}
-              className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-gray-700 border border-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
-              title="Configurar usuario exclusivo"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-amber-700" />
-              <span>{isConfiguringUser ? 'Cerrar' : 'Ajustar'}</span>
-            </button>
+            {!isPersonaGlobal && (
+              <button
+                onClick={() => {
+                  setTempUserEmail(assignedUserEmail)
+                  setIsConfiguringUser(!isConfiguringUser)
+                }}
+                className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-gray-700 border border-slate-300 text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+                title="Configurar usuario exclusivo"
+              >
+                <KeyRound className="w-3.5 h-3.5 text-amber-700" />
+                <span>{isConfiguringUser ? 'Cerrar' : 'Ajustar'}</span>
+              </button>
+            )}
           </div>
         </div>
 
