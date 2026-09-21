@@ -187,19 +187,20 @@ export default function DashboardAnalisisPage() {
           const brandName = marcasMap.get(prod?.marca_id)?.nombre_marca || 'N/A'
           const prodName = prod?.nombre_producto_equipo || 'Producto'
           const desc = (prod?.descripcion || '').toLowerCase()
+          const razonStr = (item.razon_perdida || '').toLowerCase()
 
           const qty = Number(item.cantidad || 1)
           const price = Number(item.precio_unitario || 0)
           const itemTotal = qty * price
 
-          const isDesierta = desc.includes('desierta')
+          const isDesierta = desc.includes('desierta') || razonStr.includes('desierta')
           const isAdjudicada = Boolean(item.es_adjudicado)
           const isPerdida = !isAdjudicada && !isDesierta
 
           let compWinner = 'N/A'
           let compPriceVal = 0
 
-          const adjMatch = prod?.descripcion?.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/)
+          const adjMatch = prod?.descripcion?.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/) || item.razon_perdida?.match(/Adjudicado:\s*([^($]+)(?:\(\$([^)]+)\))?/)
           if (adjMatch) {
             compWinner = adjMatch[1].trim()
             if (adjMatch[2]) compPriceVal = parseFloat(adjMatch[2].trim()) || 0
