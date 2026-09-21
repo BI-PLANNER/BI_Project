@@ -540,88 +540,147 @@ export default function DashboardAnalisisPage() {
       {/* KPI Cards (Filtered by selectedMonth) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Ofertado */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div 
+          onClick={() => {
+            setSelectedFilterStatus('todos')
+            document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="bg-white border border-slate-300 hover:border-indigo-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          title="Haz clic para ver el desglose completo de los $10.6M"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700 uppercase">Ofertado ({selectedMonth})</span>
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-700 flex items-center justify-center">
+            <span className="text-xs font-bold text-slate-700 uppercase group-hover:text-indigo-600 transition">Ofertado ({selectedMonth})</span>
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-700 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
               <DollarSign className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-gray-900 font-mono">
             ${stats.totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[11px] text-slate-700">
-            {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones
-          </p>
+          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+            <p className="text-[11px] text-slate-600">
+              {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones
+            </p>
+            <span className="text-[11px] font-bold text-indigo-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+              Ver detalle ➔
+            </span>
+          </div>
         </div>
 
         {/* Total Adjudicado */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div 
+          onClick={() => {
+            setSelectedFilterStatus('adjudicada')
+            document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="bg-white border border-slate-300 hover:border-emerald-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          title="Haz clic para ver renglones ganados"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-700 uppercase">Adjudicado</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-700 flex items-center justify-center">
+            <span className="text-xs font-bold text-emerald-700 uppercase group-hover:text-emerald-600 transition">Adjudicado</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-700 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-emerald-700 font-mono">
             ${stats.totalAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <p className="text-[11px] text-emerald-700 font-medium">
-            🟢 {stats.itemsAdjudicadosCount} renglones ganados
-          </p>
+          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+            <p className="text-[11px] text-emerald-700 font-medium">
+              🟢 {stats.itemsAdjudicadosCount} renglones ganados
+            </p>
+            <span className="text-[11px] font-bold text-emerald-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+              Ver ganados ➔
+            </span>
+          </div>
         </div>
 
         {/* Eficiencia Financiera (%) */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div 
+          onClick={() => {
+            document.getElementById('grafico-eficiencia-mensual')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="bg-white border border-slate-300 hover:border-violet-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          title="Haz clic para ver gráfico de eficiencia mensual"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-violet-700 uppercase">Eficiencia en Montos</span>
-            <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-700 flex items-center justify-center">
+            <span className="text-xs font-bold text-violet-700 uppercase group-hover:text-violet-600 transition">Eficiencia en Montos</span>
+            <div className="w-8 h-8 rounded-xl bg-violet-500/20 text-violet-700 flex items-center justify-center group-hover:bg-violet-600 group-hover:text-white transition">
               <Percent className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-violet-700 font-mono">
             {stats.eficienciaGlobalPct}%
           </p>
-          <p className="text-[11px] text-violet-800">
-            Monto Adjudicado vs Ofertado ({selectedMonth})
-          </p>
+          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+            <p className="text-[11px] text-violet-800">
+              Monto Adjudicado vs Ofertado
+            </p>
+            <span className="text-[11px] font-bold text-violet-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+              Ver gráfico ➔
+            </span>
+          </div>
         </div>
 
         {/* Renglones Perdidos */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div 
+          onClick={() => {
+            setSelectedFilterStatus('perdida')
+            document.getElementById('slide-analisis-perdidas')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="bg-white border border-slate-300 hover:border-rose-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          title="Haz clic para ver análisis de pérdidas"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-rose-700 uppercase">Renglones Perdidos</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-700 flex items-center justify-center">
+            <span className="text-xs font-bold text-rose-700 uppercase group-hover:text-rose-600 transition">Renglones Perdidos</span>
+            <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-700 flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition">
               <XCircle className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-rose-700 font-mono">
             {stats.itemsPerdidosCount} <span className="text-xs font-normal text-rose-700">renglones</span>
           </p>
-          <p className="text-[11px] text-rose-700">
-            🔴 Competencia (ARSAL, FARLAB, etc.)
-          </p>
+          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+            <p className="text-[11px] text-rose-700">
+              🔴 Competencia (ARSAL, etc.)
+            </p>
+            <span className="text-[11px] font-bold text-rose-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+              Ver pérdidas ➔
+            </span>
+          </div>
         </div>
 
         {/* Renglones Desiertos */}
-        <div className="bg-white border border-slate-300 rounded-2xl p-4 space-y-2 shadow-sm">
+        <div 
+          onClick={() => {
+            setSelectedFilterStatus('desierta')
+            document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="bg-white border border-slate-300 hover:border-amber-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+          title="Haz clic para ver renglones desiertos"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-700 uppercase">Declarados Desiertos</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center">
+            <span className="text-xs font-bold text-amber-700 uppercase group-hover:text-amber-600 transition">Declarados Desiertos</span>
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-amber-700 font-mono">
             {stats.itemsDesiertosCount} <span className="text-xs font-normal text-amber-700">renglones</span>
           </p>
-          <p className="text-[11px] text-amber-700">
-            🟡 Sin adjudicatario (Re-oferta)
-          </p>
+          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+            <p className="text-[11px] text-amber-700">
+              🟡 Sin adjudicatario (Re-oferta)
+            </p>
+            <span className="text-[11px] font-bold text-amber-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+              Ver desiertos ➔
+            </span>
+          </div>
         </div>
       </div>
 
       {/* NUEVO SECTOR: EFICIENCIA EN MONTOS POR MES (%) & COMPARATIVO */}
-      <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm">
+      <div id="grafico-eficiencia-mensual" className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm scroll-mt-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -950,7 +1009,7 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* Tabla de Inteligencia Competitiva */}
-      <div className="bg-white border border-slate-300 rounded-2xl overflow-hidden shadow-sm space-y-4 p-4">
+      <div id="tabla-desglose-renglones" className="bg-white border border-slate-300 rounded-2xl overflow-hidden shadow-sm space-y-4 p-4 scroll-mt-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
@@ -1105,7 +1164,7 @@ export default function DashboardAnalisisPage() {
       </div>
 
       {/* ─── SLIDE: ANÁLISIS DE PÉRDIDAS ─── */}
-      <div className="bg-white border border-slate-300 rounded-2xl p-6 space-y-6 shadow-sm">
+      <div id="slide-analisis-perdidas" className="bg-white border border-slate-300 rounded-2xl p-6 space-y-6 shadow-sm scroll-mt-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
