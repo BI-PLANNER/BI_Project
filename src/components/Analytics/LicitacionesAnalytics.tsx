@@ -98,7 +98,7 @@ export default function LicitacionesAnalytics() {
         <div>
           <h2 className="text-xl font-bold text-slate-800">Ofertas y Licitaciones</h2>
           <p className="text-sm text-slate-500">
-            Análisis financiero de licitaciones adjudicadas vs perdidas. Basado en {data.length} ítems ofertados.
+            Analisis financiero de licitaciones adjudicadas vs perdidas. Basado en {data.length} items ofertados.
           </p>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function LicitacionesAnalytics() {
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-cyan-600 text-sm font-medium">Tasa de Éxito (Win Rate)</h3>
+            <h3 className="text-cyan-600 text-sm font-medium">Tasa de Exito (Win Rate)</h3>
             <div className="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center">
               <Briefcase size={16} className="text-cyan-600" />
             </div>
@@ -147,14 +147,14 @@ export default function LicitacionesAnalytics() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Bar Chart by Year */}
         <div className="col-span-1 lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-          <h3 className="text-base font-bold text-slate-800 mb-6">Comparativa por Año</h3>
+          <h3 className="text-base font-bold text-slate-800 mb-6">Comparativa por Ano</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                 <YAxis 
-                  tickFormatter={(v) => \`$\${v / 1000}k\`} 
+                  tickFormatter={(v: number) => \`$\${v / 1000}k\`} 
                   axisLine={false} 
                   tickLine={false} 
                   tick={{fill: '#64748b', fontSize: 12}} 
@@ -173,7 +173,7 @@ export default function LicitacionesAnalytics() {
 
         {/* Pie Chart Global */}
         <div className="col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-          <h3 className="text-base font-bold text-slate-800 mb-6">Distribución Global</h3>
+          <h3 className="text-base font-bold text-slate-800 mb-6">Distribucion Global</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
