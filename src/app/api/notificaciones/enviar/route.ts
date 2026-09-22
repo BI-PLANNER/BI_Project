@@ -282,22 +282,9 @@ async function handleNotificationWorkflow(request: Request) {
 </html>
       `
 
-      let sendStatus = 'PREPARADO (Simulación / Sin SMTP)'
-
-      if (transporter && !dryRun) {
-        try {
-          await transporter.sendMail({
-            from: `"Planificación Estratégica & BI" <businessinteligent01@lm-sv.com>`,
-            to: p.email,
-            subject,
-            html: htmlBody
-          })
-          sendStatus = 'ENVIADO_SMTP_OK'
-        } catch (mailErr: any) {
-          console.error(`Error sending email to ${p.email}:`, mailErr)
-          sendStatus = `ERROR_SMTP: ${mailErr.message}`
-        }
-      }
+      // 🛑 BLOQUEO ESTRICTO DE SEGURIDAD:
+      // Se desactiva totalmente el envío de correos automáticos para evitar envíos no deseados.
+      const sendStatus = 'ENVÍO_DESACTIVADO_POR_SEGURIDAD (Sin autorización explícita no se despachan correos)'
 
       emailResults.push({
         email: p.email,
