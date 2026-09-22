@@ -21,8 +21,8 @@ const PIE_COLORS = ['#10b981', '#f43f5e', '#f59e0b']
 
 export default function LicitacionesAnalytics() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [items, setItems] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [items, setItems] = useState<any[]>(localFallbackData || [])
+  const [loading, setLoading] = useState(false)
 
   // Interactive Filters
   const [selectedYear, setSelectedYear] = useState<string>('TODOS')
