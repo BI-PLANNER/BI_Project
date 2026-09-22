@@ -8,7 +8,7 @@ import {
 import { 
   Briefcase, CheckCircle2, XCircle, DollarSign, Clock, Search,
   Filter, TrendingUp, Building2, Tag, ChevronLeft, ChevronRight, Loader2,
-  PieChart as PieIcon
+  PieChart as PieIcon, RefreshCw
 } from 'lucide-react'
 import localFallbackData from '@/data/licitaciones_data.json'
 
@@ -22,6 +22,8 @@ export default function LicitacionesAnalytics() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [items, setItems] = useState<any[]>(localFallbackData || [])
   const [loading, setLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [mounted, setMounted] = useState(false)
   const [statusViewMode, setStatusViewMode] = useState<'monto' | 'cantidad'>('monto')
 
@@ -36,26 +38,31 @@ export default function LicitacionesAnalytics() {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const pageSize = 12
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const res = await fetch('/api/analytics/licitaciones')
-        if (res.ok) {
-          const json = await res.json()
-          if (json.items && json.items.length > 0) {
-            setItems(json.items)
-            setLoading(false)
-            return
-          }
+  const loadData = async (showRefreshIndicator = false) => {
+    if (showRefreshIndicator) setIsRefreshing(true)
+    try {
+      const res = await fetch('/api/analytics/licitaciones', { cache: 'no-store' })
+      if (res.ok) {
+        const json = await res.json()
+        if (json.items && json.items.length > 0) {
+          setItems(json.items)
+          setLastUpdated(new Date())
+          setLoading(false)
+          setIsRefreshing(false)
+          return
         }
-      } catch (err) {
-        console.warn('Usando datos de respaldo local:', err)
       }
-      // Respaldo de alta fidelidad garantizado
-      setItems(localFallbackData || [])
-      setLoading(false)
+    } catch (err) {
+      console.warn('Usando datos de respaldo local:', err)
     }
+    // Respaldo de alta fidelidad garantizado
+    setItems(localFallbackData || [])
+    setLastUpdated(new Date())
+    setLoading(false)
+    setIsRefreshing(false)
+  }
 
+  useEffect(() => {
     loadData()
   }, [])
 
@@ -498,6 +505,23 @@ export default function LicitacionesAnalytics() {
             <p className="text-xs text-slate-500 mt-1">
               Visualización ejecutiva de organizaciones, estatus, marcas, causales de pérdida y desglose de productos.
             </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {lastUpdated && (
+              <span className="text-[11px] text-slate-400 font-medium">
+                Actualizado: {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </span>
+            )}
+            <button
+              onClick={() => loadData(true)}
+              disabled={isRefreshing}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors disabled:opacity-50 cursor-pointer shadow-sm active:scale-95"
+              title="Consultar datos frescos de Supabase"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-blue-600' : 'text-slate-600'}`} />
+              <span>{isRefreshing ? 'Sincronizando...' : 'Actualizar datos'}</span>
+            </button>
           </div>
         </div>
 
