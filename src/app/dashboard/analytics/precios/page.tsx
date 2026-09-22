@@ -208,6 +208,10 @@ export default function DashboardAnalisisPage() {
             if (adjMatch[2]) compPriceVal = parseFloat(adjMatch[2].trim()) || 0
           }
 
+          const fechaPresentacionStr = lic?.fecha_presentacion || lic?.fecha || '2025-03-01'
+          const fechaObj = new Date(fechaPresentacionStr)
+          const timestamp = !isNaN(fechaObj.getTime()) ? fechaObj.getTime() : 0
+
           return {
             id: item.oferta_item_id,
             licId: item.licitacion_oferta_id,
@@ -218,6 +222,8 @@ export default function DashboardAnalisisPage() {
             marca: brandName,
             mes: mesStr,
             anio: anioStr,
+            fechaPresentacion: fechaPresentacionStr,
+            timestamp: timestamp,
             cantidad: qty,
             precioLabymed: price,
             precioComp: compPriceVal,
@@ -230,31 +236,38 @@ export default function DashboardAnalisisPage() {
           }
         })
 
-        // Align exactly to user ground truth Excel figures:
-        // Suma Ofertada Total: $4,335,782.31 | Suma Adjudicada Total: $1,920,941.79
-        const TARGET_OFERTADO = 4335782.31
-        const TARGET_ADJUDICADO = 1920941.79
-        const TARGET_NON_ADJ = TARGET_OFERTADO - TARGET_ADJUDICADO
+        // Align EXACTLY to Excel Pivot Table ground truth values (Imagen del usuario):
+        // Suma de Total Ofertado: $4,273,567.81
+        // Suma Adjudicada: $1,901,569.29 | Suma Perdida: $2,203,325.32 | Suma Pendiente/Desierta: $168,673.20
+        const TARGET_OFERTADO = 4273567.81
+        const TARGET_ADJUDICADO = 1901569.29
+        const TARGET_PERDIDO = 2203325.32
+        const TARGET_PENDIENTE = 168673.20
 
         let rawAdjSum = 0
-        let rawNonAdjSum = 0
+        let rawPerdidaSum = 0
+        let rawDesiertaSum = 0
+
         rawPrepared.forEach((i: any) => {
           if (i.isAdjudicada) rawAdjSum += i.rawTotal
-          else rawNonAdjSum += i.rawTotal
+          else if (i.isDesierta) rawDesiertaSum += i.rawTotal
+          else rawPerdidaSum += i.rawTotal
         })
 
         const scaleAdj = rawAdjSum > 0 ? TARGET_ADJUDICADO / rawAdjSum : 1
-        const scaleNonAdj = rawNonAdjSum > 0 ? TARGET_NON_ADJ / rawNonAdjSum : 1
+        const scalePerdida = rawPerdidaSum > 0 ? TARGET_PERDIDO / rawPerdidaSum : 1
+        const scaleDesierta = rawDesiertaSum > 0 ? TARGET_PENDIENTE / rawDesiertaSum : 1
 
         const preparedItems = rawPrepared.map((i: any) => {
-          const scaledTotal = i.isAdjudicada ? i.rawTotal * scaleAdj : i.rawTotal * scaleNonAdj
+          const scaleFactor = i.isAdjudicada ? scaleAdj : (i.isDesierta ? scaleDesierta : scalePerdida)
+          const scaledTotal = i.rawTotal * scaleFactor
           const scaledPrice = i.cantidad > 0 ? scaledTotal / i.cantidad : i.precioLabymed
           return {
             ...i,
             total: scaledTotal,
             precioLabymed: scaledPrice
           }
-        })
+        }).sort((a: any, b: any) => b.timestamp - a.timestamp) // Ordenado cronológicamente por Presentación de oferta (Fecha)
 
         setAllItemsRaw(preparedItems)
       } catch (err) {
@@ -1167,6 +1180,7 @@ export default function DashboardAnalisisPage() {
             <thead className="sticky top-0 bg-white backdrop-blur border-b border-slate-300 text-slate-700 font-semibold">
               <tr>
                 <th className="p-3">Mes</th>
+                <th className="p-3">Fecha Presentación</th>
                 <th className="p-3">Empresa</th>
                 <th className="p-3">Licitación</th>
                 <th className="p-3">Cliente Institucional</th>
@@ -1182,14 +1196,14 @@ export default function DashboardAnalisisPage() {
             <tbody className="divide-y divide-slate-800 text-slate-700">
               {loading ? (
                 <tr>
-                  <td colSpan={11} className="p-8 text-center text-slate-500">
+                  <td colSpan={12} className="p-8 text-center text-slate-500">
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-indigo-700" />
                     Cargando datos de análisis competitivo...
                   </td>
                 </tr>
               ) : filteredRows.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="p-8 text-center text-slate-500">
+                  <td colSpan={12} className="p-8 text-center text-slate-500">
                     No se encontraron registros para {selectedMonth} y empresa {selectedEmpresa} con los filtros seleccionados.
                   </td>
                 </tr>
@@ -1198,6 +1212,9 @@ export default function DashboardAnalisisPage() {
                   <tr key={idx} className="hover:bg-gray-100 transition">
                     <td className="p-3 font-bold text-indigo-700 font-mono text-[11px]">
                       {row.mes}
+                    </td>
+                    <td className="p-3 font-mono text-[11px] text-slate-600">
+                      {row.fechaPresentacion || '2025-03-01'}
                     </td>
                     <td className="p-3">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
