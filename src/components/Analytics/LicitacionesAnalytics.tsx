@@ -154,7 +154,7 @@ export default function LicitacionesAnalytics() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                 <YAxis 
-                  tickFormatter={(v: number) => \`$\${v / 1000}k\`} 
+                  tickFormatter={(v: number) => `$${v / 1000}k`} 
                   axisLine={false} 
                   tickLine={false} 
                   tick={{fill: '#64748b', fontSize: 12}} 
