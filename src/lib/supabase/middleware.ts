@@ -43,7 +43,8 @@ export async function updateSession(request: NextRequest) {
     '/actividades',
     '/dashboard/reporte',
     '/dashboard/actividades',
-    '/dashboard/cumplimiento'
+    '/dashboard/cumplimiento',
+    '/dashboard/analytics'
   ]
   const isPublicPath = publicPaths.some(path => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(path + '/'))
 
