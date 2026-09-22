@@ -7,7 +7,8 @@ import {
 } from 'recharts'
 import { 
   Briefcase, CheckCircle2, XCircle, DollarSign, Clock, Search,
-  Filter, TrendingUp, Building2, Tag, ChevronLeft, ChevronRight, Loader2
+  Filter, TrendingUp, Building2, Tag, ChevronLeft, ChevronRight, Loader2,
+  PieChart as PieIcon
 } from 'lucide-react'
 import localFallbackData from '@/data/licitaciones_data.json'
 
@@ -17,12 +18,16 @@ const COLORS = {
   PENDIENTE: '#f59e0b',  // Amber
 }
 
-const PIE_COLORS = ['#10b981', '#f43f5e', '#f59e0b']
-
 export default function LicitacionesAnalytics() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [items, setItems] = useState<any[]>(localFallbackData || [])
   const [loading, setLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [statusViewMode, setStatusViewMode] = useState<'monto' | 'cantidad'>('monto')
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Interactive Filters
   const [selectedYear, setSelectedYear] = useState<string>('TODOS')
@@ -108,14 +113,48 @@ export default function LicitacionesAnalytics() {
     return Object.values(map).sort((a, b) => a.year.localeCompare(b.year))
   }, [filteredItems])
 
-  // Chart: Distribución Global (Pie)
-  const pieData = useMemo(() => {
-    return [
-      { name: 'Adjudicadas', value: kpis.adjudicado, color: COLORS.ADJUDICADA },
-      { name: 'Perdidas', value: kpis.perdido, color: COLORS.PERDIDA },
-      { name: 'Pendientes', value: kpis.pendiente, color: COLORS.PENDIENTE }
-    ].filter(p => p.value > 0)
-  }, [kpis])
+  // Chart: Distribución por Estado ($ y Cantidad)
+  const chartStatusData = useMemo(() => {
+    let countAdj = 0
+    let montoAdj = 0
+    let countPer = 0
+    let montoPer = 0
+    let countDes = 0
+    let montoDes = 0
+    let countPen = 0
+    let montoPen = 0
+
+    filteredItems.forEach(it => {
+      const val = Number(it.total || 0)
+      const est = String(it.estatus || 'PENDIENTE').toUpperCase()
+      if (est === 'ADJUDICADA' || it.isAdjudicada) {
+        countAdj++
+        montoAdj += val
+      } else if (est === 'PERDIDA' || it.isPerdida) {
+        countPer++
+        montoPer += val
+      } else if (est === 'DESIERTA' || it.isDesierta) {
+        countDes++
+        montoDes += val
+      } else {
+        countPen++
+        montoPen += val
+      }
+    })
+
+    const list = [
+      { name: 'Adjudicadas', count: countAdj, monto: montoAdj, color: '#10b981' },
+      { name: 'Perdidas', count: countPer, monto: montoPer, color: '#f43f5e' },
+    ]
+
+    if (countPen > 0) {
+      list.push({ name: 'Pendientes', count: countPen, monto: montoPen, color: '#f59e0b' })
+    }
+
+    list.push({ name: 'Desiertas', count: countDes, monto: montoDes, color: '#eab308' })
+
+    return list
+  }, [filteredItems])
 
   // Chart: Top Marcas
   const topBrandsData = useMemo(() => {
@@ -298,58 +337,125 @@ export default function LicitacionesAnalytics() {
             </div>
           </div>
           <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartDataYear} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
-                <YAxis tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11 }} />
-                <Tooltip 
-                  formatter={(val: any) => [formatCurrency(Number(val)), '']}
-                  contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', fontSize: '12px' }}
-                />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="Adjudicadas" fill="#10b981" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="Perdidas" fill="#f43f5e" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="Pendientes" fill="#f59e0b" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartDataYear} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                  <YAxis tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 11 }} />
+                  <Tooltip 
+                    formatter={(val: any) => [formatCurrency(Number(val)), '']}
+                    contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', fontSize: '12px' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                  <Bar dataKey="Adjudicadas" fill="#10b981" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="Perdidas" fill="#f43f5e" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="Pendientes" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando gráfico...</div>
+            )}
           </div>
         </div>
 
-        {/* Distribución Global Pie */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Distribución Global</h3>
-            <p className="text-xs text-slate-500">Participación por resultado de licitación</p>
+        {/* Gráfico 2: Distribución por Estado ($ o Cantidad) */}
+        <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm flex flex-col justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <PieIcon className="w-4 h-4 text-indigo-700" />
+                Distribución por Estado ({selectedYear})
+              </h3>
+              <p className="text-[11px] text-slate-700">
+                {statusViewMode === 'monto' ? 'Proporción de monto monetario ($) por estado' : 'Proporción de cantidad de renglones por estado'}
+              </p>
+            </div>
+            <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setStatusViewMode('monto')}
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  statusViewMode === 'monto'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                $ Monto
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatusViewMode('cantidad')}
+                className={`px-2.5 py-1 text-[11px] font-bold rounded-md transition-all ${
+                  statusViewMode === 'cantidad'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Cantidad
+              </button>
+            </div>
           </div>
-          <div className="h-56 w-full my-auto">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={80}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(v: any) => formatCurrency(Number(v))} />
-              </PieChart>
-            </ResponsiveContainer>
+
+          <div className="h-56 w-full flex items-center justify-center">
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartStatusData
+                      .filter(item => (statusViewMode === 'monto' ? (item.monto || 0) : (item.count || 0)) > 0)
+                      .map(item => ({
+                        ...item,
+                        displayVal: statusViewMode === 'monto' ? (item.monto || 0) : (item.count || 0)
+                      }))}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="displayVal"
+                  >
+                    {chartStatusData
+                      .filter(item => (statusViewMode === 'monto' ? (item.monto || 0) : (item.count || 0)) > 0)
+                      .map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(val: any) => [
+                      statusViewMode === 'monto'
+                        ? `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`
+                        : `${val} renglones`,
+                      statusViewMode === 'monto' ? 'Monto' : 'Cantidad'
+                    ]}
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '11px', color: '#fff' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-500 text-xs">Cargando gráfico...</div>
+            )}
           </div>
-          <div className="space-y-2 border-t border-slate-100 pt-3">
-            {pieData.map(p => (
-              <div key={p.name} className="flex items-center justify-between text-xs">
+
+          <div className="space-y-2 pt-2 border-t border-slate-300">
+            {chartStatusData.map((item, idx) => (
+              <div key={idx} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: p.color }} />
-                  <span className="font-semibold text-slate-700">{p.name}</span>
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }}></span>
+                  <span className="text-slate-700 font-medium">{item.name}</span>
                 </div>
-                <span className="font-black text-slate-900">{formatCurrency(p.value)}</span>
+                <div className="text-right">
+                  <span className="font-mono font-bold text-gray-900 block">
+                    {statusViewMode === 'monto'
+                      ? `$${Number(item.monto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      : `${item.count || 0} renglones`}
+                  </span>
+                  <span className="text-[10px] text-slate-700 font-mono block">
+                    {statusViewMode === 'monto'
+                      ? `(${item.count || 0} renglones)`
+                      : `($${Number(item.monto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
