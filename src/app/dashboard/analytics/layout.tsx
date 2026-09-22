@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { PieChart, BarChart3, CheckCircle, Boxes, AlertTriangle } from 'lucide-react'
+import { PieChart, BarChart3, CheckCircle, Boxes, AlertTriangle, Briefcase } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function AnalyticsLayout({ children }: { children: React.ReactNode }) {
@@ -41,6 +41,7 @@ export default function AnalyticsLayout({ children }: { children: React.ReactNod
     { name: 'Analítica', href: '/dashboard/analytics/precios', icon: BarChart3, color: 'text-emerald-700', activeBg: 'bg-emerald-500/20' },
     { name: 'Stock & Inventario', href: '/dashboard/analytics/stock', icon: Boxes, color: 'text-rose-700', activeBg: 'bg-rose-500/20' },
     { name: 'Ofertas vs Demanda', href: '/dashboard/analytics/demanda', icon: AlertTriangle, color: 'text-amber-700', activeBg: 'bg-amber-500/20' },
+    { name: 'Licitaciones', href: '/dashboard/analytics/licitaciones', icon: Briefcase, color: 'text-cyan-700', activeBg: 'bg-cyan-500/20' },
     { name: 'Cumplimiento', href: '/dashboard/analytics/cumplimiento', icon: CheckCircle, color: 'text-blue-700', activeBg: 'bg-blue-500/20' }
   ]
 
