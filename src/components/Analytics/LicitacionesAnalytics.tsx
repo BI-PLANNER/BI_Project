@@ -156,6 +156,160 @@ export default function LicitacionesAnalytics() {
     return list
   }, [filteredItems])
 
+  // ── POWER BI SUITE: 8 DATASETS BASADOS EN SUPABASE ──
+
+  // 1. Licitaciones por Organización en $
+  const dataOrgMonto = useMemo(() => {
+    const map: Record<string, number> = {}
+    filteredItems.forEach(it => {
+      const org = it.institucion || (it.cliente?.toUpperCase().includes('ISSS') ? 'ISSS' : (it.cliente?.toUpperCase().includes('ISBM') ? 'ISBM' : 'MINSAL'))
+      map[org] = (map[org] || 0) + Number(it.total || 0)
+    })
+    return Object.entries(map).map(([org, monto]) => ({
+      org,
+      monto: Number(monto.toFixed(2)),
+      displayMonto: monto >= 1000000 ? `${(monto / 1000000).toFixed(2)} mill.` : `$${(monto / 1000).toFixed(0)}k`
+    })).sort((a, b) => b.monto - a.monto)
+  }, [filteredItems])
+
+  // 2. Licitaciones por Organización en QTY
+  const dataOrgQty = useMemo(() => {
+    const map: Record<string, number> = {}
+    filteredItems.forEach(it => {
+      const org = it.institucion || (it.cliente?.toUpperCase().includes('ISSS') ? 'ISSS' : (it.cliente?.toUpperCase().includes('ISBM') ? 'ISBM' : 'MINSAL'))
+      map[org] = (map[org] || 0) + 1
+    })
+    return Object.entries(map).map(([org, count]) => ({
+      org,
+      count
+    })).sort((a, b) => b.count - a.count)
+  }, [filteredItems])
+
+  // 3. Licitaciones por Estatus en $
+  const dataEstatusMonto = useMemo(() => {
+    const map: Record<string, number> = {
+      PENDIENTE: 0,
+      PERDIDA: 0,
+      ADJUDICADA: 0
+    }
+    filteredItems.forEach(it => {
+      const est = (it.estatus || 'PENDIENTE').toUpperCase()
+      if (map[est] !== undefined) map[est] += Number(it.total || 0)
+      else map['PENDIENTE'] += Number(it.total || 0)
+    })
+    return [
+      { estatus: 'PENDIENTE', monto: map.PENDIENTE, label: map.PENDIENTE >= 1000000 ? `${(map.PENDIENTE / 1000000).toFixed(2)} mill.` : `$${(map.PENDIENTE / 1000).toFixed(0)}k` },
+      { estatus: 'PERDIDA', monto: map.PERDIDA, label: map.PERDIDA >= 1000000 ? `${(map.PERDIDA / 1000000).toFixed(2)} mill.` : `$${(map.PERDIDA / 1000).toFixed(0)}k` },
+      { estatus: 'ADJUDICADA', monto: map.ADJUDICADA, label: map.ADJUDICADA >= 1000000 ? `${(map.ADJUDICADA / 1000000).toFixed(2)} mill.` : `$${(map.ADJUDICADA / 1000).toFixed(0)}k` }
+    ]
+  }, [filteredItems])
+
+  // 4. Licitaciones por Estatus en QTY
+  const dataEstatusQty = useMemo(() => {
+    const map: Record<string, number> = {
+      ADJUDICADA: 0,
+      PERDIDA: 0,
+      PENDIENTE: 0
+    }
+    filteredItems.forEach(it => {
+      const est = (it.estatus || 'PENDIENTE').toUpperCase()
+      if (map[est] !== undefined) map[est] += 1
+      else map['PENDIENTE'] += 1
+    })
+    return [
+      { estatus: 'ADJUDICADA', count: map.ADJUDICADA },
+      { estatus: 'PERDIDA', count: map.PERDIDA },
+      { estatus: 'PENDIENTE', count: map.PENDIENTE }
+    ]
+  }, [filteredItems])
+
+  // 5. Licitaciones por Marca en $
+  const dataMarcaMonto = useMemo(() => {
+    const map: Record<string, number> = {}
+    let totalAll = 0
+    filteredItems.forEach(it => {
+      const m = (it.marca || 'S/M').trim()
+      const val = Number(it.total || 0)
+      map[m] = (map[m] || 0) + val
+      totalAll += val
+    })
+    const palette = ['#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#0284c7', '#0369a1', '#0f172a', '#64748b']
+    return Object.entries(map)
+      .map(([marca, monto], idx) => ({
+        marca,
+        monto: Number(monto.toFixed(2)),
+        pct: totalAll > 0 ? Number(((monto / totalAll) * 100).toFixed(1)) : 0,
+        color: palette[idx % palette.length]
+      }))
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 8)
+  }, [filteredItems])
+
+  // 6. Licitaciones por Marca en QTY
+  const dataMarcaQty = useMemo(() => {
+    const map: Record<string, number> = {}
+    let totalCount = 0
+    filteredItems.forEach(it => {
+      const m = (it.marca || 'S/M').trim()
+      map[m] = (map[m] || 0) + 1
+      totalCount += 1
+    })
+    const palette = ['#1e40af', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#0284c7', '#0369a1', '#0f172a', '#64748b']
+    return Object.entries(map)
+      .map(([marca, count], idx) => ({
+        marca,
+        count,
+        pct: totalCount > 0 ? Number(((count / totalCount) * 100).toFixed(1)) : 0,
+        color: palette[idx % palette.length]
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8)
+  }, [filteredItems])
+
+  // 7. Razones de Licitaciones Perdidas
+  const dataRazonesPerdidas = useMemo(() => {
+    const perdidas = filteredItems.filter(i => (i.estatus || '').toUpperCase() === 'PERDIDA')
+    const totalLost = perdidas.length || 1
+    const map: Record<string, { count: number, monto: number }> = {}
+    perdidas.forEach(i => {
+      const r = (i.razon || 'DOCUMENTACION LEGAL').trim().toUpperCase()
+      if (!map[r]) map[r] = { count: 0, monto: 0 }
+      map[r].count += 1
+      map[r].monto += Number(i.total || 0)
+    })
+    return Object.entries(map)
+      .map(([razon, data]) => ({
+        razon,
+        count: data.count,
+        monto: Number(data.monto.toFixed(2)),
+        pct: Number(((data.count / totalLost) * 100).toFixed(1))
+      }))
+      .sort((a, b) => b.count - a.count)
+  }, [filteredItems])
+
+  // 8. Desglose de Producto Participantes
+  const dataDesgloseProductos = useMemo(() => {
+    const map: Record<string, { producto: string, marca: string, monto: number, count: number }> = {}
+    let totalAll = 0
+    filteredItems.forEach(it => {
+      const p = (it.producto || 'GENERAL').trim()
+      const m = (it.marca || 'S/M').trim()
+      const val = Number(it.total || 0)
+      totalAll += val
+      if (!map[p]) map[p] = { producto: p, marca: m, monto: 0, count: 0 }
+      map[p].monto += val
+      map[p].count += 1
+    })
+    return Object.values(map)
+      .map(item => ({
+        ...item,
+        monto: Number(item.monto.toFixed(2)),
+        pct: totalAll > 0 ? Number(((item.monto / totalAll) * 100).toFixed(2)) : 0
+      }))
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 15)
+  }, [filteredItems])
+
   // Chart: Top Marcas
   const topBrandsData = useMemo(() => {
     const map: Record<string, { marca: string, Adjudicado: number, Total: number }> = {}
@@ -204,7 +358,7 @@ export default function LicitacionesAnalytics() {
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Datos consolidados del proceso de compras institucionales y licitaciones del sector salud.
+            Datos consolidados del proceso de compras institucionales y licitaciones del sector salud sincronizados con Supabase.
           </p>
         </div>
 
@@ -322,6 +476,365 @@ export default function LicitacionesAnalytics() {
           </p>
           <div className="mt-2 flex items-center gap-1.5 text-xs text-amber-700 font-semibold">
             <span>Por resolución de apertura</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════ */}
+      {/* ── SECCIÓN POWER BI: 8 INDICADORES CLAVE BASADOS EN SUPABASE ── */}
+      {/* ══════════════════════════════════════════════════════════════════ */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-6 bg-blue-600 rounded-full"></span>
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                Panel BI de Licitaciones • 8 Indicadores Clave
+              </h3>
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-mono">
+                Supabase Sync
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Visualización ejecutiva de organizaciones, estatus, marcas, causales de pérdida y desglose de productos.
+            </p>
+          </div>
+        </div>
+
+        {/* Fila 1: 4 Gráficos de Barras (Organización y Estatus) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: Licitaciones por Organización en $ */}
+          <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm flex flex-col justify-between">
+            <h4 className="text-xs font-bold text-slate-800 tracking-wide text-center">
+              Licitaciones por Organización en $
+            </h4>
+            <div className="h-48 w-full pt-2">
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={dataOrgMonto} margin={{ top: 20, right: 10, left: -15, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="org" axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 11, fontWeight: 700 }} />
+                    <YAxis tickFormatter={(v: number) => `$${(v / 1000000).toFixed(1)}M`} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 9 }} />
+                    <Tooltip 
+                      formatter={(v: any) => [`$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`, 'Monto']}
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                    />
+                    <Bar dataKey="monto" fill="#1e3a8a" radius={[4, 4, 0, 0]} label={{ position: 'top', fill: '#1e3a8a', fontSize: 10, fontWeight: 700, formatter: (val: any) => val >= 1000000 ? `${(val / 1000000).toFixed(2)}M` : `$${(val / 1000).toFixed(0)}k` }} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+              )}
+            </div>
+          </div>
+
+          {/* Card 2: Licitaciones por Organización en QTY */}
+          <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm flex flex-col justify-between">
+            <h4 className="text-xs font-bold text-slate-800 tracking-wide text-center">
+              Licitaciones por Organización en QTY
+            </h4>
+            <div className="h-48 w-full pt-2">
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={dataOrgQty} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="org" axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 11, fontWeight: 700 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 9 }} />
+                    <Tooltip 
+                      formatter={(v: any) => [`${v} renglones`, 'Cantidad']}
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                    />
+                    <Bar dataKey="count" fill="#1e3a8a" radius={[4, 4, 0, 0]} label={{ position: 'top', fill: '#1e3a8a', fontSize: 10, fontWeight: 700 }} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+              )}
+            </div>
+          </div>
+
+          {/* Card 3: Licitaciones por Estatus en $ */}
+          <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm flex flex-col justify-between">
+            <h4 className="text-xs font-bold text-slate-800 tracking-wide text-center">
+              Licitaciones por Estatus en $
+            </h4>
+            <div className="h-48 w-full pt-2">
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={dataEstatusMonto} margin={{ top: 20, right: 5, left: -15, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="estatus" axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }} />
+                    <YAxis tickFormatter={(v: number) => `$${(v / 1000000).toFixed(1)}M`} axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 9 }} />
+                    <Tooltip 
+                      formatter={(v: any) => [`$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`, 'Monto']}
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                    />
+                    <Bar dataKey="monto" fill="#1e3a8a" radius={[4, 4, 0, 0]} label={{ position: 'top', fill: '#1e3a8a', fontSize: 9, fontWeight: 700, formatter: (val: any) => val >= 1000000 ? `${(val / 1000000).toFixed(2)}M` : `$${(val / 1000).toFixed(0)}k` }} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+              )}
+            </div>
+          </div>
+
+          {/* Card 4: Licitaciones por Estatus en QTY */}
+          <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm flex flex-col justify-between">
+            <h4 className="text-xs font-bold text-slate-800 tracking-wide text-center">
+              Licitaciones por Estatus en QTY
+            </h4>
+            <div className="h-48 w-full pt-2">
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={dataEstatusQty} margin={{ top: 20, right: 5, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis dataKey="estatus" axisLine={false} tickLine={false} tick={{ fill: '#334155', fontSize: 9, fontWeight: 700 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 9 }} />
+                    <Tooltip 
+                      formatter={(v: any) => [`${v} renglones`, 'Cantidad']}
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                    />
+                    <Bar dataKey="count" fill="#1e3a8a" radius={[4, 4, 0, 0]} label={{ position: 'top', fill: '#1e3a8a', fontSize: 10, fontWeight: 700 }} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Fila 2: 2 Donut Charts (Marcas en $ y QTY) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Card 5: Licitaciones por Marca en $ */}
+          <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm space-y-3">
+            <div>
+              <h4 className="text-xs font-bold text-slate-800 tracking-wide">
+                Licitaciones por Marca en $
+              </h4>
+              <p className="text-[11px] text-slate-500">Distribución porcentual y monto monetario por marca</p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-1">
+              <div className="h-56 w-56 flex-shrink-0 flex items-center justify-center">
+                {mounted ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={dataMarcaMonto}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={45}
+                        outerRadius={75}
+                        paddingAngle={2}
+                        dataKey="monto"
+                      >
+                        {dataMarcaMonto.map((entry, index) => (
+                          <Cell key={`cell-monto-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(v: any, name: any, item: any) => [
+                          `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2 })} (${item.payload.pct}%)`,
+                          item.payload.marca
+                        ]}
+                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+                )}
+              </div>
+
+              <div className="flex-1 w-full space-y-1.5 text-xs max-h-56 overflow-y-auto pr-1">
+                {dataMarcaMonto.map((m, idx) => (
+                  <div key={idx} className="flex items-center justify-between py-1 border-b border-slate-50">
+                    <div className="flex items-center gap-2 truncate pr-2">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: m.color }} />
+                      <span className="font-semibold text-slate-800 truncate" title={m.marca}>{m.marca}</span>
+                    </div>
+                    <div className="text-right flex-shrink-0 font-mono">
+                      <span className="font-bold text-slate-900">${(m.monto / 1000).toFixed(0)}k</span>
+                      <span className="text-[10px] text-slate-500 ml-1.5 font-bold">({m.pct}%)</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Card 6: Licitaciones por Marca en QTY */}
+          <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm space-y-3">
+            <div>
+              <h4 className="text-xs font-bold text-slate-800 tracking-wide">
+                Licitaciones por Marca en QTY
+              </h4>
+              <p className="text-[11px] text-slate-500">Volumen de renglones y proporción por marca</p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-1">
+              <div className="h-56 w-56 flex-shrink-0 flex items-center justify-center">
+                {mounted ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={dataMarcaQty}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={45}
+                        outerRadius={75}
+                        paddingAngle={2}
+                        dataKey="count"
+                      >
+                        {dataMarcaQty.map((entry, index) => (
+                          <Cell key={`cell-qty-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(v: any, name: any, item: any) => [
+                          `${v} renglones (${item.payload.pct}%)`,
+                          item.payload.marca
+                        ]}
+                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '10px', fontSize: '11px', color: '#fff' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-slate-400 text-xs">Cargando...</div>
+                )}
+              </div>
+
+              <div className="flex-1 w-full space-y-1.5 text-xs max-h-56 overflow-y-auto pr-1">
+                {dataMarcaQty.map((m, idx) => (
+                  <div key={idx} className="flex items-center justify-between py-1 border-b border-slate-50">
+                    <div className="flex items-center gap-2 truncate pr-2">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: m.color }} />
+                      <span className="font-semibold text-slate-800 truncate" title={m.marca}>{m.marca}</span>
+                    </div>
+                    <div className="text-right flex-shrink-0 font-mono">
+                      <span className="font-bold text-slate-900">{m.count} reng.</span>
+                      <span className="text-[10px] text-slate-500 ml-1.5 font-bold">({m.pct}%)</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fila 3: 2 Tablas Analíticas (Razones de Pérdidas y Desglose de Productos) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Card 7: Razones de Licitaciones Perdidas */}
+          <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm space-y-3 flex flex-col justify-between">
+            <div>
+              <h4 className="text-xs font-bold text-slate-800 tracking-wide">
+                Razones de Licitaciones Perdidas
+              </h4>
+              <p className="text-[11px] text-slate-500">Causas registradas y peso porcentual de renglones perdidos</p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="p-2.5">Razon</th>
+                    <th className="p-2.5 text-right">Cant.</th>
+                    <th className="p-2.5 text-right">Monto ($)</th>
+                    <th className="p-2.5 text-right w-28">%</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {dataRazonesPerdidas.map((r, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-2.5 font-semibold text-slate-800">{r.razon}</td>
+                      <td className="p-2.5 text-right font-mono text-slate-600">{r.count}</td>
+                      <td className="p-2.5 text-right font-mono font-bold text-slate-900">${(r.monto / 1000).toFixed(0)}k</td>
+                      <td className="p-2.5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div className="w-12 bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-600 rounded-full" style={{ width: `${Math.min(100, r.pct)}%` }}></div>
+                          </div>
+                          <span className="font-mono font-bold text-slate-700 w-10">{r.pct}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="border-t-2 border-slate-200 font-bold bg-slate-50 text-slate-900">
+                  <tr>
+                    <td className="p-2.5 font-black">Total</td>
+                    <td className="p-2.5 text-right font-mono">{dataRazonesPerdidas.reduce((s, r) => s + r.count, 0)}</td>
+                    <td className="p-2.5 text-right font-mono">${(dataRazonesPerdidas.reduce((s, r) => s + r.monto, 0) / 1000).toFixed(0)}k</td>
+                    <td className="p-2.5 text-right font-mono font-black">100 %</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          {/* Card 8: Desglose de Producto Participantes */}
+          <div className="border border-slate-200 rounded-2xl p-5 bg-white shadow-sm space-y-3 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-bold text-slate-800 tracking-wide">
+                  Desglose de Producto Participantes
+                </h4>
+                <p className="text-[11px] text-slate-500">Monto ponderado y porcentaje representado del portafolio</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-slate-400">
+                Top 15 Productos
+              </span>
+            </div>
+
+            <div className="overflow-x-auto max-h-[300px] overflow-y-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                  <tr>
+                    <th className="p-2.5 bg-slate-50">Marca</th>
+                    <th className="p-2.5 bg-slate-50">Producto</th>
+                    <th className="p-2.5 bg-slate-50 text-right">Monto Total</th>
+                    <th className="p-2.5 bg-slate-50 text-right w-28">% Representado</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {dataDesgloseProductos.map((p, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-2.5 whitespace-nowrap">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 font-bold text-[10px] text-slate-700">
+                          {p.marca}
+                        </span>
+                      </td>
+                      <td className="p-2.5 max-w-[180px] truncate font-semibold text-slate-800" title={p.producto}>
+                        {p.producto}
+                      </td>
+                      <td className="p-2.5 text-right font-mono font-bold text-slate-900 whitespace-nowrap">
+                        ${Number(p.monto).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </td>
+                      <td className="p-2.5 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div className="w-12 bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-600 rounded-full" style={{ width: `${Math.min(100, p.pct * 5)}%` }}></div>
+                          </div>
+                          <span className="font-mono font-bold text-slate-700 w-12">{p.pct}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="border-t-2 border-slate-200 font-bold bg-slate-50 text-slate-900 sticky bottom-0">
+                  <tr>
+                    <td className="p-2.5 font-black bg-slate-50" colSpan={2}>Total Top Productos</td>
+                    <td className="p-2.5 text-right font-mono font-black bg-slate-50">
+                      ${dataDesgloseProductos.reduce((s, p) => s + p.monto, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="p-2.5 text-right font-mono font-black bg-slate-50">
+                      {dataDesgloseProductos.reduce((s, p) => s + p.pct, 0).toFixed(2)}%
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
         </div>
       </div>

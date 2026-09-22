@@ -17,32 +17,71 @@ export async function GET() {
   try {
     let items = localData
 
-    // Attempt to query live Supabase items joined with licitaciones
+    // Query live Supabase items joined with licitaciones, productos y marcas
     try {
       const { data: dbItems, error } = await supabaseAdmin
         .from('ofertas_items')
         .select(`
           oferta_item_id,
+          renglon_numero,
           cantidad,
           precio_unitario,
           precio_total,
           es_adjudicado,
           razon_perdida,
-          renglon_numero,
           licitaciones_ofertas (
             licitacion_oferta_id,
             numero_oferta,
             nombre_oferta,
             fecha_presentacion,
             mes_presentacion,
-            observaciones
+            observaciones,
+            clientes ( cliente_id, nombre_cliente ),
+            empresas ( empresa_id, nombre_empresa )
+          ),
+          productos_equipo (
+            producto_equipo_id,
+            nombre_producto_equipo,
+            marcas ( marca_id, nombre_marca )
           )
         `)
         .order('renglon_numero', { ascending: true })
 
       if (!error && dbItems && dbItems.length > 0) {
-        // Merge or use DB items enriched with local metadata if needed
-        items = localData
+        items = dbItems.map((row: any) => {
+          const lic = row.licitaciones_ofertas
+          const prod = row.productos_equipo
+          const marca = prod?.marcas?.nombre_marca || 'S/M'
+          const clientName = lic?.clientes?.nombre_cliente || 'MINSAL'
+          const upperClient = clientName.toUpperCase()
+          const institucion = upperClient.includes('ISSS') || upperClient.includes('SEGURO SOCIAL') ? 'ISSS' : (upperClient.includes('ISBM') ? 'ISBM' : 'MINSAL')
+          const anio = lic?.fecha_presentacion ? lic.fecha_presentacion.slice(0, 4) : '2025'
+          const qty = Number(row.cantidad || 1)
+          const pUnit = Number(row.precio_unitario || 0)
+          const totalVal = Number(row.precio_total || (qty * pUnit) || 0)
+          const estatus = row.es_adjudicado ? 'ADJUDICADA' : (row.razon_perdida ? 'PERDIDA' : 'PENDIENTE')
+
+          return {
+            id: row.oferta_item_id,
+            renglon: row.renglon_numero,
+            anio,
+            mes: lic?.mes_presentacion || 'ENERO',
+            empresa: lic?.empresas?.nombre_empresa || 'LABYMED',
+            institucion,
+            cliente: clientName,
+            noOferta: lic?.numero_oferta || 'S/N',
+            nombreOferta: lic?.nombre_oferta || '',
+            fecha: lic?.fecha_presentacion || '2025-01-01',
+            producto: prod?.nombre_producto_equipo || 'PRODUCTO GENERAL',
+            marca,
+            precioUnitario: pUnit,
+            cantidad: qty,
+            total: totalVal,
+            estatus,
+            razon: row.razon_perdida || '',
+            esAdjudicado: row.es_adjudicado
+          }
+        })
       }
     } catch (dbErr) {
       console.warn('Fallback to localData in /api/analytics/licitaciones:', dbErr)
