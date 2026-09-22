@@ -86,6 +86,8 @@ export default function DashboardAnalisisPage() {
   const [competitiveTable, setCompetitiveTable] = useState<any[]>([])
   const [orgChartData, setOrgChartData] = useState<any[]>([])
   const [perdidasData, setPerdidasData] = useState<{ rows: any[], byCompetidor: any[], byRazon: any[], totalMonto: number, topCliente: string }>({ rows: [], byCompetidor: [], byRazon: [], totalMonto: 0, topCliente: '' })
+  const [ofertadoSlideData, setOfertadoSlideData] = useState<{ byEmpresa: any[], topClientes: any[] }>({ byEmpresa: [], topClientes: [] })
+  const [adjudicadoSlideData, setAdjudicadoSlideData] = useState<{ byEmpresa: any[], topClientes: any[] }>({ byEmpresa: [], topClientes: [] })
 
   useEffect(() => {
     setMounted(true)
@@ -442,6 +444,78 @@ export default function DashboardAnalisisPage() {
 
     setPerdidasData({ rows: perdidasRows, byCompetidor, byRazon, totalMonto: Number(totalMontoPerdido.toFixed(2)), topCliente })
 
+    // ── SLIDES DEDICADOS: Suma Ofertada & Suma Adjudicada ──
+    const empOfertadoMap: Record<string, { monto: number, count: number, lics: Set<string> }> = {
+      'LABYMED': { monto: 0, count: 0, lics: new Set() },
+      'LAB&MED': { monto: 0, count: 0, lics: new Set() },
+      'DIAGNOSAL': { monto: 0, count: 0, lics: new Set() }
+    }
+    const empAdjudicadoMap: Record<string, { monto: number, count: number, lics: Set<string> }> = {
+      'LABYMED': { monto: 0, count: 0, lics: new Set() },
+      'LAB&MED': { monto: 0, count: 0, lics: new Set() },
+      'DIAGNOSAL': { monto: 0, count: 0, lics: new Set() }
+    }
+
+    const clienteOfertadoMap: Record<string, { monto: number, count: number }> = {}
+    const clienteAdjudicadoMap: Record<string, { monto: number, count: number }> = {}
+
+    filteredByMonth.forEach(item => {
+      const emp = item.empresa || 'LABYMED'
+      if (!empOfertadoMap[emp]) empOfertadoMap[emp] = { monto: 0, count: 0, lics: new Set() }
+      empOfertadoMap[emp].monto += item.total
+      empOfertadoMap[emp].count++
+      empOfertadoMap[emp].lics.add(item.licId)
+
+      const c = item.cliente || 'MINSAL'
+      if (!clienteOfertadoMap[c]) clienteOfertadoMap[c] = { monto: 0, count: 0 }
+      clienteOfertadoMap[c].monto += item.total
+      clienteOfertadoMap[c].count++
+
+      if (item.isAdjudicada) {
+        if (!empAdjudicadoMap[emp]) empAdjudicadoMap[emp] = { monto: 0, count: 0, lics: new Set() }
+        empAdjudicadoMap[emp].monto += item.total
+        empAdjudicadoMap[emp].count++
+        empAdjudicadoMap[emp].lics.add(item.licId)
+
+        if (!clienteAdjudicadoMap[c]) clienteAdjudicadoMap[c] = { monto: 0, count: 0 }
+        clienteAdjudicadoMap[c].monto += item.total
+        clienteAdjudicadoMap[c].count++
+      }
+    })
+
+    const safeTotalOfertado = totalOfertadoSum || 1
+    const safeTotalAdjudicado = totalAdjudicadoSum || 1
+
+    const byEmpresaOfertado = Object.entries(empOfertadoMap).map(([emp, v]) => ({
+      empresa: emp,
+      monto: Number(v.monto.toFixed(2)),
+      count: v.count,
+      licsCount: v.lics.size,
+      pct: Number(((v.monto / safeTotalOfertado) * 100).toFixed(1))
+    })).sort((a, b) => b.monto - a.monto)
+
+    const byEmpresaAdjudicado = Object.entries(empAdjudicadoMap).map(([emp, v]) => ({
+      empresa: emp,
+      monto: Number(v.monto.toFixed(2)),
+      count: v.count,
+      licsCount: v.lics.size,
+      pct: Number(((v.monto / safeTotalAdjudicado) * 100).toFixed(1)),
+      eficienciaVsOfertado: empOfertadoMap[emp]?.monto > 0 ? Number(((v.monto / empOfertadoMap[emp].monto) * 100).toFixed(1)) : 0
+    })).sort((a, b) => b.monto - a.monto)
+
+    const topClientesOfertados = Object.entries(clienteOfertadoMap)
+      .map(([c, v]) => ({ cliente: c, monto: Number(v.monto.toFixed(2)), count: v.count, pct: Number(((v.monto / safeTotalOfertado) * 100).toFixed(1)) }))
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 5)
+
+    const topClientesAdjudicados = Object.entries(clienteAdjudicadoMap)
+      .map(([c, v]) => ({ cliente: c, monto: Number(v.monto.toFixed(2)), count: v.count, pct: Number(((v.monto / safeTotalAdjudicado) * 100).toFixed(1)) }))
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 5)
+
+    setOfertadoSlideData({ byEmpresa: byEmpresaOfertado, topClientes: topClientesOfertados })
+    setAdjudicadoSlideData({ byEmpresa: byEmpresaAdjudicado, topClientes: topClientesAdjudicados })
+
     setCompetitiveTable(rowsForTable)
   }, [allItemsRaw, selectedMonth, selectedEmpresa, selectedYear])
 
@@ -543,10 +617,10 @@ export default function DashboardAnalisisPage() {
         <div 
           onClick={() => {
             setSelectedFilterStatus('todos')
-            document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+            document.getElementById('slide-monto-ofertado')?.scrollIntoView({ behavior: 'smooth' })
           }}
           className="bg-white border border-slate-300 hover:border-indigo-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
-          title="Haz clic para ver el desglose completo de los $10.6M"
+          title="Haz clic para ver el Slide de Suma Total Ofertada ($10.6M)"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-700 uppercase group-hover:text-indigo-600 transition">Ofertado ({selectedMonth})</span>
@@ -562,7 +636,7 @@ export default function DashboardAnalisisPage() {
               {stats.totalLicitaciones} licitaciones • {stats.totalItems} renglones
             </p>
             <span className="text-[11px] font-bold text-indigo-600 group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
-              Ver detalle ➔
+              Ver Slide 1 ➔
             </span>
           </div>
         </div>
@@ -571,10 +645,10 @@ export default function DashboardAnalisisPage() {
         <div 
           onClick={() => {
             setSelectedFilterStatus('adjudicada')
-            document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+            document.getElementById('slide-monto-adjudicado')?.scrollIntoView({ behavior: 'smooth' })
           }}
           className="bg-white border border-slate-300 hover:border-emerald-500 rounded-2xl p-4 space-y-2 shadow-sm hover:shadow-md transition-all cursor-pointer group"
-          title="Haz clic para ver renglones ganados"
+          title="Haz clic para ver el Slide de Suma Solo Adjudicadas ($7.5M)"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-emerald-700 uppercase group-hover:text-emerald-600 transition">Adjudicado</span>
@@ -1160,6 +1234,229 @@ export default function DashboardAnalisisPage() {
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* ─── SLIDE 1: SUMA TOTAL OFERTADA (DATA EXCEL) ─── */}
+      <div id="slide-monto-ofertado" className="bg-white border border-indigo-200 rounded-2xl p-6 space-y-6 shadow-sm scroll-mt-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-100 pb-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold text-indigo-700 uppercase tracking-widest mb-1">
+              <DollarSign className="w-4 h-4 text-indigo-600" />
+              Slide 1: Suma Total Ofertada (Data Excel) • {selectedMonth} {selectedYear !== 'TODOS' ? selectedYear : ''} {selectedEmpresa !== 'TODOS' ? `• ${selectedEmpresa}` : ''}
+            </div>
+            <h2 className="text-xl font-black text-gray-900">Desglose Consolidado de la Suma Ofertada</h2>
+            <p className="text-xs text-slate-600 mt-0.5">Suma total de ofertas presentadas en licitaciones según la base de datos de Excel</p>
+          </div>
+          <button
+            onClick={() => {
+              setSelectedFilterStatus('todos')
+              document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5 self-start sm:self-auto"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>Ver Renglones Ofertados en Tabla</span>
+          </button>
+        </div>
+
+        {/* Dynamic Metric Display */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Main Hero Metric */}
+          <div className="md:col-span-1 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-lg flex flex-col justify-between space-y-4">
+            <div>
+              <span className="text-[11px] font-bold tracking-widest text-indigo-300 uppercase">Suma Total Ofertada</span>
+              <p className="text-3xl lg:text-4xl font-black text-white font-mono mt-2">
+                ${stats.totalOfertado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <p className="text-xs text-indigo-200/90 mt-1 font-medium">
+                Monto bruto ofertado acumulado en {stats.totalLicitaciones} licitaciones
+              </p>
+            </div>
+            <div className="space-y-2 pt-4 border-t border-indigo-800/60">
+              <div className="flex justify-between text-xs">
+                <span className="text-indigo-300">Total Renglones:</span>
+                <span className="font-bold text-white font-mono">{stats.totalItems} renglones</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-indigo-300">Promedio por Renglón:</span>
+                <span className="font-bold text-emerald-400 font-mono">
+                  ${stats.totalItems > 0 ? (stats.totalOfertado / stats.totalItems).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Empresa Breakdown Cards */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {ofertadoSlideData.byEmpresa.map((emp) => (
+              <div key={emp.empresa} className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between hover:border-indigo-300 transition">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      emp.empresa === 'LABYMED' ? 'bg-blue-100 text-blue-800' : emp.empresa === 'LAB&MED' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {emp.empresa}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-slate-700">{emp.pct}%</span>
+                  </div>
+                  <p className="text-lg font-black text-gray-900 font-mono">
+                    ${emp.monto.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                  <p className="text-[11px] text-slate-500 mt-1">{emp.count} renglones en {emp.licsCount} licitaciones</p>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2 mt-3 overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full ${emp.empresa === 'LABYMED' ? 'bg-blue-600' : emp.empresa === 'LAB&MED' ? 'bg-purple-600' : 'bg-amber-600'}`} 
+                    style={{ width: `${Math.min(100, emp.pct)}%` }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top 5 Instituciones por Monto Ofertado */}
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+          <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <Building2 className="w-4 h-4 text-indigo-600" />
+            Top 5 Clientes Institucionales con Mayor Monto Ofertado
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-500 font-semibold">
+                  <th className="pb-2">Cliente / Institución</th>
+                  <th className="pb-2 text-center">Renglones Ofertados</th>
+                  <th className="pb-2 text-right">Suma Ofertada ($USD)</th>
+                  <th className="pb-2 text-right">% Participación</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {ofertadoSlideData.topClientes.map((c, i) => (
+                  <tr key={i} className="hover:bg-slate-100">
+                    <td className="py-2 font-bold text-gray-800">{c.cliente}</td>
+                    <td className="py-2 text-center font-mono text-slate-600">{c.count}</td>
+                    <td className="py-2 text-right font-mono font-bold text-indigo-700">${c.monto.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td className="py-2 text-right font-mono font-semibold text-slate-700">{c.pct}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── SLIDE 2: SUMA OFERTADA FILTRADA POR SOLO ADJUDICADAS ─── */}
+      <div id="slide-monto-adjudicado" className="bg-white border border-emerald-200 rounded-2xl p-6 space-y-6 shadow-sm scroll-mt-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-100 pb-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-widest mb-1">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              Slide 2: Suma Ofertada Filtrada por Solo Adjudicadas • {selectedMonth} {selectedYear !== 'TODOS' ? selectedYear : ''} {selectedEmpresa !== 'TODOS' ? `• ${selectedEmpresa}` : ''}
+            </div>
+            <h2 className="text-xl font-black text-gray-900">Monto Ganado en Licitaciones (Solo Adjudicadas)</h2>
+            <p className="text-xs text-slate-600 mt-0.5">Suma total de ofertas ganadas y adjudicadas a nuestras empresas</p>
+          </div>
+          <button
+            onClick={() => {
+              setSelectedFilterStatus('adjudicada')
+              document.getElementById('tabla-desglose-renglones')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5 self-start sm:self-auto"
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Ver Renglones Ganados en Tabla</span>
+          </button>
+        </div>
+
+        {/* Dynamic Metric Display */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Main Hero Metric */}
+          <div className="md:col-span-1 bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white rounded-2xl p-6 shadow-lg flex flex-col justify-between space-y-4">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold tracking-widest text-emerald-300 uppercase">Suma Adjudicada (Ganada)</span>
+                <span className="px-2 py-0.5 bg-emerald-500/30 text-emerald-300 text-[10px] font-bold rounded-full border border-emerald-400/30">
+                  🟢 SOLO GANADAS
+                </span>
+              </div>
+              <p className="text-3xl lg:text-4xl font-black text-emerald-300 font-mono mt-2">
+                ${stats.totalAdjudicado.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <p className="text-xs text-emerald-200/90 mt-1 font-medium">
+                Monto adjudicado efectivo ({stats.eficienciaGlobalPct}% de conversión global)
+              </p>
+            </div>
+            <div className="space-y-2 pt-4 border-t border-emerald-800/60">
+              <div className="flex justify-between text-xs">
+                <span className="text-emerald-300">Renglones Ganados:</span>
+                <span className="font-bold text-white font-mono">{stats.itemsAdjudicadosCount} de {stats.totalItems}</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-emerald-300">Eficiencia Global:</span>
+                <span className="font-bold text-emerald-400 font-mono">{stats.eficienciaGlobalPct}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Empresa Breakdown Cards */}
+          <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {adjudicadoSlideData.byEmpresa.map((emp) => (
+              <div key={emp.empresa} className="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-4 flex flex-col justify-between hover:border-emerald-400 transition">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      emp.empresa === 'LABYMED' ? 'bg-blue-100 text-blue-800' : emp.empresa === 'LAB&MED' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {emp.empresa}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-emerald-700">{emp.eficienciaVsOfertado}% ef.</span>
+                  </div>
+                  <p className="text-lg font-black text-emerald-900 font-mono">
+                    ${emp.monto.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                  <p className="text-[11px] text-slate-600 mt-1">{emp.count} renglones adjudicados</p>
+                </div>
+                <div className="w-full bg-emerald-200 rounded-full h-2 mt-3 overflow-hidden">
+                  <div 
+                    className="h-full rounded-full bg-emerald-600" 
+                    style={{ width: `${Math.min(100, emp.eficienciaVsOfertado)}%` }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top 5 Instituciones por Monto Adjudicado */}
+        <div className="bg-emerald-50/40 border border-emerald-200 rounded-2xl p-5">
+          <h3 className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            Top 5 Clientes Institucionales con Mayor Monto Adjudicado (Ganado)
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="border-b border-emerald-200 text-slate-500 font-semibold">
+                  <th className="pb-2">Cliente / Institución</th>
+                  <th className="pb-2 text-center">Renglones Ganados</th>
+                  <th className="pb-2 text-right">Suma Adjudicada ($USD)</th>
+                  <th className="pb-2 text-right">% Del Total Adjudicado</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-emerald-100">
+                {adjudicadoSlideData.topClientes.map((c, i) => (
+                  <tr key={i} className="hover:bg-emerald-100/50">
+                    <td className="py-2 font-bold text-gray-900">{c.cliente}</td>
+                    <td className="py-2 text-center font-mono text-emerald-800">{c.count}</td>
+                    <td className="py-2 text-right font-mono font-bold text-emerald-700">${c.monto.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td className="py-2 text-right font-mono font-semibold text-slate-700">{c.pct}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
