@@ -11,6 +11,7 @@ import { Briefcase, CheckCircle2, XCircle, DollarSign, Loader2 } from 'lucide-re
 const COLORS = ['#10b981', '#f43f5e'] // Emerald (Adjudicadas), Rose (Perdidas)
 
 export default function LicitacionesAnalytics() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
@@ -188,7 +189,7 @@ export default function LicitacionesAnalytics() {
                   stroke="none"
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={\`cell-\${index}\`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip 
